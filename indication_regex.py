@@ -19,7 +19,8 @@ def _split_numbered(block: str) -> list[str]:
             selected.append(match)
             expected += 1
     if len(selected) < 2:
-        return []
+        # 没有编号的说明书：按句号/分号拆
+        return [p.strip() for p in re.split(r"[。；;]", block) if p.strip()]
     parts = []
     for match in selected:
         idx = matches.index(match)
@@ -38,8 +39,15 @@ def _short(part: str) -> str:
         candidates = re.findall(r"(?<=[，。；的性])([\u4e00-\u9fa5]{2,20}(?:癌|淋巴瘤|白血病|肉瘤|病))", body)
         if not candidates:
             candidates = re.findall(r"([\u4e00-\u9fa5]{2,12}(?:癌|淋巴瘤|白血病|肉瘤))", body)
+        if not candidates:
+            candidates = re.findall(r"([\u4e00-\u9fa5A-Za-z0-9]{2,30}(?:疾病|肌无力|综合征|谱系疾病))", body)
         if candidates:
             short = candidates[-1]
+    short = re.sub(r"^本品(?:适用于|用于)?", "", short)
+    for prefix in ("的", "抗体阳性的", "成人", "儿童", "患者"):
+        while short.startswith(prefix):
+            short = short[len(prefix):]
+    short = re.sub(r"^的", "", short)
     short = re.sub(r"\s+", "", short)
     if "非小细胞肺癌" in body:
         short = "非小细胞肺癌"
