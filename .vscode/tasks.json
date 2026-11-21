@@ -29,19 +29,10 @@
     {
       "label": "dev: backend",
       "type": "shell",
-      "command": "${workspaceFolder}/venv/bin/uvicorn",
+      "command": "${workspaceFolder}/venv/bin/python",
       "args": [
+        "dev_server.py",
         "main:app",
-        "--reload",
-        "--reload-exclude",
-        "'venv/**'",
-        "--reload-exclude",
-        "'.venv/**'",
-        "--reload-exclude",
-        "'**/__pycache__/**'",
-        "--reload-exclude",
-        "'*.db'",
-        "--port",
         "8000"
       ],
       "options": {
@@ -58,19 +49,10 @@
     {
       "label": "dev: market",
       "type": "shell",
-      "command": "${workspaceFolder}/venv/bin/uvicorn",
+      "command": "${workspaceFolder}/venv/bin/python",
       "args": [
+        "dev_server.py",
         "market_module.app:app",
-        "--reload",
-        "--reload-exclude",
-        "'venv/**'",
-        "--reload-exclude",
-        "'.venv/**'",
-        "--reload-exclude",
-        "'**/__pycache__/**'",
-        "--reload-exclude",
-        "'*.db'",
-        "--port",
         "8001"
       ],
       "options": {
