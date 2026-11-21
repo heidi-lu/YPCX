@@ -213,6 +213,17 @@ def test_full_indications_from_pdf_text():
     assert rows[1]["indication_full"].startswith("【2】")
 
 
+def test_inline_sequential_indications_from_pdf_text():
+    text = """说明书全部适应症/功能主治
+1.本品适用于经典型霍奇金淋巴瘤的治疗。2.本品适用于非鳞状非小细胞肺癌的一线治疗。3.本品适用于鳞状非小细胞肺癌的一线治疗。
+现行医保目录的医保支付范围
+1.经典型..."""
+    rows = _extract_full_indications_from_text(text)
+    assert len(rows) == 3
+    assert all(r["indication_short"] for r in rows)
+    assert rows[0]["indication_full"].startswith("1.")
+
+
 def test_numbered_indications_split_rules():
     combined = "【1】经典型霍奇金淋巴瘤 本品适用于... 【2】非鳞状非小细胞肺癌（1）本品联合...（2）本品联合..."
     rows = _split_numbered_indications([{

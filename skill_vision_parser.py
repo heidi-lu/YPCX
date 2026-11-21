@@ -62,13 +62,28 @@ def _extract_full_indications_from_text(full_text: str) -> list[dict]:
         return []
     block = re.sub(r"\s+", "", match.group(1))
     result = []
-    for part in re.split(r"(?=【\d+】)", block):
-        part = part.strip()
-        if not re.match(r"【\d+】", part):
-            continue
-        body = re.sub(r"^【\d+】", "", part)
+    parts = []
+    if len(re.findall(r"【\d+】", block)) >= 2:
+        parts = [p.strip() for p in re.split(r"(?=【\d+】)", block) if re.match(r"【\d+】", p.strip())]
+        marker = re.compile(r"^【\d+】")
+    else:
+        # 兼容 1. 2. 3. ... 这种连续编号，必须从 1 开始且连续
+        matches = list(re.finditer(r"(?<!\d)(\d{1,2})\s*[.、]\s*", block))
+        nums = [int(m.group(1)) for m in matches]
+        if len(matches) >= 2 and nums[0] == 1 and all(b == a + 1 for a, b in zip(nums, nums[1:])):
+            for i, m in enumerate(matches):
+                end = matches[i + 1].start() if i + 1 < len(matches) else len(block)
+                parts.append(block[m.start():end].strip())
+        marker = re.compile(r"^\d{1,2}\s*[.、]\s*")
+
+    for part in parts:
+        body = marker.sub("", part).strip()
         short = re.split(r"本品|用于|适用|联合|（|\(", body, maxsplit=1)[0].strip()
         short = re.sub(r"\s+", "", short)
+        if not short:
+            # 1.2.3. 这种没有病名标题的条目：至少保留可展示的短名，不丢条目
+            fallback = re.sub(r"^本品(?:适用于|用于)?", "", body).strip()
+            short = fallback[:60]
         if not short:
             continue
         result.append({
