@@ -61,6 +61,13 @@ def _extract_full_indications_from_text(full_text: str) -> list[dict]:
     if not match:
         return []
     block = re.sub(r"\s+", "", match.group(1))
+    # 申报表把“医保支付范围调整”的 1./2./3. 插进了适应症正文，先删掉这段
+    block = re.sub(
+        r"1\.20\d{2}年12月31日协议到期.*?其他药品。",
+        "",
+        block,
+        flags=re.S,
+    )
     result = []
     parts = []
     if len(re.findall(r"【\d+】", block)) >= 2:

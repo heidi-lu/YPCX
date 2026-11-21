@@ -362,7 +362,7 @@
 
                 const statusLabel = (s) => ({ running: "进行中", success: "完成", error: "失败", cached: "缓存命中" }[s] || s);
                 const progressStatusOf = (s) => (s === "success" ? "success" : s === "error" ? "exception" : "");
-                const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.dosage_form || ""}|${d.specification || ""}|${d.indication_short || ""}|${d.indication_subtype || ""}`;
+                const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.dosage_form || ""}|${d.specification || ""}|${d.indication_short || ""}|${d.indication_subtype || ""}|${d.indication_full || ""}`;
 
                 const normalizeGroupName = (name) => {
                     let s = String(name || "").replace(/\s+/g, "");

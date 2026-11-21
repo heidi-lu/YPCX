@@ -211,14 +211,16 @@ def _save_rows(name: str, rows: list) -> list:
 
             k = (row.get("generic_name",""), row.get("brand_name",""), row.get("manufacturer",""),
                  row.get("dosage_form",""), row.get("specification",""),
-                 row.get("indication_short",""), row.get("indication_subtype",""))
+                 row.get("indication_short",""), row.get("indication_subtype",""),
+                 _indication_text_key(row.get("indication_full")))
             if k in seen: continue
             seen.add(k)
             
             ex = s.query(Drug).filter(
                 Drug.generic_name==k[0], Drug.brand_name==k[1], Drug.manufacturer==k[2],
                 Drug.dosage_form==k[3], Drug.specification==k[4],
-                Drug.indication_short==k[5], Drug.indication_subtype==k[6]
+                Drug.indication_short==k[5], Drug.indication_subtype==k[6],
+                Drug.indication_full == row.get("indication_full", "")
             ).first()
             
             if not ex and row.get("status") == "DRAFT":
@@ -240,8 +242,9 @@ def _save_rows(name: str, rows: list) -> list:
                 old_short = str(ex.indication_short or "").strip()
                 new_short = str(row.get("indication_short") or "").strip()
                 bad_old = (
-                    len(old_short) > 14
+                    len(old_short) > 8
                     or old_short.startswith(("联合", "单药", "本品", "适用于", "用于", "至少经过"))
+                    or any(token in old_short for token in ("鳞状", "腺癌", "细胞癌", "结合部", "非鳞状"))
                 )
                 if ex.status == "APPROVED" and bad_old and new_short and len(new_short) <= 30:
                     ex.indication_short = new_short
@@ -454,6 +457,7 @@ def create_drug(payload: dict, db: Session = Depends(get_db)):
         Drug.specification == data.get("specification", ""),
         Drug.indication_short == data.get("indication_short", ""),
         Drug.indication_subtype == data.get("indication_subtype", ""),
+        Drug.indication_full == data.get("indication_full", ""),
     ).first()
     if row:
         for key, value in data.items():
@@ -482,6 +486,7 @@ def create_draft(payload: dict, db: Session = Depends(get_db)):
         Drug.specification == data.get("specification", ""),
         Drug.indication_short == data.get("indication_short", ""),
         Drug.indication_subtype == data.get("indication_subtype", ""),
+        Drug.indication_full == data.get("indication_full", ""),
     ).first()
     if row:
         if row.status == "APPROVED":

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Text, DateTime, Boolean, JSON, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, Text, DateTime, Boolean, JSON
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 
@@ -7,12 +7,6 @@ Base = declarative_base()
 class Drug(Base):
     __tablename__ = "drugs"
     
-    __table_args__ = (
-        UniqueConstraint('generic_name', 'brand_name', 'manufacturer', 'dosage_form',
-                         'specification', 'indication_short', 'indication_subtype',
-                         name='uix_drug_identity'),
-    )
-
     id = Column(Integer, primary_key=True, autoincrement=True)
     
     generic_name = Column(String(200), index=True, nullable=False, default="")

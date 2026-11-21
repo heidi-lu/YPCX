@@ -156,12 +156,13 @@ def _split_numbered_indications(indications: list[dict]) -> list[dict]:
         if len(parts) <= 1:
             result.append(ind)
             continue
+        from_pdf = bool(ind.get("_from_pdf"))
         for part in parts:
             short = _short_from_numbered_section(part)
             if not short:
                 continue
             key = (short, str(ind.get("specification", "")))
-            if key in seen:
+            if key in seen and not from_pdf:
                 continue
             seen.add(key)
             row = dict(ind)
@@ -610,6 +611,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 old = old_by_short.get(key, {})
                 merged.append({
                     **full,
+                    "_from_pdf": True,
                     "approval_date": old.get("approval_date", ""),
                     "dosage_full": old.get("dosage_full", ""),
                     "specification": normalize_specification(old.get("specification") or res.get("specification", "")),
@@ -683,14 +685,16 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 if not spec:
                     spec = _strength_from_text(ind.get("indication_full", ""))
                 dedupe_key = (target_short, spec)
-                if dedupe_key in seen_keys:
+                from_pdf = bool(ind.get("_from_pdf"))
+                if not from_pdf and dedupe_key in seen_keys:
                     for existing in cleaned_inds:
                         if existing["indication_short"] == target_short and existing.get("specification", "") == spec and not existing.get("approval_date"):
                             existing["approval_date"] = _validate_date(ind.get("approval_date", ""))
                             break
                     continue
                 
-                seen_keys.add(dedupe_key)
+                if not from_pdf:
+                    seen_keys.add(dedupe_key)
                 existing_china_inds.add(target_short)
                 
                 dosage_dict = {}
