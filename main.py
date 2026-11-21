@@ -158,75 +158,37 @@ def _display_indication(raw: str) -> tuple[str, str]:
 
 
 def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, is_generic: bool = False, p0_ins_year: str = "") -> str:
-    if not nhi_data: return "未纳入医保"
+    """医保目录是权威来源：先匹配目录限制，不用获批时间去否定目录年份。"""
+    if not nhi_data:
+        return "未纳入医保"
     timeline = nhi_data.get("restriction_timeline", {})
     execution_dates = nhi_data.get("execution_dates", {})
     if not isinstance(execution_dates, dict):
         execution_dates = {}
-    if not timeline: return "未纳入医保"
+    if not timeline:
+        return "未纳入医保"
 
     valid_years = sorted([y for y in timeline.keys() if y.isdigit()], key=int)
-    if not valid_years: return "未纳入医保"
+    if not valid_years:
+        return "未纳入医保"
 
-    def _ym(value: str):
-        text = str(value or "")
-        m = re.search(r"(\d{4})\D{0,3}(\d{1,2})", text)
+    app_year = 0
+    if approval_date:
+        m = re.search(r"(\d{4})", str(approval_date))
         if m:
-            month = int(m.group(2))
-            if 1 <= month <= 12:
-                return int(m.group(1)), month
-        m = re.search(r"(\d{4})", text)
-        return (int(m.group(1)), 1) if m else None
-
-    app_ym = _ym(approval_date)
-
-    def _release_ym(year: str):
-        return _ym(execution_dates.get(str(year), f"{year}年1月1日"))
+            app_year = int(m.group(1))
 
     terms = _disease_terms(ind_short)
-    matched_year = None
     for year in valid_years:
         restriction = re.sub(r"\s+", "", str(timeline.get(year, "")))
-        unrestricted = restriction == "无限制"
-        explicit = any(_term_in_text(term, restriction) for term in terms)
-        if unrestricted:
-            if not app_ym:
-                continue
-            if _release_ym(year) and _release_ym(year) < app_ym:
-                continue
-            matched_year = year
-            break
-        if explicit:
-            if app_ym and _release_ym(year) and _release_ym(year) < app_ym:
-                continue
-            matched_year = year
-            break
-
-    if not matched_year: return "未纳入医保"
-
-    if is_generic:
-        p0_ym = _ym(p0_ins_year) if p0_ins_year and p0_ins_year != "未纳入医保" else None
-        year_candidates = [int(matched_year)]
-        if app_ym: year_candidates.append(app_ym[0])
-        if p0_ym: year_candidates.append(p0_ym[0])
-        final_y = max(year_candidates)
-        while final_y <= max(int(y) for y in valid_years):
-            key = str(final_y)
-            release = _release_ym(key)
-            if not app_ym or not release or release >= app_ym:
-                return execution_dates.get(key, key)
-            final_y += 1
-        return "待核实"
-    return execution_dates.get(matched_year, matched_year)
-
-
-def _year_month(value) -> tuple[int, int] | None:
-    text = str(value or "")
-    m = re.search(r"(\d{4})\D{0,3}(\d{1,2})", text)
-    if m and 1 <= int(m.group(2)) <= 12:
-        return int(m.group(1)), int(m.group(2))
-    m = re.search(r"(\d{4})", text)
-    return (int(m.group(1)), 1) if m else None
+        if restriction == "无限制":
+            # 无限制只代表目录没限定；没有获批时间时不能硬套
+            if app_year and int(year) >= app_year:
+                return execution_dates.get(year, year)
+            continue
+        if any(_term_in_text(term, restriction) for term in terms):
+            return execution_dates.get(year, year)
+    return "未纳入医保"
 
 
 def _indication_text_key(value) -> str:
@@ -274,12 +236,6 @@ def _save_rows(name: str, rows: list) -> list:
                             break
 
             if ex:
-                # 已入库行如果医保日期早于获批日期，允许用本次重算值修正
-                if ex.status == "APPROVED" and row.get("indication_insurance_date"):
-                    old_app = _year_month(ex.indication_approval_date)
-                    old_ins = _year_month(ex.indication_insurance_date)
-                    if old_app and old_ins and old_ins < old_app:
-                        ex.indication_insurance_date = row["indication_insurance_date"]
                 # 已有行只补空字段，绝不用新值覆盖已有值
                 for ck, v in row.items():
                     if not hasattr(Drug, ck) or v in (None, ""):

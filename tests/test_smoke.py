@@ -135,8 +135,8 @@ def test_flatten_returns_execution_date():
     rows = main.flatten_to_rows(data)
     assert rows
     assert rows[0]["insurance_date"] == "2017年"
-    # 适应症 2020 年才获批，不能早于获批时间
-    assert rows[0]["indication_insurance_date"] == "2020年1月1日"
+    # 医保目录优先，不因获批时间去否定目录年份
+    assert rows[0]["indication_insurance_date"] == "2017年"
 
 
 def test_asthma_display_keeps_subtype():
@@ -156,7 +156,7 @@ def test_indication_alias_matching():
     assert main._derive_insurance_year(mepo, "EGPA维持治疗", "") == "2025年1月1日"
 
     beli = main._match_nhi("注射用贝利尤单抗", "注射剂")
-    assert main._derive_insurance_year(beli, "狼疮性肾炎", "2024-03") == "2025年1月1日"
+    assert main._derive_insurance_year(beli, "狼疮性肾炎", "2024-03") == "2024年1月1日"
 
 
 def test_multi_subtype_uses_detail_in_short():
