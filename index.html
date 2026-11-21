@@ -241,6 +241,7 @@
                 <el-form-item label="用法用量"><el-input type="textarea" v-model="editForm.dosage" :rows="3"></el-input></el-form-item>
                 <div style="text-align: right; margin-top: 30px;">
                     <el-button @click="drawerVisible = false" style="border-radius: 8px;">取消</el-button>
+                    <el-button @click="saveDraft" style="border-radius: 8px;">保存草稿</el-button>
                     <el-button type="primary" @click="saveEdit" style="background: #2563eb; border-color: #2563eb; border-radius: 8px;">保存并入库</el-button>
                 </div>
             </el-form>
@@ -279,7 +280,7 @@
 
         function statusFormatter(cell) {
             const v = cell.getValue() || "FEEDBACK";
-            const label = { MACHINE: "机器初判", FEEDBACK: "反馈待补全", APPROVED: "已入库", REJECTED: "不予入库" }[v] || v;
+            const label = { DRAFT: "草稿", MACHINE: "机器初判", FEEDBACK: "反馈待补全", APPROVED: "已入库", REJECTED: "不予入库" }[v] || v;
             return `<span class="status-pill status-${escapeHtml(v)}">${escapeHtml(label)}</span>`;
         }
 
@@ -547,6 +548,30 @@
                     }
                 };
 
+                const saveDraft = async () => {
+                    try {
+                        const id = editForm.value.id;
+                        const res = await fetch(id ? `${API_BASE}/drugs/${id}/draft` : `${API_BASE}/drugs/draft`, {
+                            method: id ? "PATCH" : "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(editForm.value)
+                        });
+                        if (!res.ok) throw new Error(await res.text());
+                        const updated = await res.json();
+                        const oldKey = rowKey(editForm.value);
+                        tableData.value = tableData.value.map((d) => rowKey(d) === oldKey ? updated : d);
+                        sortTableData();
+                        table.setData(tableData.value).then(() => {
+                            applyFilters();
+                            table.redraw();
+                        });
+                        drawerVisible.value = false;
+                        ElMessage.success("草稿已保存，可稍后继续补全");
+                    } catch (e) {
+                        ElMessage.error(`保存草稿失败: ${e.message}`);
+                    }
+                };
+
                 const cancelQuery = () => { if (eventSource) eventSource.close(); loading.value = false; };
                 const addDrug = (name) => { const c = String(name).trim(); if (c && !drugNames.value.includes(c)) drugNames.value.push(c); };
                 const removeDrug = (name) => (drugNames.value = drugNames.value.filter((n) => n !== name));
@@ -586,7 +611,7 @@
                     inputValue, drugNames, loading, tableData, progressItems, stats,
                     globalSearch, onlyPending, onlyApproved, onlyRejected,
                     handleSuggestSelect, handleAddFromInput, removeDrug, handleSearch, cancelQuery, exportData, statusLabel, progressStatusOf,
-                    drawerVisible, editForm, saveEdit,
+                    drawerVisible, editForm, saveEdit, saveDraft,
                     querySearch, applyFilters  
                 };
             },

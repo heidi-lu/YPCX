@@ -9,7 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from datetime import datetime
+from sqlalchemy import or_
+from datetime import datetime, timedelta
 
 from db import init_db, get_db, SessionLocal
 from models import Drug, Feedback
@@ -68,13 +69,15 @@ _save_lock = asyncio.Lock()
 @app.on_event("startup")
 def startup():
     init_db()
-    # 清理历史未入库缓存；只保留 APPROVED
+    # 清理：DRAFT 保留 24 小时；旧的 MACHINE/空状态清掉；APPROVED 永久保留
     try:
         with SessionLocal() as s:
-            s.query(Drug).filter(Drug.status != "APPROVED").delete(synchronize_session=False)
+            cutoff = datetime.now() - timedelta(hours=24)
+            s.query(Drug).filter(Drug.status == "DRAFT", Drug.updated_at < cutoff).delete(synchronize_session=False)
+            s.query(Drug).filter(or_(Drug.status.is_(None), Drug.status.notin_(["DRAFT", "APPROVED"]))).delete(synchronize_session=False)
             s.commit()
     except Exception as e:
-        logger.warning(f"清理未入库缓存失败: {e}")
+        logger.warning(f"清理草稿失败: {e}")
 
 def _normalize_dosage_form(raw_form: str) -> str:
     if not raw_form: return ""
@@ -375,10 +378,13 @@ async def query_stream(request: Request, drug_names: str):
             if "error" in data:
                 return await queue.put({"type":"biz_error","drug":name,"error":str(data["error"])})
 
-            # 查询结果只在内存里展示；不写库、不读缓存。
-            # 只有前端点击“入库”时才 POST /drugs 落库。
+            # 查询结果存 DRAFT，便于补全；每次查询仍然重新抓，不读旧缓存。
             rows = await loop.run_in_executor(None, flatten_to_rows, data)
-            await queue.put({"type":"done","drug":name,"data":rows})
+            for row in rows:
+                row["status"] = "DRAFT"
+            async with _save_lock:
+                saved = await loop.run_in_executor(None, _save_rows, data.get("generic_name", name), rows)
+            await queue.put({"type":"done","drug":name,"data":saved})
         except Exception as e:
             logger.error(f"查询 {name} 严重报错: {e}", exc_info=True)
             await queue.put({"type":"biz_error","drug":name,"error":f"系统异常: {e}"})
@@ -425,6 +431,54 @@ def create_drug(payload: dict, db: Session = Depends(get_db)):
     else:
         row = Drug(**data)
         db.add(row)
+    row.updated_at = datetime.now()
+    db.commit()
+    db.refresh(row)
+    return _drug_to_dict(row)
+
+
+@app.post("/drugs/draft")
+def create_draft(payload: dict, db: Session = Depends(get_db)):
+    allowed = {c.name for c in Drug.__table__.columns} - {"id", "created_at", "updated_at"}
+    data = {k: v for k, v in (payload or {}).items() if k in allowed}
+    if not data.get("generic_name"):
+        raise HTTPException(status_code=400, detail="缺少通用名")
+    data["status"] = "DRAFT"
+    row = db.query(Drug).filter(
+        Drug.generic_name == data.get("generic_name", ""),
+        Drug.brand_name == data.get("brand_name", ""),
+        Drug.manufacturer == data.get("manufacturer", ""),
+        Drug.dosage_form == data.get("dosage_form", ""),
+        Drug.specification == data.get("specification", ""),
+        Drug.indication_short == data.get("indication_short", ""),
+        Drug.indication_subtype == data.get("indication_subtype", ""),
+    ).first()
+    if row:
+        if row.status == "APPROVED":
+            return _drug_to_dict(row)
+        for key, value in data.items():
+            setattr(row, key, value)
+    else:
+        row = Drug(**data)
+        db.add(row)
+    row.updated_at = datetime.now()
+    db.commit()
+    db.refresh(row)
+    return _drug_to_dict(row)
+
+
+@app.patch("/drugs/{drug_id}/draft")
+def update_draft(drug_id: int, payload: dict, db: Session = Depends(get_db)):
+    row = db.query(Drug).filter(Drug.id == drug_id).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="药品不存在")
+    if row.status == "APPROVED":
+        return _drug_to_dict(row)
+    allowed = {c.name for c in Drug.__table__.columns} - {"id", "created_at", "updated_at"}
+    for key, value in (payload or {}).items():
+        if key in allowed:
+            setattr(row, key, value)
+    row.status = "DRAFT"
     row.updated_at = datetime.now()
     db.commit()
     db.refresh(row)
