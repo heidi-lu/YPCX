@@ -21,42 +21,43 @@ cp .env.example .env
 uvicorn main:app --reload --port 8000
 ```
 
-另开终端启动前端：
+前端不需要单独起静态服务。直接用浏览器打开 `index.html`，它会请求 `http://127.0.0.1:8000`。
 
-```bash
-cd YPCX
-source venv/bin/activate
-python -m http.server 5173
-```
+## 在 VS Code 启动
 
-浏览器打开 `http://127.0.0.1:5173/index.html`；也可以直接打开 `index.html`（前端会回退到 `127.0.0.1:8000`）。
+不需要额外插件，VS Code 自带任务和调试器就够了。
 
-## 一键启动
+### 点击启动（推荐）
 
-项目根目录有一个可双击的启动脚本：
+按 `F5`，选择：
 
 ```text
-启动YPCX.command
+FastAPI: uvicorn
 ```
 
-它会：
+后端会在 VS Code 的集成终端里启动，日志直接可见。
 
-1. 检查 `venv` 里的 `uvicorn`
-2. 后台启动 `uvicorn main:app --reload --port 8000`
-3. 等后端就绪后打开 `index.html`
-4. 关闭终端窗口 / `Ctrl+C` 时停止后端
-
-前端不需要单独起静态服务，`index.html` 里已经写死 `http://127.0.0.1:8000`。
-
-在 VS Code 里也可以：
+或者按：
 
 ```text
-Terminal → Run Task → dev: start
+Cmd + Shift + B
 ```
 
-后端日志在 `.run/backend.log`。
+执行 `dev: start` 任务，同样在当前集成终端显示 uvicorn 日志。
 
-如果要开机自启，用 macOS `launchd`，见 `docs/launchd.md`（待补）。
+停止：在终端里按 `Ctrl+C`。
+
+### 自动启动
+
+VS Code 没有必要的“自动启动插件”。如果确实要打开项目就启动，可以在 `.vscode/tasks.json` 的 `dev: start` 上加：
+
+```json
+"runOptions": { "runOn": "folderOpen" }
+```
+
+但不建议默认开启：多个窗口会抢 8000 端口。
+
+真正登录自启用 macOS `launchd`，见 [docs/launchd.md](docs/launchd.md)。
 
 ## 环境变量
 

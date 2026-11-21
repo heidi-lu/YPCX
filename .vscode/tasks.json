@@ -19,7 +19,9 @@
     {
       "label": "dev: start",
       "type": "shell",
-      "command": "${workspaceFolder}/启动YPCX.command",
+      "command": "${workspaceFolder}/venv/bin/uvicorn",
+      "args": ["main:app", "--reload", "--port", "8000"],
+      "options": { "cwd": "${workspaceFolder}" },
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": [],
       "presentation": {
@@ -27,18 +29,6 @@
         "panel": "shared",
         "focus": true,
         "clear": true
-      }
-    },
-    {
-      "label": "dev: logs",
-      "type": "shell",
-      "command": "tail",
-      "args": ["-f", ".run/backend.log"],
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "focus": true
       }
     }
   ]

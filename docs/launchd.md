@@ -3,7 +3,7 @@
 如果你希望 **登录 macOS 后自动启动后端**，不再双击脚本，用 `launchd`。
 
 > 这会常驻一个 uvicorn 进程，并绑定 `127.0.0.1:8000`。  
-> 开发时改代码后需要重启（见文末），所以日常开发更推荐双击 `启动YPCX.command`。
+> 开发时改代码后需要重启（见文末），所以日常开发更推荐 VS Code 的 `F5` / `dev: start`。
 
 ## 1. 后端 plist
 
@@ -104,4 +104,4 @@ tail -f /Users/xiaoxu/Desktop/YPCX/.run/backend.launchd.err.log
 - plist 里的路径是绝对路径；换目录或重建 venv 后要改。
 - `KeepAlive=true` 会在进程退出后自动拉起；调试崩溃时先 `bootout` 停止。
 - 如果 8000 被占用，launchd 会反复重启；先确认端口空闲。
-- 不想开机自启就继续用 `启动YPCX.command`，不要加载 plist。
+- 不想开机自启就用 VS Code 的 `F5` / `dev: start`，不要加载 plist。

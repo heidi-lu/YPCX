@@ -26,10 +26,12 @@ uvicorn main:app --reload --port 8000
 python -m http.server 5173
 ```
 
-## 一键启动
+## 在 VS Code 启动
 
-- 双击 `启动YPCX.command`，或 VS Code `Run Task → dev: start`。
-- 脚本启动后端并打开 `index.html`；日志在 `.run/backend.log`。
+- 不需要额外插件：`F5` 选 `FastAPI: uvicorn`，或 `Cmd+Shift+B` 运行 `dev: start`。
+- 后端日志直接显示在集成终端；`Ctrl+C` 停止。
+- 前端直接打开 `index.html`，不需要单独起静态服务。
+- 真正登录自启见 `docs/launchd.md`，不要默认给任务加 `runOn: folderOpen`。
 
 ## 目录
 
