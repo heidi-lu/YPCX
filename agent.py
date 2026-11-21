@@ -347,6 +347,7 @@ def _normalize_short_indications(products: list[dict]) -> None:
         )
         prompt = f"""下面是药品的完整适应症原文。请为每条提取一个“纯疾病名”作为适应症简称。
 只输出病名，不要包含：本品、联合、单药、用于、适用于、治疗、患者、一线/二线、方案。
+保留疾病大类，但不要继续上卷：非小细胞肺癌的各亚型统一为“非小细胞肺癌”，不要归成“肺癌”。
 输出 JSON：{{"items":[{{"index":1,"indication_short":"纯疾病名"}}]}}
 {lines}"""
         result = _call_llm(prompt, ShortIndicationResult)
