@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医药数据大脑 · 药品基础库</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.5.6/dist/index.css" />
+    <link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #1e293b; 
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            border-radius: 16px;
+        }
+
+        .app-container { max-width: 1800px; margin: 0 auto; }
+        
+        .top-nav { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 16px 28px; margin-bottom: 20px; 
+            background: rgba(255, 255, 255, 0.65) !important; backdrop-filter: blur(16px);
+            border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .logo-group { display: flex; align-items: center; gap: 20px; width: 100%;}
+        .logo-area { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; color: #0b2b4a; letter-spacing: 1px; }
+        .logo-icon { font-size: 28px; }
+        
+        .nav-links { display: flex; gap: 8px; background: rgba(0, 0, 0, 0.04); padding: 4px; border-radius: 10px; }
+        .nav-btn { 
+            padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; 
+            color: #5a6d7c; border: none; background: transparent;
+        }
+        .nav-btn.active { background: #ffffff; color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+        .stats-bar { display: flex; align-items: center; padding: 16px 28px; margin-bottom: 20px; border-radius: 16px; }
+        .stat-item { display: flex; align-items: baseline; gap: 8px; }
+        .stat-divider { width: 1px; height: 18px; background: rgba(0,0,0,0.1); margin: 0 24px; }
+        .stat-label { font-size: 14px; color: #64748b; font-weight: 500; }
+        .stat-value { font-size: 22px; font-weight: 700; }
+        .stat-value.accent { color: #2563eb; } 
+        .stat-value.success { color: #10b981; } 
+        .stat-value.danger { color: #ef4444; }
+
+        .card { 
+            background: rgba(255, 255, 255, 0.65) !important; backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 16px;
+            padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+        }
+
+        .input-row { display: flex; gap: 12px; margin-bottom: 16px; }
+        .input-row .el-autocomplete { flex: 1; }
+        .progress-panel { margin-top: 16px; padding: 16px; background: rgba(240, 249, 255, 0.6); border: 1px solid rgba(186, 230, 253, 0.5); border-radius: 12px; }
+        .progress-header { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: #2563eb; }
+        .progress-item { padding: 10px 12px; background: rgba(255,255,255,0.8); border-radius: 8px; margin-bottom: 8px; border: 1px solid rgba(241, 245, 249, 0.5); }
+        .progress-item-head { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; font-weight: 600; }
+
+        .table-toolbar { display: flex; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.05); flex-wrap: wrap; }
+        .table-toolbar .el-input { max-width: 360px; }
+        .toggle-chip { display: inline-flex; align-items: center; padding: 6px 12px; font-size: 13px; border-radius: 8px; background: rgba(255,255,255,0.5); color: #475569; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); user-select: none; }
+        .toggle-chip.active { background: rgba(239, 246, 255, 0.8); color: #2563eb; border-color: rgba(191, 219, 254, 0.8); font-weight: 500; }
+
+        /* ================= Tabulator 核心修复 ================= */
+        #tabulator-table { background: transparent !important; }
+        .tabulator { border: none !important; font-size: 13px; background-color: transparent !important; }
+        
+        .tabulator .tabulator-header { 
+            background-color: #f8fafc !important; 
+            border-bottom: 1px solid #e2e8f0; 
+            font-weight: 600; 
+            color: #1e293b; 
+        }
+        
+        .tabulator .tabulator-header .tabulator-col.tabulator-frozen {
+            background-color: #f8fafc !important;
+            border-right: 1px solid rgba(226, 232, 240, 0.8) !important;
+            z-index: 20 !important;
+        }
+
+        .tabulator .tabulator-row .tabulator-cell.tabulator-frozen {
+            background-color: #ffffff !important;
+            border-right: 1px solid rgba(226, 232, 240, 0.8) !important;
+            z-index: 20 !important;
+        }
+
+        .tabulator .tabulator-row:hover .tabulator-cell.tabulator-frozen {
+            background-color: #f0f7ff !important;
+        }
+
+        .tabulator .tabulator-row { background-color: rgba(255, 255, 255, 0.4) !important; border-bottom: 1px solid rgba(241, 245, 249, 0.5); }
+        .tabulator .tabulator-row:nth-child(even) { background-color: rgba(255, 255, 255, 0.2) !important; }
+        .tabulator .tabulator-row:hover { background-color: rgba(239, 246, 255, 0.8) !important; }
+        
+        .long-text-cell { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; line-height: 1.5; font-size: 12px; color: #475569; word-break: break-all; }
+        .link-btn { color: #2563eb; text-decoration: none; font-weight: 500; }
+        
+        .empty-hint { display: flex; flex-direction: column; align-items: center; padding: 80px 20px; color: #94a3b8; }
+        .empty-hint .icon { font-size: 40px; margin-bottom: 12px; }
+
+        .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+        .badge-running { background: rgba(224, 242, 254, 0.7); color: #0284c7; }
+        .badge-success { background: rgba(209, 250, 229, 0.7); color: #047857; }
+        .badge-error { background: rgba(254, 226, 226, 0.7); color: #b91c1c; }
+        .badge-cached { background: rgba(254, 243, 199, 0.7); color: #b45309; }
+        
+        .status-pill { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+        .status-FEEDBACK { background: rgba(254, 249, 195, 0.7); color: #a16207; }
+        .status-APPROVED { background: rgba(209, 250, 229, 0.7); color: #047857; }
+        .status-REJECTED { background: rgba(254, 226, 226, 0.7); color: #b91c1c; }
+        .status-MACHINE  { background: rgba(224, 242, 254, 0.7); color: #0284c7; }
+
+        .op-btn { border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer; margin-right: 4px; color: white; }
+        .op-approve { background: #10b981; }
+        .op-edit    { background: #3b82f6; }
+        .op-reject  { background: #ef4444; }
+
+        /* ================= 干净表头 ================= */
+        .tabulator .tabulator-header .tabulator-col { 
+            border-right: none !important; 
+            padding: 12px 12px !important; 
+            background-color: transparent !important; 
+            color: #475569 !important; 
+            font-weight: 600; 
+        }
+        
+        .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
+            white-space: nowrap !important;
+            overflow: visible !important;
+        }
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover { 
+            background-color: rgba(255, 255, 255, 0.8) !important; 
+            border-radius: 6px; 
+        }
+
+        .tabulator .tabulator-header .tabulator-col .tabulator-arrow {
+            display: none !important; 
+        }
+        
+        .tabulator .tabulator-row .tabulator-cell { border-right: none !important; padding: 12px 12px !important; color: #334155; }
+        
+        .tabulator-row {
+            min-height: 45px !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="app-container">
+        
+        <header class="top-nav">
+            <div class="logo-group">
+                <div class="logo-area">
+                    <span class="logo-icon">💊</span>
+                    <span>医药数据大脑</span>
+                </div>
+                <div class="nav-links">
+                    <button class="nav-btn active">药品基础库</button>
+                    <button class="nav-btn" onclick="window.location.href='market.html'">市场情报库</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="stats-bar glass-card">
+            <div class="stat-item"><span class="stat-label">已收录药品</span><span class="stat-value">{{ stats.totalDrugs }}</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat-item"><span class="stat-label">本次查询</span><span class="stat-value accent">{{ stats.currentQuery }}</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat-item"><span class="stat-label">已完成</span><span class="stat-value success">{{ stats.done }}</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat-item"><span class="stat-label">失败</span><span class="stat-value danger">{{ stats.failed }}</span></div>
+        </div>
+
+        <div class="card">
+            <div class="input-row">
+                <el-autocomplete v-model="inputValue" :fetch-suggestions="querySearch" placeholder="输入药品名，回车添加" clearable @select="handleSuggestSelect" @keydown.enter="handleAddFromInput" size="large" style="border-radius: 10px;">
+                    <template #prefix><el-icon><Search /></el-icon></template>
+                </el-autocomplete>
+                <el-button type="primary" size="large" @click="handleAddFromInput" style="border-radius: 10px; background: linear-gradient(135deg, #2563eb, #0ea5e9); border:none;">添加</el-button>
+            </div>
+            <div style="margin-bottom:16px;" v-if="drugNames.length > 0">
+                <el-tag v-for="name in drugNames" :key="name" closable @close="removeDrug(name)" style="margin-right:8px; margin-bottom:8px; border-radius: 6px;">{{ name }}</el-tag>
+                <el-button link size="small" @click="drugNames = []">清空</el-button>
+            </div>
+            <div style="display:flex; gap:12px; margin-bottom:8px;">
+                <el-button type="primary" size="large" :loading="loading" @click="handleSearch" :disabled="drugNames.length === 0" style="border-radius: 10px; background: linear-gradient(135deg, #2563eb, #0ea5e9); border:none;">开始查询</el-button>
+                <el-button v-if="loading" type="danger" size="large" plain @click="cancelQuery" style="border-radius: 10px;">取消</el-button>
+                <el-button type="success" size="large" plain :disabled="tableData.length === 0" @click="exportData" style="border-radius: 10px;">导出 Excel</el-button>
+            </div>
+
+            <div class="progress-panel" v-if="progressItems.length > 0">
+                <div class="progress-header"><span>{{ loading ? '查询进行中…' : '查询完成' }}</span><span>{{ stats.done }} / {{ stats.currentQuery }}</span></div>
+                <div v-for="item in progressItems" :key="item.drug" class="progress-item">
+                    <div class="progress-item-head"><span>{{ item.drug }}</span><span :class="['badge', 'badge-' + item.status]">{{ statusLabel(item.status) }}</span></div>
+                    <el-progress :percentage="item.percent" :status="progressStatusOf(item.status)" :stroke-width="6" :show-text="false" />
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-toolbar">
+                <el-input v-model="globalSearch" placeholder="全局搜索..." clearable @input="applyFilters" style="border-radius: 10px; width: 300px;" />
+                <span class="toggle-chip" :class="{ active: onlyPending }" @click="onlyPending = !onlyPending; applyFilters()">只看待反馈</span>
+                <span class="toggle-chip" :class="{ active: onlyApproved }" @click="onlyApproved = !onlyApproved; applyFilters()">只看已入库</span>
+                <span class="toggle-chip" :class="{ active: onlyRejected }" @click="onlyRejected = !onlyRejected; applyFilters()">只看已拒绝</span>
+            </div>
+            <div v-show="tableData.length > 0" id="tabulator-table"></div>
+            <div v-if="tableData.length === 0" class="empty-hint"><div class="icon">🔍</div><h3>还没有数据</h3><p>在上方输入药品名称点击查询</p></div>
+        </div>
+
+        <el-drawer v-model="drawerVisible" :title="editForm.id ? '✏️ 人工补全药品信息' : '➕ 新增药品数据'" size="600px" :close-on-click-modal="false">
+            <el-form :model="editForm" label-width="120px" style="padding-right: 20px;">
+                <el-form-item label="通用名">
+                    <el-input v-model="editForm.generic_name" :disabled="!!editForm.id" placeholder="必填"></el-input>
+                </el-form-item>
+                <el-form-item label="商品名"><el-input v-model="editForm.brand_name"></el-input></el-form-item>
+                <el-form-item label="厂家"><el-input v-model="editForm.manufacturer"></el-input></el-form-item>
+                <el-form-item label="原研/仿制">
+                    <el-select v-model="editForm.origin_type" style="width: 100%;">
+                        <el-option label="原研" value="原研"></el-option>
+                        <el-option label="仿制" value="仿制"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="适应症简"><el-input v-model="editForm.indication_short"></el-input></el-form-item>
+                <el-form-item label="药品上市时间"><el-input v-model="editForm.china_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
+                <el-form-item label="适应症获批时间"><el-input v-model="editForm.indication_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
+                <el-form-item label="进医保时间"><el-input v-model="editForm.indication_insurance_date" placeholder="YYYY"></el-input></el-form-item>
+                <el-form-item label="用法用量"><el-input type="textarea" v-model="editForm.dosage" :rows="3"></el-input></el-form-item>
+                <div style="text-align: right; margin-top: 30px;">
+                    <el-button @click="drawerVisible = false" style="border-radius: 8px;">取消</el-button>
+                    <el-button type="primary" @click="saveEdit" style="background: #2563eb; border-color: #2563eb; border-radius: 8px;">保存并入库</el-button>
+                </div>
+            </el-form>
+        </el-drawer>
+    </div>
+
+    <script src="https://unpkg.com/vue@3.3.13/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/element-plus@2.5.6/dist/index.full.js"></script>
+    <script src="https://unpkg.com/element-plus@2.5.6/dist/locale/zh-cn.js"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+    <script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8000";
+        const { createApp, ref, onMounted } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return "";
+            return String(unsafe).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function linkFormatter(cell) {
+            const val = cell.getValue();
+            if (!val) return "";
+            const raw = String(val).trim();
+            if (!/^https?:\/\//i.test(raw)) return escapeHtml(raw);
+            return `<a href="${escapeHtml(raw)}" target="_blank" rel="noopener noreferrer" class="link-btn">查看</a>`;
+        }
+
+        function longTextFormatter(cell) {
+            const val = cell.getValue();
+            if (!val) return "";
+            return `<div class="long-text-cell" title="${escapeHtml(val)}">${escapeHtml(val)}</div>`;
+        }
+
+        function statusFormatter(cell) {
+            const v = cell.getValue() || "FEEDBACK";
+            const label = { MACHINE: "机器初判", FEEDBACK: "反馈待补全", APPROVED: "已入库", REJECTED: "不予入库" }[v] || v;
+            return `<span class="status-pill status-${escapeHtml(v)}">${escapeHtml(label)}</span>`;
+        }
+
+        function opFormatter(cell) {
+            const rowStr = JSON.stringify(cell.getRow().getData()).replace(/"/g, '&quot;');
+            return `<button class="op-btn op-approve" onclick="handleAction('approve', JSON.parse('${rowStr}'))">入库</button>
+                    <button class="op-btn op-edit" onclick="handleAction('edit', JSON.parse('${rowStr}'))">补全</button>
+                    <button class="op-btn op-reject" onclick="handleAction('reject', JSON.parse('${rowStr}'))">拒绝</button>`;
+        }
+
+        const app = createApp({
+            setup() {
+                const inputValue = ref("");
+                const drugNames = ref([]);
+                const historyDrugs = ref([]);
+                const loading = ref(false);
+                const tableData = ref([]);
+                const progressItems = ref([]);
+                const stats = ref({ totalDrugs: 0, currentQuery: 0, done: 0, failed: 0 });
+                const globalSearch = ref("");
+                const onlyPending = ref(false);
+                const onlyApproved = ref(false);
+                const onlyRejected = ref(false);
+                
+                const drawerVisible = ref(false);
+                const editForm = ref({});
+                
+                let eventSource = null;
+                let table = null;
+                let expectedCount = 0;
+                let doneCount = 0;
+
+                const columnDefs = [
+                    { title: "序号", formatter: "rownum", hozAlign: "center", width: 60, headerSort: false, frozen: true },
+                    { title: "通用名", field: "generic_name", width: 150, frozen: true },
+                    { title: "商品名", field: "brand_name", width: 110, frozen: true },
+                    { title: "厂家", field: "manufacturer", width: 180 },
+                    { title: "原研/仿制", field: "origin_type", width: 100 },
+                    { title: "适应症简", field: "indication_short", width: 150 },
+                    { title: "获批国家", field: "approval_country", width: 90 },
+                    { title: "药品上市时间", field: "china_approval_date", width: 120 },
+                    { title: "适应症全称", field: "indication_full", width: 250, formatter: longTextFormatter },
+                    { title: "适应症获批时间", field: "indication_approval_date", width: 130 },
+                    { title: "适应症进医保时间", field: "indication_insurance_date", width: 140 },
+                    { title: "指南提及", field: "guideline_recommendation", width: 200, formatter: longTextFormatter },
+                    { title: "指南名称", field: "guideline_name", width: 180, formatter: longTextFormatter },
+                    { title: "医保局PDF", field: "nhsa_pdf_url", width: 100, formatter: linkFormatter },
+                    { title: "PPT摘要", field: "nhsa_ppt_url", width: 100, formatter: linkFormatter },
+                    { title: "医保类别", field: "insurance_category", width: 100 },
+                    { title: "医保限制", field: "insurance_restriction", width: 250, formatter: longTextFormatter },
+                    { title: "剂型", field: "dosage_form", width: 100 },
+                    { title: "规格", field: "specification", width: 120 },
+                    { title: "用法用量", field: "dosage", width: 200, formatter: longTextFormatter },
+                    { title: "单次用量", field: "dosage_single", width: 100 },
+                    { title: "用药频次", field: "frequency", width: 100 },
+                    { title: "给药途径", field: "route", width: 100 },
+                    { title: "疗程", field: "duration", width: 120, formatter: longTextFormatter },
+                    { title: "入库时间", field: "updated_at", width: 160 },
+                    { title: "状态", field: "status", width: 110, formatter: statusFormatter },
+                    { title: "操作", field: "id", width: 200, formatter: opFormatter },
+                ];
+
+                const statusLabel = (s) => ({ running: "进行中", success: "完成", error: "失败", cached: "缓存命中" }[s] || s);
+                const progressStatusOf = (s) => (s === "success" ? "success" : s === "error" ? "exception" : "");
+                const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.indication_short || ""}`;
+
+                const fetchHistory = async () => {
+                    try {
+                        const res = await fetch(`${API_BASE}/drugs`);
+                        const data = await res.json();
+                        historyDrugs.value = [...new Set(data.map((d) => d.generic_name).filter(Boolean))];
+                        stats.value.totalDrugs = historyDrugs.value.length;
+                    } catch (e) { console.error(e); }
+                };
+
+                const exportData = () => { if (table) table.download("xlsx", `药品数据_${Date.now()}.xlsx`, { sheetName: "药品数据", rowRange: "active" }); };
+
+                const handleSearch = () => {
+                    if (!drugNames.value.length) { ElMessage.warning("请添加药品"); return; }
+                    loading.value = true; progressItems.value = [];
+                    drugNames.value.forEach((d) => progressItems.value.push({ drug: d, percent: 0, stage: "准备中", status: "running" }));
+                    expectedCount = drugNames.value.length; doneCount = 0;
+                    stats.value = { ...stats.value, currentQuery: expectedCount, done: 0, failed: 0 };
+
+                    if (eventSource) eventSource.close();
+                    eventSource = new EventSource(`${API_BASE}/query/stream?drug_names=${encodeURIComponent(drugNames.value.join(","))}`);
+
+                    const upsertProgress = (drug, patch) => {
+                        const idx = progressItems.value.findIndex((p) => p.drug === drug);
+                        if (idx >= 0) progressItems.value[idx] = { ...progressItems.value[idx], ...patch };
+                    };
+
+                    eventSource.addEventListener("cached", (e) => {
+                        const res = JSON.parse(e.data);
+                        upsertProgress(res.drug, { status: "cached", stage: "已加载缓存" });
+                        tableData.value = tableData.value.filter((d) => !res.data.some((x) => rowKey(x) === rowKey(d)));
+                        tableData.value = [...tableData.value, ...res.data]; 
+                        table.setData(tableData.value).then(() => table.redraw());
+                    });
+
+                    eventSource.addEventListener("progress", (e) => {
+                        const res = JSON.parse(e.data);
+                        upsertProgress(res.drug, { percent: res.percent, stage: res.stage, status: "running" });
+                    });
+
+                    eventSource.addEventListener("biz_error", (e) => {
+                        const res = JSON.parse(e.data);
+                        ElMessage.error(`${res.drug}: ${res.error}`);
+                        doneCount++; stats.value.failed++;
+                        upsertProgress(res.drug, { status: "error", stage: res.error });
+                        if (doneCount >= expectedCount) { loading.value = false; eventSource.close(); }
+                    });
+
+                    eventSource.addEventListener("done", (e) => {
+                        const res = JSON.parse(e.data);
+                        doneCount++; stats.value.done = doneCount;
+                        upsertProgress(res.drug, { status: "success", percent: 100 });
+                        
+                        tableData.value = tableData.value.filter((d) => !res.data.some((x) => rowKey(x) === rowKey(d)));
+                        tableData.value = [...tableData.value, ...res.data]; 
+                        
+                        table.setData(tableData.value).then(() => {
+                            applyFilters();
+                            setTimeout(() => {
+                                if (table) {
+                                    table.redraw();
+                                    const el = document.getElementById("tabulator-table");
+                                    if (el) {
+                                        el.style.display = 'none';
+                                        el.offsetHeight;
+                                        el.style.display = 'block';
+                                    }
+                                    table.redraw();
+                                }
+                            }, 100);
+                        });
+
+                        if (doneCount >= expectedCount) { loading.value = false; fetchHistory(); eventSource.close(); }
+                    });
+
+                    eventSource.onerror = () => {
+                        if (eventSource && eventSource.readyState === EventSource.CLOSED) { ElMessage.error("连接已断开"); loading.value = false; }
+                    };
+                };
+
+                window.handleAction = async (action, rowData) => {
+                    if (action === "edit") {
+                        editForm.value = JSON.parse(JSON.stringify(rowData));
+                        drawerVisible.value = true;
+                    } else if (action === "approve") {
+                        ElMessage.success(`药品 ${rowData.generic_name} 已入库`);
+                        rowData.status = "APPROVED";
+                        table.updateData([rowData]);
+                    } else if (action === "reject") {
+                        ElMessage.error(`药品 ${rowData.generic_name} 已拒绝`);
+                        rowData.status = "REJECTED";
+                        table.updateData([rowData]);
+                    }
+                };
+
+                const saveEdit = async () => {
+                    try {
+                        const updatedData = { ...editForm.value, status: "APPROVED", updated_at: new Date().toLocaleString() };
+                        table.updateData([updatedData]);
+                        drawerVisible.value = false;
+                        ElMessage.success("保存成功，数据已入库！");
+                    } catch (e) {
+                        ElMessage.error("保存失败");
+                    }
+                };
+
+                const cancelQuery = () => { if (eventSource) eventSource.close(); loading.value = false; };
+                const addDrug = (name) => { const c = String(name).trim(); if (c && !drugNames.value.includes(c)) drugNames.value.push(c); };
+                const removeDrug = (name) => (drugNames.value = drugNames.value.filter((n) => n !== name));
+                const handleSuggestSelect = (i) => { addDrug(i.value); inputValue.value = ""; };
+                const handleAddFromInput = () => {
+                    const raw = inputValue.value.trim(); if (!raw) return;
+                    raw.split(/[,，、\n;；]+/).forEach(addDrug); inputValue.value = "";
+                };
+                const querySearch = (q, cb) => {
+                    const lower = (q || "").toLowerCase();
+                    cb(historyDrugs.value.filter((n) => n.toLowerCase().includes(lower)).map((n) => ({ value: n })));
+                };
+                const applyFilters = () => {
+                    if (!table) return;
+                    const filters = [];
+                    if (globalSearch.value) { const q = globalSearch.value.toLowerCase(); filters.push((d) => Object.values(d).some((v) => v && String(v).toLowerCase().includes(q))); }
+                    if (onlyPending.value) filters.push((d) => (d.status || "FEEDBACK") === "FEEDBACK");
+                    if (onlyApproved.value) filters.push((d) => d.status === "APPROVED");
+                    if (onlyRejected.value) filters.push((d) => d.status === "REJECTED");
+                    if (filters.length === 0) table.clearFilter(); else table.setFilter(filters);
+                };
+
+                onMounted(() => {
+                    table = new Tabulator("#tabulator-table", {
+                        height: "65vh", 
+                        layout: "fitColumns", 
+                        columns: columnDefs, 
+                        placeholder: "暂无数据", 
+                        tooltips: true,
+                        initialSort: [
+                            {column: "origin_type", dir: "desc"}, 
+                            {column: "manufacturer", dir: "asc"},
+                            {column: "brand_name", dir: "asc"},
+                            {column: "generic_name", dir: "asc"}
+                        ]
+                    });
+                    
+                    table.on("tableBuilt", function() { table.redraw(); });
+                    fetchHistory();
+                });
+
+                return {
+                    inputValue, drugNames, loading, tableData, progressItems, stats,
+                    globalSearch, onlyPending, onlyApproved, onlyRejected,
+                    handleSuggestSelect, handleAddFromInput, removeDrug, handleSearch, cancelQuery, exportData, statusLabel, progressStatusOf,
+                    drawerVisible, editForm, saveEdit,
+                    querySearch, applyFilters  
+                };
+            },
+        });
+        app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+        app.mount("#app");
+    </script>
+</body>
+</html>

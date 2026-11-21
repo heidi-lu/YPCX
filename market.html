@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医药数据大脑 · 市场情报</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.5.6/dist/index.css" />
+  <link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
+  
+  <style>
+    /* ================= 核心：磨砂玻璃主题 ================= */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1e293b; 
+      min-height: 100vh;
+      /* 高级渐变色背景 */
+      background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+      background-attachment: fixed;
+      padding: 20px;
+    }
+
+    /* 磨砂玻璃卡片基类 */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.65) !important;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+      border-radius: 16px;
+    }
+
+    .app-container { max-width: 1440px; margin: 0 auto; }
+    
+    /* 顶部导航栏 (磨砂) */
+    .top-nav { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 16px 28px; 
+      margin-bottom: 20px; 
+      background: rgba(255, 255, 255, 0.65) !important;
+      backdrop-filter: blur(16px);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .logo-group { display: flex; align-items: center; gap: 20px; }
+    .logo-area { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; color: #0b2b4a; letter-spacing: 1px; }
+    .logo-icon { font-size: 28px; }
+    
+    /* 切换按钮组美化 */
+    .nav-links { display: flex; gap: 8px; background: rgba(0, 0, 0, 0.04); padding: 4px; border-radius: 10px; }
+    .nav-btn { 
+      padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; 
+      color: #5a6d7c; border: none; background: transparent;
+    }
+    .nav-btn.active { background: #ffffff; color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    /* 通用卡片 */
+    .card { 
+      padding: 24px; 
+      margin-bottom: 20px; 
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+    }
+
+    /* 筛选栏 */
+    .filter-card { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+    .filter-item { display: flex; align-items: center; gap: 12px; }
+    .filter-item .label { font-size: 14px; font-weight: 600; color: #475569; white-space: nowrap; }
+    .search-input { width: 340px; }
+    .year-select { width: 140px; }
+    .btn-query { background: linear-gradient(135deg, #2563eb, #0ea5e9); border: none; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
+    /* 表格区 */
+    .table-card { padding: 12px 20px 20px 20px; }
+    #tabulator-container { height: 50vh; width: 100%; border-radius: 12px; background: transparent; }
+    .tabulator { border: none; font-size: 13px; background-color: transparent !important; }
+    .tabulator .tabulator-header { background-color: rgba(248, 250, 252, 0.8) !important; border-bottom: 1px solid rgba(226, 232, 240, 0.8); font-weight: 600; color: #1e293b; }
+    .tabulator .tabulator-row { background-color: rgba(255, 255, 255, 0.4) !important; border-bottom: 1px solid rgba(241, 245, 249, 0.5); }
+    .tabulator .tabulator-row:nth-child(even) { background-color: rgba(255, 255, 255, 0.2) !important; }
+    .tabulator .tabulator-row:hover { background-color: rgba(239, 246, 255, 0.8) !important; }
+    .source-link { color: #2563eb; text-decoration: none; font-weight: 600; }
+    .source-link:hover { text-decoration: underline; }
+
+    /* 录入区（置顶区） */
+    .input-section { display: flex; gap: 20px; flex-wrap: wrap; }
+    .input-area { flex: 2; min-width: 300px; }
+    .upload-area { flex: 1; min-width: 200px; }
+    .btn-parse { background: #0b2b4a; border: none; color: white; font-weight: 600; width: 100%; height: 100px; font-size: 16px; letter-spacing: 1px; border-radius: 12px; box-shadow: 0 4px 16px rgba(11, 43, 74, 0.3); transition: all 0.3s; }
+    .btn-parse:hover { background: #1e3a8a; transform: translateY(-2px); }
+
+    /* ================= 高级表头排序箭头改造 ================= */
+    .tabulator .tabulator-header .tabulator-col { border-right: none !important; padding: 12px 16px !important; background-color: transparent !important; color: #475569 !important; font-weight: 600; transition: background-color 0.2s ease; }
+    .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover { background-color: rgba(255, 255, 255, 0.8) !important; border-radius: 6px; }
+    .tabulator .tabulator-header .tabulator-col .tabulator-arrow {
+        border: none !important; width: 14px !important; height: 14px !important; right: 8px !important; top: 50% !important; transform: translateY(-50%) !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 15l5 5 5-5M7 9l5-5 5 5'/%3E%3C/svg%3E") !important;
+        background-size: contain; background-repeat: no-repeat; opacity: 0.4; transition: all 0.2s;
+    }
+    .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover .tabulator-arrow { opacity: 1; }
+    .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="ascending"] .tabulator-arrow {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 15l-6-6-6 6'/%3E%3C/svg%3E") !important; opacity: 1;
+    }
+    .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="descending"] .tabulator-arrow {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important; opacity: 1;
+    }
+    .tabulator .tabulator-row .tabulator-cell { border-right: none !important; padding: 12px 16px !important; color: #334155; }
+  </style>
+</head>
+<body>
+  <div id="app" v-cloak class="app-container">
+    
+    <!-- 顶部导航 -->
+    <header class="top-nav">
+      <div class="logo-group">
+        <div class="logo-area">
+          <span class="logo-icon">💊</span>
+          <span>医药数据大脑</span>
+        </div>
+        <!-- 导航按钮紧贴标题后方 -->
+        <div class="nav-links">
+          <button class="nav-btn" onclick="window.location.href='index.html'">药品基础库</button>
+          <button class="nav-btn active">市场情报库</button>
+        </div>
+      </div>
+      <div>
+        <el-button type="default" onclick="window.location.href='index.html'" style="border-radius: 8px;">
+          ⬅️ 返回基础库
+        </el-button>
+      </div>
+    </header>
+
+    <!-- 🌟 置顶：智能解析入库区 -->
+    <div class="card" style="border: 1px dashed rgba(147, 197, 253, 0.6);">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+        <span style="font-size: 24px;">🔗</span>
+        <h3 style="font-size: 18px; font-weight: 700; color: #0b2b4a; margin: 0;">多源数据智能解析入库</h3>
+      </div>
+      
+      <div class="input-section">
+        <div class="input-area">
+          <el-input 
+            v-model="inputLink" 
+            type="textarea" 
+            :rows="5" 
+            placeholder="在此粘贴微信公众号/新闻文章链接，系统将自动抓取正文并解析..." 
+            style="border-radius: 12px;"
+          />
+        </div>
+        <div class="upload-area">
+          <el-button 
+            type="primary" 
+            :loading="isParsing" 
+            @click="handleParse" 
+            class="btn-parse"
+          >
+            {{ isParsing ? 'AI 正在深度解析...' : '开始智能解析' }}
+          </el-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 筛选栏 -->
+    <div class="card filter-card">
+      <div class="filter-item">
+        <span class="label">全局搜索</span>
+        <el-input v-model="filterKeyword" class="search-input" placeholder="输入药品名、厂家或适应症搜索竞品" clearable :prefix-icon="Search" @keyup.enter="loadMarketData" style="border-radius: 10px;" />
+      </div>
+      <div class="filter-item">
+        <span class="label">年份</span>
+        <el-select v-model="filterYear" class="year-select" placeholder="全部" style="border-radius: 10px;">
+          <el-option label="全部" value="all" />
+          <el-option label="2026" value="2026" />
+          <el-option label="2025" value="2025" />
+          <el-option label="2024" value="2024" />
+          <el-option label="2023" value="2023" />
+        </el-select>
+      </div>
+      <el-button type="primary" class="btn-query" @click="loadMarketData" style="border-radius: 10px;">查询</el-button>
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="card table-card">
+      <div id="tabulator-container"></div>
+    </div>
+
+    <!-- 批量解析结果确认 Modal -->
+    <el-dialog v-model="previewVisible" title="✨ 解析结果确认 (批量)" width="1150px" :close-on-click-modal="false">
+      <p style="color: #64748b; font-size: 13px; margin-bottom: 12px;">系统已成功解析出以下 {{ previewDataList.length }} 条数据，请核对（支持直接修改数值）后批量入库：</p>
+      
+      <el-table :data="previewDataList" border size="small" height="450">
+        <el-table-column prop="generic_name" label="通用名 (含剂型)" width="160"></el-table-column>
+        <el-table-column prop="manufacturer" label="厂家" width="120"></el-table-column>
+        <el-table-column prop="indication" label="适应症" width="140" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="metric_year" label="年份" width="70"></el-table-column>
+        <el-table-column label="数值 / 单位" width="140">
+          <template #default="scope">
+            <el-input v-model="scope.row.metric_value" size="small" style="width: 60px; margin-right: 4px;"></el-input>
+            <el-input v-model="scope.row.metric_unit" size="small" style="width: 55px;"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="source_snippet" label="原文证据" show-overflow-tooltip></el-table-column>
+        
+        <el-table-column label="来源链接" width="90" align="center">
+          <template #default="scope">
+            <a v-if="scope.row.source_url" :href="scope.row.source_url" target="_blank" style="color:#2563eb; text-decoration:none; font-weight: 600;">查看原文</a>
+            <span v-else style="color:#ccc;">无</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="previewVisible = false" style="border-radius: 8px;">取消</el-button>
+          <el-button type="primary" @click="confirmInsertAll" style="background-color: #2563eb; border-color: #2563eb; border-radius: 8px;">一键全部入库</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+
+  <script src="https://unpkg.com/vue@3.3.13/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/element-plus@2.5.6/dist/index.full.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+  <script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
+
+  <script>
+    const { createApp, ref, onMounted, nextTick } = Vue;
+    const { ElMessage } = ElementPlus;
+    const API_BASE = "http://127.0.0.1:8001"; 
+
+    let tabulatorInstance = null;
+
+    const app = createApp({
+      setup() {
+        const filterKeyword = ref('');
+        const filterYear = ref('all');
+        const Search = ElementPlusIconsVue.Search;
+        const inputLink = ref('');
+        const isParsing = ref(false);
+        const previewVisible = ref(false);
+        const previewDataList = ref([]);
+
+        const loadMarketData = async () => {
+          let url = `${API_BASE}/api/market_facts?keyword=${encodeURIComponent(filterKeyword.value)}`;
+          if (filterYear.value !== 'all') url += `&year=${filterYear.value}`;
+
+          try {
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            if (!tabulatorInstance) {
+              tabulatorInstance = new Tabulator("#tabulator-container", {
+                layout: 'fitColumns', height: '50vh', placeholder: '暂无数据',
+                columns: [
+                  { title: '年份', field: 'metric_year', width: 80 },
+                  { title: '通用名', field: 'generic_name', width: 160 },
+                  { title: '厂家', field: 'manufacturer', width: 120 },
+                  { title: '适应症', field: 'indication', width: 140 },
+                  { title: '指标', field: 'metric_type', width: 90 },
+                  { title: '数值', field: 'metric_value', width: 80, hozAlign: 'right' },
+                  { title: '单位', field: 'metric_unit', width: 70 },
+                  { title: '来源', field: 'data_source', width: 110 },
+                  { title: '原文证据', field: 'source_snippet', width: 180, formatter: (c) => c.getValue().length > 30 ? c.getValue().substring(0,27)+'...' : c.getValue() },
+                  { title: '原文链接', field: 'source_url', width: 90, formatter: (c) => {
+                    const url = c.getValue();
+                    return url ? `<a href="${url}" target="_blank" class="source-link">查看原文</a>` : "";
+                  }}
+                ]
+              });
+            }
+            tabulatorInstance.setData(data);
+          } catch (e) {
+            ElMessage.error("加载大盘数据失败");
+          }
+        };
+
+        const handleParse = async () => {
+          const text = inputLink.value.trim();
+          if (!text) { ElMessage.warning('请提供链接或文本！'); return; }
+
+          isParsing.value = true;
+          try {
+            const res = await fetch(`${API_BASE}/api/parse_article`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text: text })
+            });
+            
+            if (!res.ok) {
+              const err = await res.json();
+              throw new Error(err.detail || "解析失败");
+            }
+
+            const data = await res.json();
+            if (data.data && data.data.length > 0) {
+              previewDataList.value = data.data; 
+              previewVisible.value = true;
+            } else {
+              ElMessage.warning("未从文中提取到有效数据");
+            }
+          } catch (e) {
+            ElMessage.error(e.message || "解析失败");
+          } finally {
+            isParsing.value = false;
+          }
+        };
+
+        // 一键全部入库（串行防锁死）
+        const confirmInsertAll = async () => {
+          try {
+            let successCount = 0;
+            let failCount = 0;
+            const total = previewDataList.value.length;
+            
+            const loadingMsg = ElMessage({ message: `准备入库 0/${total}...`, duration: 0, type: 'info' });
+
+            for (let i = 0; i < total; i++) {
+              const item = previewDataList.value[i];
+              loadingMsg.message = `正在入库 ${i + 1}/${total}：${item.generic_name}`;
+              
+              try {
+                const res = await fetch(`${API_BASE}/api/market_facts`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(item)
+                });
+                if (res.ok) successCount++;
+                else failCount++;
+              } catch (err) {
+                failCount++;
+              }
+            }
+            
+            loadingMsg.close();
+            previewVisible.value = false;
+            inputLink.value = '';
+            
+            if (failCount === 0) {
+                ElMessage.success(`🎉 完美！成功入库 ${successCount} 条数据！`);
+            } else {
+                ElMessage.warning(`入库完成：成功 ${successCount} 条，失败 ${failCount} 条`);
+            }
+            
+            loadMarketData(); 
+          } catch (e) {
+            ElMessage.error("批量入库异常");
+          }
+        };
+
+        onMounted(() => {
+          nextTick(() => { loadMarketData(); });
+        });
+
+        return { filterKeyword, filterYear, Search, inputLink, isParsing, handleParse, previewVisible, previewDataList, confirmInsertAll, loadMarketData };
+      }
+    });
+
+    app.use(ElementPlus);
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component);
+    }
+    app.mount('#app');
+  </script>
+</body>
+</html>

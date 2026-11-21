@@ -1,0 +1,479 @@
+{
+  "过敏性哮喘": {
+    "aliases": ["哮喘", "过敏性哮喘病", "外源性哮喘", "allergic asthma", "atopic asthma"]
+  },
+  "慢性阻塞性肺疾病": {
+    "aliases": ["慢阻肺", "慢性阻塞性肺病", "慢性阻塞性肺部疾病", "chronic obstructive pulmonary disease"]
+  },
+  "慢性肺源性心脏病": {
+    "aliases": ["肺心病", "慢性肺心病", "肺源性心脏病", "cor pulmonale"]
+  },
+  "特发性肺间质纤维化": {
+    "aliases": ["特发性肺纤维化", "肺纤维化", "idiopathic pulmonary fibrosis"]
+  },
+  "肺动脉高压": {
+    "aliases": ["肺高压", "pulmonary hypertension", "特发性肺动脉高压"]
+  },
+  "高血压": {
+    "aliases": ["原发性高血压", "高血压病", "hypertension"]
+  },
+  "冠心病": {
+    "aliases": ["冠状动脉粥样硬化性心脏病", "缺血性心脏病", "coronary heart disease"]
+  },
+  "慢性心力衰竭": {
+    "aliases": ["心力衰竭", "心衰", "chronic heart failure", "充血性心力衰竭"]
+  },
+  "心肌病": {
+    "aliases": ["cardiomyopathy", "扩张型心肌病", "肥厚型心肌病"]
+  },
+  "心脏瓣膜病": {
+    "aliases": ["风湿性心脏病", "风心病", "valvular heart disease", "rheumatic heart disease"]
+  },
+  "先天性心脏病": {
+    "aliases": ["先心病", "congenital heart disease"]
+  },
+  "慢性高原性心脏病": {
+    "aliases": ["高原心脏病", "高原性心脏病", "chronic high altitude heart disease"]
+  },
+  "2型糖尿病": {
+    "aliases": ["二型糖尿病", "II型糖尿病", "type 2 diabetes", "糖尿病2型"]
+  },
+  "甲状腺功能亢进症": {
+    "aliases": ["甲亢", "hyperthyroidism", "甲状腺机能亢进"]
+  },
+  "甲状腺功能减退症": {
+    "aliases": ["甲减", "hypothyroidism", "甲状腺机能减退"]
+  },
+  "重度骨质疏松": {
+    "aliases": ["骨质疏松", "osteoporosis", "严重骨质疏松"]
+  },
+  "痛风": {
+    "aliases": ["gout", "痛风性关节炎", "痛风病"]
+  },
+  "类风湿关节炎": {
+    "aliases": ["类风湿性关节炎", "rheumatoid arthritis", "类风湿"]
+  },
+  "强直性脊柱炎": {
+    "aliases": ["ankylosing spondylitis", "强直性脊柱炎病"]
+  },
+  "系统性红斑狼疮": {
+    "aliases": [
+      "systemic lupus erythematosus",
+      "系统性红斑狼疮病",
+      "SLE",
+      "全身性红斑狼疮",
+      "系统性全身红斑狼疮",
+      "播散性红斑狼疮",
+      "disseminated lupus erythematosus",
+      "狼疮"
+    ]
+  },
+  "狼疮性肾炎": {
+    "aliases": [
+      "LN",
+      "lupus nephritis",
+      "狼疮肾炎",
+      "红斑狼疮性肾炎",
+      "全身性红斑狼疮性肾炎",
+      "systemic lupus erythematosus nephritis",
+      "SLEN",
+      "活动性狼疮肾炎",
+      "active lupus nephritis"
+    ]
+  },
+  "皮肤型红斑狼疮": {
+    "aliases": ["CLE", "cutaneous lupus erythematosus", "皮肤红斑狼疮", "皮肤狼疮"]
+  },
+  "急性皮肤型红斑狼疮": {
+    "aliases": ["ACLE", "acute cutaneous lupus erythematosus"]
+  },
+  "亚急性皮肤型红斑狼疮": {
+    "aliases": ["SCLE", "subacute cutaneous lupus erythematosus"]
+  },
+  "慢性皮肤型红斑狼疮": {
+    "aliases": ["CCLE", "chronic cutaneous lupus erythematosus"]
+  },
+  "盘状红斑狼疮": {
+    "aliases": ["DLE", "discoid lupus erythematosus", "盘状狼疮"]
+  },
+  "深在型红斑狼疮": {
+    "aliases": ["LEP", "lupus erythematosus profundus", "狼疮性脂膜炎"]
+  },
+  "冻疮样红斑狼疮": {
+    "aliases": ["CHLE", "chilblain lupus erythematosus", "冻疮样狼疮"]
+  },
+  "肿胀型红斑狼疮": {
+    "aliases": ["LET", "lupus erythematosus tumidus"]
+  },
+  "新生儿红斑狼疮": {
+    "aliases": ["NLE", "neonatal lupus erythematosus"]
+  },
+  "中枢神经系统狼疮": {
+    "aliases": [
+      "NPSLE",
+      "neuropsychiatric systemic lupus erythematosus",
+      "神经精神性狼疮",
+      "狼疮脑病"
+    ]
+  },
+  "干燥综合征": {
+    "aliases": ["舍格伦综合征", "sjogren syndrome", "干燥综合征病"]
+  },
+  "系统性硬化症": {
+    "aliases": ["硬皮病", "scleroderma", "系统性硬化"]
+  },
+  "白塞病": {
+    "aliases": ["白塞氏病", "Behcet病", "behcet disease"]
+  },
+  "特发性炎性肌病": {
+    "aliases": ["皮肌炎", "多肌炎", "dermatomyositis", "polymyositis"]
+  },
+  "自身免疫性肝炎": {
+    "aliases": ["autoimmune hepatitis", "自免肝"]
+  },
+  "肝硬化": {
+    "aliases": ["肝硬变", "cirrhosis", "liver cirrhosis"]
+  },
+  "慢性乙型肝炎": {
+    "aliases": ["慢乙肝", "乙肝", "chronic hepatitis B"]
+  },
+  "病毒性肝炎": {
+    "aliases": ["viral hepatitis", "肝炎", "丙型肝炎", "慢性丙型肝炎"]
+  },
+  "克罗恩病": {
+    "aliases": ["Crohn病", "crohn disease", "克罗恩"]
+  },
+  "溃疡性结肠炎": {
+    "aliases": ["ulcerative colitis", "溃结"]
+  },
+  "慢性肾脏病": {
+    "aliases": ["慢性肾病", "chronic kidney disease", "慢性肾炎"]
+  },
+  "肾病综合征": {
+    "aliases": ["肾综", "nephrotic syndrome"]
+  },
+  "慢性肾功能衰竭": {
+    "aliases": ["慢性肾衰竭", "慢性肾功能不全", "尿毒症"]
+  },
+  "脑血管病后遗症": {
+    "aliases": ["脑卒中后遗症", "中风后遗症", "脑梗后遗症", "脑出血后遗症"]
+  },
+  "癫痫": {
+    "aliases": ["epilepsy", "羊癫疯", "癫痫发作"]
+  },
+  "帕金森病": {
+    "aliases": ["帕金森", "Parkinson disease", "震颤麻痹"]
+  },
+  "阿尔茨海默病": {
+    "aliases": ["老年痴呆", "Alzheimer disease", "阿尔茨海默症"]
+  },
+  "重症肌无力": {
+    "aliases": ["myasthenia gravis", "肌无力"]
+  },
+  "多发性硬化": {
+    "aliases": ["multiple sclerosis", "多发性硬化症"]
+  },
+  "视神经脊髓炎": {
+    "aliases": ["neuromyelitis optica", "视神经脊髓炎谱系疾病"]
+  },
+  "运动神经元疾病": {
+    "aliases": ["肌萎缩侧索硬化", "渐冻症", "运动神经元病"]
+  },
+  "肝豆状核变性": {
+    "aliases": ["Wilson病", "wilson disease"]
+  },
+  "进行性肌营养不良": {
+    "aliases": ["肌营养不良", "progressive muscular dystrophy"]
+  },
+  "脑瘫": {
+    "aliases": ["脑性瘫痪", "cerebral palsy"]
+  },
+  "普拉德-威利综合征": {
+    "aliases": ["Prader-Willi syndrome", "小胖威利"]
+  },
+  "原发性生长激素缺乏症": {
+    "aliases": ["生长激素缺乏症", "儿童生长激素缺乏症", "垂体性侏儒"]
+  },
+  "抑郁症": {
+    "aliases": ["抑郁障碍", "depression", "抑郁发作", "重度抑郁"]
+  },
+  "焦虑症": {
+    "aliases": ["焦虑障碍", "anxiety disorder", "广泛性焦虑", "慢性焦虑症"]
+  },
+  "强迫症": {
+    "aliases": ["obsessive-compulsive disorder", "强迫性障碍"]
+  },
+  "孤独症": {
+    "aliases": ["自闭症", "autism", "孤独症谱系障碍"]
+  },
+  "血管性痴呆": {
+    "aliases": ["vascular dementia", "血管性认知障碍"]
+  },
+  "重症精神障碍": {
+    "aliases": ["精神分裂症", "双相情感障碍", "schizophrenia", "重性精神病"]
+  },
+  "结核病": {
+    "aliases": ["肺结核", "tuberculosis", "结核"]
+  },
+  "耐药结核病": {
+    "aliases": ["耐多药结核", "drug-resistant tuberculosis"]
+  },
+  "艾滋病": {
+    "aliases": ["HIV", "获得性免疫缺陷综合征"]
+  },
+  "银屑病": {
+    "aliases": ["牛皮癣", "psoriasis", "银屑病性关节炎"]
+  },
+  "天疱疮": {
+    "aliases": ["pemphigus", "寻常型天疱疮", "大疱性皮肤病"]
+  },
+  "特应性皮炎": {
+    "aliases": ["中重度特应性皮炎", "湿疹", "异位性皮炎", "atopic dermatitis"]
+  },
+  "结节性痒疹": {
+    "aliases": ["中重度结节性痒疹", "重度结节性痒疹", "prurigo nodularis"]
+  },
+  "慢性自发性荨麻疹": {
+    "aliases": ["慢性荨麻疹", "荨麻疹", "chronic spontaneous urticaria"]
+  },
+  "大疱性类天疱疮": {
+    "aliases": ["类天疱疮", "bullous pemphigoid"]
+  },
+  "青光眼": {
+    "aliases": ["glaucoma", "原发性青光眼"]
+  },
+  "湿性年龄相关性黄斑变性": {
+    "aliases": ["湿性AMD", "脉络膜新生血管", "年龄相关性黄斑变性"]
+  },
+  "包虫病": {
+    "aliases": ["棘球蚴病", "echinococcosis", "hydatid disease"]
+  },
+  "慢性骨髓炎": {
+    "aliases": ["chronic osteomyelitis", "骨髓炎", "慢性化脓性骨髓炎"]
+  },
+  "前列腺增生": {
+    "aliases": ["良性前列腺增生", "前列腺肥大", "benign prostatic hyperplasia"]
+  },
+  "血友病": {
+    "aliases": ["hemophilia", "血友病A", "血友病B"]
+  },
+  "再生障碍性贫血": {
+    "aliases": ["再障", "aplastic anemia"]
+  },
+  "原发免疫性血小板减少症": {
+    "aliases": ["免疫性血小板减少症", "immune thrombocytopenia", "特发性血小板减少性紫癜"]
+  },
+  "地中海贫血": {
+    "aliases": ["地贫", "thalassemia", "β-地中海贫血", "重型和中间型地中海贫血"]
+  },
+  "噬血细胞综合征": {
+    "aliases": ["hemophagocytic syndrome", "噬血细胞性淋巴组织细胞增生症"]
+  },
+  "肺癌": {
+    "aliases": ["原发性支气管肺癌", "肺腺癌", "肺鳞癌", "小细胞肺癌", "非小细胞肺癌", "lung cancer"]
+  },
+  "乳腺癌": {
+    "aliases": ["乳腺恶性肿瘤", "浸润性乳腺癌", "breast cancer"]
+  },
+  "结直肠癌": {
+    "aliases": ["大肠癌", "结肠癌", "直肠癌", "colorectal cancer"]
+  },
+  "胃癌": {
+    "aliases": ["胃恶性肿瘤", "胃腺癌", "gastric cancer", "stomach cancer"]
+  },
+  "肝癌": {
+    "aliases": ["原发性肝癌", "肝细胞癌", "liver cancer", "hepatocellular carcinoma"]
+  },
+  "甲状腺癌": {
+    "aliases": ["甲状腺恶性肿瘤", "甲状腺乳头状癌", "thyroid cancer"]
+  },
+  "恶性肿瘤": {
+    "aliases": ["癌症", "cancer", "malignant tumor", "肿瘤"]
+  },
+  "流行性感冒": {
+    "aliases": ["流感", "时行感冒", "influenza", "flu"]
+  },
+  "急性上呼吸道感染": {
+    "aliases": ["普通感冒", "感冒", "上感", "伤风", "common cold", "upper respiratory infection"]
+  },
+  "水痘": {
+    "aliases": ["varicella", "chickenpox", "水痘带状疱疹病毒感染"]
+  },
+  "麻疹": {
+    "aliases": ["measles", "痧子", "疹子"]
+  },
+  "风疹": {
+    "aliases": ["rubella", "German measles", "德国麻疹", "风痧"]
+  },
+  "流行性腮腺炎": {
+    "aliases": ["mumps", "痄腮", "腮腺炎"]
+  },
+  "百日咳": {
+    "aliases": ["whooping cough", "pertussis", "顿咳", "痉咳"]
+  },
+  "猩红热": {
+    "aliases": ["scarlet fever", "烂喉丹痧", "丹痧"]
+  },
+  "细菌性痢疾": {
+    "aliases": ["菌痢", "bacillary dysentery", "痢疾", "志贺菌感染"]
+  },
+  "伤寒": {
+    "aliases": ["typhoid fever", "enteric fever", "肠热病"]
+  },
+  "布鲁菌病": {
+    "aliases": ["布病", "波状热", "brucellosis", "地中海弛张热"]
+  },
+  "传染性单核细胞增多症": {
+    "aliases": ["传单", "接吻病", "infectious mononucleosis", "EB病毒感染"]
+  },
+  "狂犬病": {
+    "aliases": ["恐水症", "rabies", "hydrophobia"]
+  },
+  "轮状病毒性肠炎": {
+    "aliases": ["婴儿秋季腹泻", "秋季腹泻", "rotavirus enteritis"]
+  },
+  "疟疾": {
+    "aliases": ["malaria", "打摆子", "冷热病", "疟原虫病"]
+  },
+  "流行性出血热": {
+    "aliases": ["肾综合征出血热", "HFRS", "出血热"]
+  },
+  "手足口病": {
+    "aliases": ["hand, foot and mouth disease", "HFMD", "手足口综合征"]
+  },
+  "幼儿急疹": {
+    "aliases": ["婴儿玫瑰疹", "roseola infantum", "exanthema subitum", "烧疹"]
+  },
+  "鹅口疮": {
+    "aliases": ["雪口病", "白念菌病", "thrush", "口腔念珠菌感染"]
+  },
+  "小儿腹泻病": {
+    "aliases": ["婴幼儿腹泻", "infantile diarrhea", "小儿泄泻"]
+  },
+  "小儿抽动症": {
+    "aliases": ["抽动障碍", "抽动综合征", "tic disorder", "习惯性痉挛综合征"]
+  },
+  "先天性肌性斜颈": {
+    "aliases": ["歪脖儿", "肌性斜颈", "congenital muscular torticollis"]
+  },
+  "异位妊娠": {
+    "aliases": ["宫外孕", "ectopic pregnancy"]
+  },
+  "盆腔炎": {
+    "aliases": ["盆腔炎性疾病", "pelvic inflammatory disease", "PID", "附件炎"]
+  },
+  "子宫肌瘤": {
+    "aliases": ["子宫平滑肌瘤", "uterine fibroid", "leiomyoma", "石瘕"]
+  },
+  "卵巢囊肿": {
+    "aliases": ["卵巢良性囊肿", "ovarian cyst"]
+  },
+  "乳腺增生": {
+    "aliases": ["乳腺囊性增生病", "小叶增生", "乳腺结构不良症", "fibrocystic breast changes"]
+  },
+  "阴道炎": {
+    "aliases": ["vaginitis", "阴道炎症", "外阴阴道炎"]
+  },
+  "宫颈炎": {
+    "aliases": ["宫颈炎性疾病", "cervicitis", "子宫颈炎"]
+  },
+  "尿路感染": {
+    "aliases": ["泌尿系感染", "泌尿道感染", "urinary tract infection", "UTI"]
+  },
+  "泌尿系结石": {
+    "aliases": ["尿石症", "肾结石", "输尿管结石", "urolithiasis", "石淋"]
+  },
+  "前列腺炎": {
+    "aliases": ["prostatitis", "慢性前列腺炎", "慢性骨盆疼痛综合征"]
+  },
+  "鞘膜积液": {
+    "aliases": ["睾丸鞘膜积液", "hydrocele"]
+  },
+  "颈椎病": {
+    "aliases": ["颈椎综合征", "cervical spondylosis", "项痹", "颈椎关节病"]
+  },
+  "腰椎间盘突出症": {
+    "aliases": ["腰间盘突出", "腰椎间盘突出", "lumbar disc herniation", "LDH"]
+  },
+  "骨关节炎": {
+    "aliases": ["骨关节病", "退行性关节炎", "增生性关节炎", "osteoarthritis", "OA", "骨性关节炎"]
+  },
+  "肩周炎": {
+    "aliases": ["冻结肩", "五十肩", "粘连性肩关节囊炎", "adhesive capsulitis", "肩关节周围炎"]
+  },
+  "腰肌劳损": {
+    "aliases": ["功能性腰痛", "慢性腰肌劳损", "lumbar muscle strain"]
+  },
+  "结膜炎": {
+    "aliases": ["红眼病", "conjunctivitis", "结膜炎症"]
+  },
+  "干眼症": {
+    "aliases": ["角结膜干燥症", "dry eye syndrome", "干眼", "眼干燥症"]
+  },
+  "白内障": {
+    "aliases": ["cataract", "晶状体混浊", "老年性白内障"]
+  },
+  "过敏性鼻炎": {
+    "aliases": ["变应性鼻炎", "allergic rhinitis", "花粉症"]
+  },
+  "鼻窦炎": {
+    "aliases": ["副鼻窦炎", "sinusitis", "鼻旁窦炎"]
+  },
+  "中耳炎": {
+    "aliases": ["otitis media", "卡他性中耳炎", "化脓性中耳炎", "渗出性中耳炎"]
+  },
+  "咽喉炎": {
+    "aliases": ["咽炎", "喉炎", "pharyngitis", "laryngitis", "慢性咽炎", "梅核气"]
+  },
+  "扁桃体炎": {
+    "aliases": ["tonsillitis", "急性扁桃体炎", "慢性扁桃体炎", "乳蛾"]
+  },
+  "腺样体肥大": {
+    "aliases": ["咽扁桃体肥大", "adenoid hypertrophy", "腺样体增生"]
+  },
+  "鼻出血": {
+    "aliases": ["鼻衄", "epistaxis", "流鼻血"]
+  },
+  "龋齿": {
+    "aliases": ["龋病", "蛀牙", "虫牙", "dental caries", "tooth decay"]
+  },
+  "牙周炎": {
+    "aliases": ["periodontitis", "牙周病", "牙龈炎进展"]
+  },
+  "口腔溃疡": {
+    "aliases": ["复发性阿弗他溃疡", "复发性口疮", "canker sore", "aphthous ulcer", "口疮"]
+  },
+  "痔疮": {
+    "aliases": ["痔", "痔核", "hemorrhoids", "内痔", "外痔", "混合痔"]
+  },
+  "肛裂": {
+    "aliases": ["anal fissure", "裂痔", "钩肠痔", "肛管裂伤"]
+  },
+  "肛周脓肿": {
+    "aliases": ["肛门周围脓肿", "perianal abscess", "肛旁脓肿"]
+  },
+  "带状疱疹": {
+    "aliases": ["蛇串疮", "缠腰火丹", "herpes zoster", "shingles", "蜘蛛疮"]
+  },
+  "皮炎": {
+    "aliases": ["湿疹", "dermatitis", "eczema", "接触性皮炎"]
+  },
+  "高脂血症": {
+    "aliases": ["血脂异常", "高脂蛋白血症", "hyperlipidemia", "dyslipidemia"]
+  },
+  "贫血": {
+    "aliases": ["anemia", "血虚", "贫血症"]
+  },
+  "眩晕综合征": {
+    "aliases": ["眩晕", "vertigo", "头晕", "真性眩晕"]
+  },
+  "偏头痛": {
+    "aliases": ["migraine", "血管性头痛", "偏头风"]
+  },
+  "阑尾炎": {
+    "aliases": ["appendicitis", "盲肠炎", "急性阑尾炎"]
+  },
+  "腹股沟疝": {
+    "aliases": ["疝气", "腹股沟斜疝", "腹股沟直疝", "inguinal hernia"]
+  }
+}

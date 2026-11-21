@@ -1,0 +1,21 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.6
+openai>=1.51.0
+sqlalchemy>=2.0.35
+python-dotenv>=1.0.1
+redis>=5.0.8
+requests>=2.32.3
+beautifulsoup4>=4.12.3
+pdfplumber>=0.11.4
+python-pptx>=1.0.2
+openpyxl>=3.1.5
+pymupdf>=1.24.0
+# 以下三个包在 Python 3.14 下极易触发本地编译报错，使用 >= 让其自动拉取最新预编译版本
+pydantic>=2.13.0
+pandas>=2.3.3
+cryptography>=46.0.1
+tenacity>=8.3.0
+json-repair>=0.58.0
+certifi
+beautifulsoup4
+markdownify

@@ -1,0 +1,36 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# local database
+*.db
+*.db-shm
+*.db-wal
+
+# raw / generated data
+nhi_excels/
+nhsa_split/
+*.pdf
+*.pptx
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# personal instruction overlays
+AGENTS.local.md
+CLAUDE.local.md
+
+# directories with a leading space in their name
+*nhi_excels/
+*nhsa_split/
