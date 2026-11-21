@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import main
+from agent import _strength_from_text
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -24,6 +25,7 @@ def test_normalize_dosage_form():
     assert main._normalize_dosage_form("注射液") == "注射剂"
     assert main._normalize_dosage_form("片剂") == "片剂"
     assert main._normalize_dosage_form("胶囊") == "胶囊"
+    assert main._normalize_dosage_form("装置") == "植入剂"
     assert main._normalize_dosage_form("") == ""
 
 
@@ -149,6 +151,54 @@ def test_indication_alias_matching():
 
     beli = main._match_nhi("注射用贝利尤单抗", "注射剂")
     assert main._derive_insurance_year(beli, "狼疮性肾炎", "2024-03") == "2024年1月1日"
+
+
+def test_multi_subtype_uses_detail_in_short():
+    data = {
+        "generic_name": "测试哮喘药",
+        "products": [{
+            "generic_name": "测试哮喘药",
+            "origin_type": "原研",
+            "dosage_form": "注射剂",
+            "indications": [
+                {"indication_short": "过敏性哮喘", "indication_full": "过敏性哮喘"},
+                {"indication_short": "重度嗜酸粒细胞性哮喘", "indication_full": "重度嗜酸粒细胞性哮喘"},
+            ],
+        }],
+    }
+    rows = main.flatten_to_rows(data)
+    assert {r["indication_short"] for r in rows} == {"过敏性哮喘", "重度嗜酸粒细胞性哮喘"}
+
+    data["products"][0]["indications"] = [{"indication_short": "过敏性哮喘", "indication_full": "过敏性哮喘"}]
+    rows = main.flatten_to_rows(data)
+    assert rows[0]["indication_short"] == "哮喘"
+    assert rows[0]["indication_subtype"] == "过敏性哮喘"
+
+
+def test_row_level_specification_and_brand_precedence():
+    data = {
+        "generic_name": "测试规格药",
+        "products": [{
+            "generic_name": "测试规格药",
+            "brand_name": "原商品名",
+            "origin_type": "原研",
+            "dosage_form": "装置",
+            "specification": "10.8mg, 3.6mg",
+            "indications": [
+                {"indication_short": "前列腺癌", "specification": "10.8mg", "brand_name": "别家商品名"},
+                {"indication_short": "乳腺癌", "specification": "3.6mg"},
+            ],
+        }],
+    }
+    rows = main.flatten_to_rows(data)
+    assert [r["specification"] for r in rows] == ["10.8mg", "3.6mg"]
+    assert all(r["brand_name"] == "原商品名" for r in rows)
+
+
+def test_strength_from_text():
+    assert _strength_from_text("醋酸戈舍瑞林缓释植入剂10.8mg【适应症】前列腺癌") == "10.8mg"
+    assert _strength_from_text("3.6mg 前列腺癌；乳腺癌；子宫内膜异位症") == "3.6mg"
+    assert _strength_from_text("10.8mg 和 3.6mg 两种规格") == ""
 
 
 def test_manufacturer_truncated_suffix():

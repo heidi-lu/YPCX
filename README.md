@@ -29,23 +29,18 @@ uvicorn main:app --reload --port 8000
 
 ### 点击启动（推荐）
 
-按 `F5`，选择：
+按 `Cmd + Shift + B` 启动：
 
 ```text
-FastAPI: uvicorn
+dev: backend  -> 127.0.0.1:8000
+dev: market   -> 127.0.0.1:8001
 ```
 
-后端会在 VS Code 的集成终端里启动，日志直接可见。
+两个服务会分别在集成终端里启动，日志直接可见。
 
-或者按：
+按 `F5` 只启动主后端 `FastAPI: uvicorn`，不启动市场服务。
 
-```text
-Cmd + Shift + B
-```
-
-执行 `dev: start` 任务，同样在当前集成终端显示 uvicorn 日志。
-
-停止：在终端里按 `Ctrl+C`。
+停止：在对应终端里按 `Ctrl+C`。
 
 ### 自动启动
 

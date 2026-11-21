@@ -76,6 +76,7 @@ def _normalize_dosage_form(raw_form: str) -> str:
     if "口服液" in raw_form or "液体" in raw_form: return "口服液体剂"
     if "颗粒" in raw_form: return "颗粒剂"
     if "乳膏" in raw_form or "软膏" in raw_form: return "软膏剂"
+    if "植入" in raw_form or raw_form.strip() == "装置": return "植入剂"
     return raw_form.strip()
 
 def _match_nhi(generic_name: str, dosage_form: str = ""):
@@ -200,12 +201,16 @@ def _save_rows(name: str, rows: list) -> list:
                         v = normalize_manufacturer(v)
                     row[k] = v
 
-            k = (row.get("generic_name",""), row.get("brand_name",""), row.get("manufacturer",""), row.get("dosage_form",""), row.get("indication_short",""), row.get("indication_subtype",""))
+            k = (row.get("generic_name",""), row.get("brand_name",""), row.get("manufacturer",""),
+                 row.get("dosage_form",""), row.get("specification",""),
+                 row.get("indication_short",""), row.get("indication_subtype",""))
             if k in seen: continue
             seen.add(k)
             
             ex = s.query(Drug).filter(
-                Drug.generic_name==k[0], Drug.brand_name==k[1], Drug.manufacturer==k[2], Drug.dosage_form==k[3], Drug.indication_short==k[4], Drug.indication_subtype==k[5]
+                Drug.generic_name==k[0], Drug.brand_name==k[1], Drug.manufacturer==k[2],
+                Drug.dosage_form==k[3], Drug.specification==k[4],
+                Drug.indication_short==k[5], Drug.indication_subtype==k[6]
             ).first()
             
             if ex:
@@ -254,11 +259,22 @@ def flatten_to_rows(data: dict) -> list:
                             logger.info(f"[时间兜底] {product.get('generic_name')} 最早进医保适应症缺时间，用上市时间兜底。")
                         break
 
-        processed_inds = []
+        display_info = []
         for ind in inds:
             raw_ind_name = re.sub(r'^(降低|存在|疾病进展|风险的)+', '', ind.get("indication_short", "")).strip()
             raw_ind_name = re.sub(r'[（(][^）)]*[）)]', '', raw_ind_name).strip()
-            ind_name, ind_subtype = _display_indication(raw_ind_name)
+            display_info.append(_display_indication(raw_ind_name))
+
+        # 同一药品同一大类下有多个细分时，简称直接显示细分；只有一个时显示大类
+        subtypes_by_display = {}
+        for display, subtype in display_info:
+            if subtype:
+                subtypes_by_display.setdefault(display, set()).add(subtype)
+
+        processed_inds = []
+        for idx, ind in enumerate(inds):
+            display, ind_subtype = display_info[idx]
+            ind_name = ind_subtype if ind_subtype and len(subtypes_by_display.get(display, set())) > 1 else display
             match_name = ind_subtype or ind_name
             country = ind.get("approval_country", "中国")
             
@@ -301,7 +317,8 @@ def flatten_to_rows(data: dict) -> list:
             full_dosage = ind.get("dosage_full") or ind.get("dosage", "")
 
             rows.append({**base,
-                "brand_name": ind.get("brand_name") or base.get("brand_name", ""),
+                "brand_name": base.get("brand_name") or ind.get("brand_name", ""),
+                "specification": ind.get("specification") or base.get("specification", ""),
                 "indication_short": ind_name, "indication_subtype": ind_subtype,
                 "indication_full": ind.get("indication_full", ind_name),
                 "approval_country": country, "indication_approval_date": ind.get("approval_date", ""),
@@ -357,12 +374,42 @@ async def query_stream(request: Request, drug_names: str):
 def list_drugs(db: Session = Depends(get_db)): 
     return [_drug_to_dict(r) for r in db.query(Drug).order_by(Drug.updated_at.desc()).all()]
 
+
+@app.post("/drugs/{drug_id}/approve")
+def approve_drug(drug_id: int, db: Session = Depends(get_db)):
+    row = db.query(Drug).filter(Drug.id == drug_id).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="药品不存在")
+    row.status = "APPROVED"
+    row.updated_at = datetime.now()
+    db.commit()
+    db.refresh(row)
+    return _drug_to_dict(row)
+
+
+@app.patch("/drugs/{drug_id}")
+def update_drug(drug_id: int, payload: dict, db: Session = Depends(get_db)):
+    row = db.query(Drug).filter(Drug.id == drug_id).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="药品不存在")
+    allowed = {c.name for c in Drug.__table__.columns} - {"id", "created_at", "updated_at"}
+    for key, value in (payload or {}).items():
+        if key in allowed:
+            setattr(row, key, value)
+    row.status = "APPROVED"
+    row.updated_at = datetime.now()
+    db.commit()
+    db.refresh(row)
+    return _drug_to_dict(row)
+
 def _drug_to_dict(d: Drug) -> dict: 
     result = {}
     for c in d.__table__.columns:
-        if c.name in ("created_at", "updated_at"): continue
+        if c.name == "created_at": continue
         val = getattr(d, c.name)
         if isinstance(val, str):
             val = re.sub(r'[\x00-\x1F\x7F]', '', val).strip()
+        if c.name == "updated_at" and val:
+            val = val.strftime("%Y-%m-%d %H:%M:%S")
         result[c.name] = val
     return result

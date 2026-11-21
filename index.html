@@ -235,7 +235,6 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="适应症简"><el-input v-model="editForm.indication_short"></el-input></el-form-item>
-                <el-form-item label="适应症细分"><el-input v-model="editForm.indication_subtype"></el-input></el-form-item>
                 <el-form-item label="药品上市时间"><el-input v-model="editForm.china_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
                 <el-form-item label="适应症获批时间"><el-input v-model="editForm.indication_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
                 <el-form-item label="进医保时间"><el-input v-model="editForm.indication_insurance_date" placeholder="YYYY年M月D日"></el-input></el-form-item>
@@ -320,7 +319,6 @@
                     { title: "厂家", field: "manufacturer", width: 180 },
                     { title: "原研/仿制", field: "origin_type", width: 100 },
                     { title: "适应症简", field: "indication_short", width: 150 },
-                    { title: "适应症细分", field: "indication_subtype", width: 160 },
                     { title: "获批国家", field: "approval_country", width: 90 },
                     { title: "药品上市时间", field: "china_approval_date", width: 120 },
                     { title: "适应症全称", field: "indication_full", width: 250, formatter: longTextFormatter },
@@ -346,7 +344,7 @@
 
                 const statusLabel = (s) => ({ running: "进行中", success: "完成", error: "失败", cached: "缓存命中" }[s] || s);
                 const progressStatusOf = (s) => (s === "success" ? "success" : s === "error" ? "exception" : "");
-                const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.indication_short || ""}|${d.indication_subtype || ""}`;
+                const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.dosage_form || ""}|${d.specification || ""}|${d.indication_short || ""}|${d.indication_subtype || ""}`;
 
                 const normalizeGroupName = (name) => {
                     let s = String(name || "").replace(/\s+/g, "");
@@ -474,9 +472,17 @@
                         editForm.value = JSON.parse(JSON.stringify(rowData));
                         drawerVisible.value = true;
                     } else if (action === "approve") {
-                        ElMessage.success(`药品 ${rowData.generic_name} 已入库`);
-                        rowData.status = "APPROVED";
-                        table.updateData([rowData]);
+                        try {
+                            const res = await fetch(`${API_BASE}/drugs/${rowData.id}/approve`, { method: "POST" });
+                            if (!res.ok) throw new Error(await res.text());
+                            const updated = await res.json();
+                            table.updateData([updated]);
+                            const idx = tableData.value.findIndex((d) => d.id === updated.id);
+                            if (idx >= 0) tableData.value[idx] = updated;
+                            ElMessage.success(`药品 ${updated.generic_name} 已入库，入库时间已更新`);
+                        } catch (e) {
+                            ElMessage.error(`入库失败: ${e.message}`);
+                        }
                     } else if (action === "reject") {
                         ElMessage.error(`药品 ${rowData.generic_name} 已拒绝`);
                         rowData.status = "REJECTED";
@@ -486,12 +492,22 @@
 
                 const saveEdit = async () => {
                     try {
-                        const updatedData = { ...editForm.value, status: "APPROVED", updated_at: new Date().toLocaleString() };
-                        table.updateData([updatedData]);
+                        const id = editForm.value.id;
+                        if (!id) throw new Error("缺少记录 ID");
+                        const res = await fetch(`${API_BASE}/drugs/${id}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(editForm.value)
+                        });
+                        if (!res.ok) throw new Error(await res.text());
+                        const updated = await res.json();
+                        table.updateData([updated]);
+                        const idx = tableData.value.findIndex((d) => d.id === updated.id);
+                        if (idx >= 0) tableData.value[idx] = updated;
                         drawerVisible.value = false;
                         ElMessage.success("保存成功，数据已入库！");
                     } catch (e) {
-                        ElMessage.error("保存失败");
+                        ElMessage.error(`保存失败: ${e.message}`);
                     }
                 };
 

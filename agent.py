@@ -97,6 +97,13 @@ def _clean_disease_name(raw: str) -> str:
     cleaned = cleaned.split('。')[0].split('；')[0].split(';')[0].strip()
     return cleaned.strip()
 
+def _strength_from_text(text: str) -> str:
+    """Only accept a strength when the indication text mentions exactly one."""
+    values = re.findall(r"\d+(?:\.\d+)?\s*(?:mg|g|μg|ug|ml|mL|IU|万IU)", str(text or ""))
+    values = list(dict.fromkeys(v.replace(" ", "") for v in values))
+    return values[0] if len(values) == 1 else ""
+
+
 def _judge_origin_by_reg(reg_cat: str) -> str:
     """通过注册分类硬明细判断"""
     if not reg_cat: return ""
@@ -153,6 +160,7 @@ def _normalize_dosage_form(raw_form: str) -> str:
     if "胶囊" in raw_form: return "胶囊"
     if "口服液" in raw_form or "液体" in raw_form: return "口服液体剂"
     if "颗粒" in raw_form: return "颗粒剂"
+    if "植入" in raw_form or str(raw_form).strip() == "装置": return "植入剂"
     return str(raw_form).strip()
 
 # ================= 模型定义（修复 NoneType 报错） =================
@@ -205,9 +213,20 @@ def _call_llm(prompt, schema_cls, timeout=40):
     return None
 
 def _enrich_missing_brands(products: list[dict]) -> None:
-    """最后一个网搜步骤：只补 PDF/PPT 缺失的商品名，按适应症写入。"""
+    """最后一个网搜步骤：只补缺失商品名；厂家不同时新增产品，不污染原行。"""
+    existing_keys = {
+        (
+            str(prod.get("generic_name", "")).strip(),
+            str(prod.get("brand_name", "")).strip(),
+            normalize_manufacturer(prod.get("manufacturer", "")),
+        )
+        for prod in products
+    }
+    additions: list[dict] = []
+    addition_by_key: dict[tuple, dict] = {}
     enriched = 0
-    for prod in products:
+
+    for prod in list(products):
         if enriched >= 8:
             break
         generic = str(prod.get("generic_name", "")).strip()
@@ -218,13 +237,14 @@ def _enrich_missing_brands(products: list[dict]) -> None:
         ]
         if not generic or not missing:
             continue
+
         indication_lines = "\n".join(
             f"- {ind.get('indication_short', '')}" for ind in missing[:12]
         )
-        hits = ds_search(f"{generic} 商品名 适应症 获批 上市", 5)
+        hits = ds_search(f"{generic} 商品名 适应症 厂家 获批 上市", 5)
         if not hits:
             continue
-        prompt = f"""你是药品数据核对员。根据资料，为下列通用名的适应症匹配商品名。
+        prompt = f"""你是药品数据核对员。根据资料，为下列通用名的适应症匹配商品名和厂家。
 只提取资料中明确出现的对应关系；不确定的留空，不要猜。
 通用名：{generic}
 适应症：
@@ -235,26 +255,66 @@ def _enrich_missing_brands(products: list[dict]) -> None:
         result = _call_llm(prompt, BrandByIndicationResult)
         if not result:
             continue
+
+        product_mfr = normalize_manufacturer(prod.get("manufacturer", ""))
         for item in result.indications:
             brand = _clean_brand_name(item.brand_name or "")
             if not brand:
                 continue
+            search_mfr = normalize_manufacturer(item.manufacturer or "")
             target = _normalize_disease_with_dict(item.indication_short or "")
+            matched_ind = None
             for ind in missing:
                 ind_norm = _normalize_disease_with_dict(ind.get("indication_short", ""))
                 if target and ind_norm and (target == ind_norm or target in ind_norm or ind_norm in target):
-                    ind["brand_name"] = brand
-                    if item.manufacturer:
-                        mfr = normalize_manufacturer(item.manufacturer)
-                        if mfr and not prod.get("manufacturer"):
-                            prod["manufacturer"] = mfr
+                    matched_ind = ind
                     break
+            if matched_ind is None:
+                continue
+
+            # 资料厂家与现有厂家对不上：说明大概率是另一个商品/厂家，新增行，不改原行
+            if product_mfr and search_mfr and search_mfr not in product_mfr and product_mfr not in search_mfr:
+                key = (generic, brand, search_mfr)
+                new_ind = dict(matched_ind)
+                new_ind["brand_name"] = brand
+                if key in addition_by_key:
+                    addition_by_key[key]["indications"].append(new_ind)
+                    continue
+                if key in existing_keys:
+                    continue
+                new_prod = {
+                    "generic_name": generic,
+                    "brand_name": brand,
+                    "manufacturer": search_mfr,
+                    "origin_type": "仿制" if prod.get("origin_type") == "原研" else "",
+                    "china_approval_date": prod.get("china_approval_date", ""),
+                    "dosage_form": prod.get("dosage_form", ""),
+                    "specification": prod.get("specification", ""),
+                    "indications": [new_ind],
+                    "nhsa_pdf_url": prod.get("nhsa_pdf_url", ""),
+                    "nhsa_ppt_url": prod.get("nhsa_ppt_url", ""),
+                }
+                additions.append(new_prod)
+                addition_by_key[key] = new_prod
+                existing_keys.add(key)
+                logger.info(f"🌐 商品名新增产品: {generic} / {brand} / {search_mfr}")
+                continue
+
+            # 厂家未知时，不能把商品名硬塞给已有厂家，跳过
+            if not search_mfr and product_mfr:
+                continue
+
+            matched_ind["brand_name"] = brand
+            if search_mfr and not product_mfr:
+                prod["manufacturer"] = search_mfr
 
         brands = {ind.get("brand_name") for ind in inds if ind.get("brand_name")}
         if not prod.get("brand_name") and len(brands) == 1:
             prod["brand_name"] = next(iter(brands))
         enriched += 1
         logger.info(f"🌐 商品名补全: {generic} -> {sorted(brands)}")
+
+    products.extend(additions)
 
 
 # ================= 主流程 =================
@@ -344,7 +404,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
         raw_inds = res.get("indications", [])
         
         if raw_inds:
-            seen_shorts = set()
+            seen_keys = set()
             for ind in raw_inds:
                 # 👇 防幻觉：强制校准疾病名
                 raw_short = ind.get("indication_short", "")
@@ -360,14 +420,18 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 if not short: continue
                 
                 target_short = _normalize_disease_with_dict(short)
-                if target_short in seen_shorts:
+                spec = str(ind.get("specification") or "").strip()
+                if not spec:
+                    spec = _strength_from_text(ind.get("indication_full", ""))
+                dedupe_key = (target_short, spec)
+                if dedupe_key in seen_keys:
                     for existing in cleaned_inds:
-                        if existing["indication_short"] == target_short and not existing.get("approval_date"):
+                        if existing["indication_short"] == target_short and existing.get("specification", "") == spec and not existing.get("approval_date"):
                             existing["approval_date"] = _validate_date(ind.get("approval_date", ""))
                             break
                     continue
                 
-                seen_shorts.add(target_short)
+                seen_keys.add(dedupe_key)
                 existing_china_inds.add(target_short)
                 
                 dosage_dict = {}
@@ -375,7 +439,8 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                     dosage_dict = _parse_dosage_fields(ind.get("dosage_full"))
 
                 cleaned_inds.append({
-                    "indication_short": target_short, 
+                    "indication_short": target_short,
+                    "specification": spec,
                     "indication_full": ind.get("indication_full", target_short),
                     "approval_country": "中国", 
                     "approval_date": _validate_date(ind.get("approval_date", "")),

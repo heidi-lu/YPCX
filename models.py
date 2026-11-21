@@ -9,7 +9,8 @@ class Drug(Base):
     
     __table_args__ = (
         UniqueConstraint('generic_name', 'brand_name', 'manufacturer', 'dosage_form',
-                         'indication_short', 'indication_subtype', name='uix_drug_identity'),
+                         'specification', 'indication_short', 'indication_subtype',
+                         name='uix_drug_identity'),
     )
 
     id = Column(Integer, primary_key=True, autoincrement=True)

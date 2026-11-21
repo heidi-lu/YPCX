@@ -17,18 +17,45 @@
       "problemMatcher": []
     },
     {
-      "label": "dev: start",
+      "label": "dev: backend",
       "type": "shell",
       "command": "${workspaceFolder}/venv/bin/uvicorn",
       "args": ["main:app", "--reload", "--port", "8000"],
       "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "dev: market",
+      "type": "shell",
+      "command": "${workspaceFolder}/venv/bin/uvicorn",
+      "args": ["market_module.app:app", "--reload", "--port", "8001"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "dev: start",
+      "type": "shell",
+      "command": "echo \"启动 backend:8000 + market:8001\"",
+      "dependsOn": ["dev: backend", "dev: market"],
+      "dependsOrder": "parallel",
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
         "panel": "shared",
-        "focus": true,
-        "clear": true
+        "focus": true
       }
     }
   ]

@@ -156,6 +156,7 @@ def _extract_body_info(pdf_bytes: bytes) -> dict:
         prompt = """提取正文信息。严格输出JSON：
         {"dosage_form":"", "specification":"", "indications":[{
             "indication_short":"极简疾病名", "indication_full":"完整原话", 
+            "specification":"该适应症对应规格(如10.8mg)，没写填''",
             "approval_date":"获批时间(YYYY-MM)，没写填''",
             "dosage_full":"用法用量", "guidelines":[{"name":"", "recommendation":"", "level":""}]
         }]}
