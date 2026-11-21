@@ -493,7 +493,13 @@
                         drawerVisible.value = true;
                     } else if (action === "approve") {
                         try {
-                            const res = await fetch(`${API_BASE}/drugs/${rowData.id}/approve`, { method: "POST" });
+                            // 不管有没有 id，都走 POST /drugs 按身份 upsert；
+                            // 这样清空缓存后的旧表格行也能重新入库。
+                            const res = await fetch(`${API_BASE}/drugs`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(rowData)
+                            });
                             if (!res.ok) throw new Error(await res.text());
                             const updated = await res.json();
                             table.updateData([updated]);

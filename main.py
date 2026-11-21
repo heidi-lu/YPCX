@@ -396,6 +396,35 @@ def list_drugs(db: Session = Depends(get_db)):
     return [_drug_to_dict(r) for r in db.query(Drug).order_by(Drug.updated_at.desc()).all()]
 
 
+@app.post("/drugs")
+def create_drug(payload: dict, db: Session = Depends(get_db)):
+    """把前端临时行直接入库；同一身份已存在时转为 APPROVED。"""
+    allowed = {c.name for c in Drug.__table__.columns} - {"id", "created_at", "updated_at"}
+    data = {k: v for k, v in (payload or {}).items() if k in allowed}
+    if not data.get("generic_name"):
+        raise HTTPException(status_code=400, detail="缺少通用名")
+    data["status"] = "APPROVED"
+    row = db.query(Drug).filter(
+        Drug.generic_name == data.get("generic_name", ""),
+        Drug.brand_name == data.get("brand_name", ""),
+        Drug.manufacturer == data.get("manufacturer", ""),
+        Drug.dosage_form == data.get("dosage_form", ""),
+        Drug.specification == data.get("specification", ""),
+        Drug.indication_short == data.get("indication_short", ""),
+        Drug.indication_subtype == data.get("indication_subtype", ""),
+    ).first()
+    if row:
+        for key, value in data.items():
+            setattr(row, key, value)
+    else:
+        row = Drug(**data)
+        db.add(row)
+    row.updated_at = datetime.now()
+    db.commit()
+    db.refresh(row)
+    return _drug_to_dict(row)
+
+
 @app.post("/drugs/{drug_id}/approve")
 def approve_drug(drug_id: int, db: Session = Depends(get_db)):
     row = db.query(Drug).filter(Drug.id == drug_id).first()
