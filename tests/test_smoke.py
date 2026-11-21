@@ -201,6 +201,21 @@ def test_row_level_specification_and_brand_precedence():
     assert all(r["brand_name"] == "原商品名" for r in rows)
 
 
+def test_insurance_status_entry_and_exit():
+    nhi = {
+        "restriction_timeline": {
+            "2021": "经典型霍奇金淋巴瘤；尿路上皮癌",
+            "2022": "经典型霍奇金淋巴瘤；尿路上皮癌；鳞状非小细胞肺癌一线",
+            "2023": "经典型霍奇金淋巴瘤；尿路上皮癌；鳞状非小细胞肺癌一线",
+            "2024": "经典型霍奇金淋巴瘤；尿路上皮癌；鳞状非小细胞肺癌一线",
+            "2025": "经典型霍奇金淋巴瘤；尿路上皮癌；鳞状非小细胞肺癌一线",
+            "2026": "尿路上皮癌；鳞状非小细胞肺癌一线",
+        }
+    }
+    assert main._insurance_status_text(nhi, "经典型霍奇金淋巴瘤", "霍奇金淋巴瘤") == "2021年进入，2026年退出"
+    assert main._insurance_status_text(nhi, "尿路上皮癌", "尿路上皮癌") == "2021年进入"
+
+
 def test_full_indications_from_pdf_text():
     text = """说明书全部适应症/功能主治
 【1】经典型霍奇金淋巴瘤 本品适用于至少经过二线系统化疗的复发或难治性经典型霍奇金淋巴瘤的治疗。

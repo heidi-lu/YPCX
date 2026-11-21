@@ -24,7 +24,8 @@ class Drug(Base):
     
     china_approval_date = Column(String(100), default="")          # 药品上市时间
     indication_approval_date = Column(String(100), default="")     # 适应症获批时间
-    indication_insurance_date = Column(String(100), default="")    # 适应症进医保时间
+    indication_insurance_date = Column(String(100), default="")    # 适应症进医保时间/兼容字段
+    insurance_status_text = Column(String(200), default="")        # 例如：2021年进入，2026年退出
 
     guideline_name = Column(String(300), default="")
     guideline_recommendation = Column(Text, default="")

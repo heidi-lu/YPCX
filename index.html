@@ -245,7 +245,7 @@
                 <el-form-item label="适应症简"><el-input v-model="editForm.indication_short"></el-input></el-form-item>
                 <el-form-item label="药品上市时间"><el-input v-model="editForm.china_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
                 <el-form-item label="适应症获批时间"><el-input v-model="editForm.indication_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
-                <el-form-item label="进医保时间"><el-input v-model="editForm.indication_insurance_date" placeholder="YYYY年M月D日"></el-input></el-form-item>
+                <el-form-item label="进医保时间"><el-input v-model="editForm.insurance_status_text" placeholder="例如：2021年进入，2026年退出"></el-input></el-form-item>
                 <el-form-item label="用法用量"><el-input type="textarea" v-model="editForm.dosage" :rows="3"></el-input></el-form-item>
                 <div style="text-align: right; margin-top: 30px;">
                     <el-button @click="drawerVisible = false" style="border-radius: 8px;">取消</el-button>
@@ -341,7 +341,7 @@
                     { title: "药品上市时间", field: "china_approval_date", width: 120 },
                     { title: "适应症全称", field: "indication_full", width: 250, formatter: longTextFormatter },
                     { title: "适应症获批时间", field: "indication_approval_date", width: 130 },
-                    { title: "适应症进医保时间", field: "indication_insurance_date", width: 140 },
+                    { title: "适应症进医保时间", field: "insurance_status_text", width: 190, formatter: (cell) => cell.getValue() || cell.getRow().getData().indication_insurance_date || "未纳入" },
                     { title: "指南提及", field: "guideline_recommendation", width: 200, formatter: longTextFormatter },
                     { title: "指南名称", field: "guideline_name", width: 180, formatter: longTextFormatter },
                     { title: "医保局PDF", field: "nhsa_pdf_url", width: 100, formatter: linkFormatter },

@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, event, inspect
+from sqlalchemy import create_engine, event, inspect, text
 from sqlalchemy.orm import sessionmaker
 from config import DATABASE_URL
 from models import Base
@@ -40,6 +40,10 @@ def init_db():
             print("❌ [DB] 严重警告：'drugs' 表未能成功创建！请检查 models.py 的 Base 导入是否正确。")
         else:
             cols = [c['name'] for c in inspector.get_columns('drugs')]
+            if "insurance_status_text" not in cols:
+                with engine.begin() as conn:
+                    conn.execute(text("ALTER TABLE drugs ADD COLUMN insurance_status_text VARCHAR(200) DEFAULT ''"))
+                print("✅ [DB] 已补充字段 insurance_status_text")
             print(f"✅ [DB] 'drugs' 表字段数: {len(cols)}")
             if "manual_locked_fields" not in cols:
                 print("⚠️ [DB] 警告：缺少新字段 manual_locked_fields，可能使用了旧代码！")

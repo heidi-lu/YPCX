@@ -191,6 +191,82 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
     return "未纳入医保"
 
 
+def _restriction_clauses(restriction: str) -> list[str]:
+    text = re.sub(r"^限\s*[：:]?", "", str(restriction or "").strip())
+    if not text:
+        return []
+    if re.search(r"(?<!\d)1\s*[.、]", text):
+        parts = re.split(r"(?=\d+\s*[.、])", text)
+    else:
+        parts = re.split(r"[；;]", text)
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _status_terms(full: str) -> list[str]:
+    terms = []
+    for key in ("霍奇金", "尿路上皮", "非小细胞肺癌", "小细胞肺癌", "肝细胞癌", "微卫星", "鼻咽"):
+        if key in full:
+            terms.append(key)
+    # “胃或胃食管”里的“食管”不是食管癌，不能把胃癌匹配成食管癌
+    if "胃或胃食管" in full or "胃及胃食管" in full:
+        terms.append("胃")
+    else:
+        if "食管" in full:
+            terms.append("食管")
+        if "胃" in full:
+            terms.append("胃")
+    return terms
+
+
+def _clause_matches_indication(clause: str, full: str) -> bool:
+    terms = _status_terms(full)
+    if not any(term in clause for term in terms):
+        return False
+    if "小细胞肺癌" in full and "非小细胞肺癌" not in full and "非小细胞肺癌" in clause:
+        return False
+    if "非小细胞肺癌" in full:
+        if "既往接受过" in full and "既往" not in clause:
+            return False
+        if ("新辅助" in full or "可切除" in full or "围术期" in full):
+            if not any(x in clause for x in ("新辅助", "可切除", "围术期", "辅助治疗")):
+                return False
+    if "食管" in full:
+        if "既往" in full and "既往" not in clause:
+            return False
+        if "一线" in full and "既往" not in full and ("既往" in clause or "进展" in clause):
+            return False
+    if "一线" in full and "一线" not in clause:
+        return False
+    return True
+
+
+def _insurance_status_text(nhi_data: dict, ind_full: str, ind_short: str) -> str:
+    """逐年匹配医保目录，输出“2021年进入，2026年退出”。"""
+    if not nhi_data:
+        return "未纳入"
+    timeline = nhi_data.get("restriction_timeline", {})
+    if not isinstance(timeline, dict) or not timeline:
+        return "未纳入"
+    years = sorted([int(y) for y in timeline if str(y).isdigit()])
+    if not years:
+        return "未纳入"
+
+    full = str(ind_full or "")
+    present = []
+    for year in years:
+        clauses = _restriction_clauses(timeline.get(str(year), ""))
+        if any(_clause_matches_indication(c, full) for c in clauses):
+            present.append(year)
+
+    if not present:
+        return "未纳入"
+    first, last = present[0], present[-1]
+    max_year = max(years)
+    if last >= max_year:
+        return f"{first}年进入"
+    return f"{first}年进入，{last + 1}年退出"
+
+
 def _indication_text_key(value) -> str:
     return re.sub(r"[\s（）()]+", "", str(value or ""))
 
@@ -366,6 +442,7 @@ def flatten_to_rows(data: dict) -> list:
             row_brand = pi["brand_name"]
             country = pi["country"]
             ind_ins_year = pi["ind_ins_year"]
+            ind_ins_status = _insurance_status_text(local_nhi or target_nhi, ind.get("indication_full", ""), ind_name)
             
             guidelines = ind.get("guidelines", [])
             g_names = " / ".join([g.get("name", "") for g in guidelines if g.get("name")])
@@ -378,7 +455,7 @@ def flatten_to_rows(data: dict) -> list:
                 "indication_short": ind_name, "indication_subtype": ind_subtype,
                 "indication_full": ind.get("indication_full", ind_name),
                 "approval_country": country, "indication_approval_date": ind.get("approval_date", ""),
-                "indication_insurance_date": ind_ins_year, "dosage": full_dosage, 
+                "indication_insurance_date": ind_ins_year, "insurance_status_text": ind_ins_status, "dosage": full_dosage, 
                 "dosage_single": ind.get("dosage_single", ""), "frequency": ind.get("frequency", ""), 
                 "duration": ind.get("duration", ""), "route": ind.get("route", ""), 
                 "guideline_name": g_names, "guideline_recommendation": g_recs
