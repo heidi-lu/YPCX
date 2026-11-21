@@ -74,12 +74,21 @@ def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
                     if val: res["cover_drug_name"] = re.sub(r'[_ \s]', '', val)
                     break
                         
-            for i, line in enumerate(lines):
-                if "企业名称" in line or "上市许可持有人" in line:
-                    val = re.sub(r'.*?(?:企业名称|上市许可持有人)\s*[：:]\s*', '', line).strip()
-                    if not val and i+1 < len(lines): val = lines[i+1].strip()
-                    if val: res["manufacturer"] = re.sub(r'[_ \s]', '', val)
-                    break
+            # 优先取“企业名称”，不要取“授权企业”；企业名可能跨两行
+            m_ent = re.search(
+                r"企业名称\s*[：:]\s*(.{0,100}?(?:有限公司|有限责任公司|股份有限公司|集团|分公司))",
+                full_text,
+                re.S,
+            )
+            if m_ent:
+                res["manufacturer"] = re.sub(r"[_ \s]", "", m_ent.group(1))
+            else:
+                for i, line in enumerate(lines):
+                    if "上市许可持有人" in line:
+                        val = re.sub(r'.*?上市许可持有人\s*[：:]\s*', '', line).strip()
+                        if not val and i+1 < len(lines): val = lines[i+1].strip()
+                        if val: res["manufacturer"] = re.sub(r'[_ \s]', '', val)
+                        break
             
             clean_text = re.sub(r'\s+', '', full_text)
             m_reg = re.search(r'(?:药品)?注册分类[：:]?([\u4e00-\u9fa5a-zA-Z0-9\.]+)', clean_text)

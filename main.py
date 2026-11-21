@@ -124,6 +124,19 @@ def _disease_terms(raw: str) -> set[str]:
     return {t for t in terms if t}
 
 
+def _resolve_brand(base_brand: str, ind_brand: str) -> str:
+    base = str(base_brand or "").strip()
+    ind = str(ind_brand or "").strip()
+    if not ind:
+        return base
+    if not base:
+        return ind
+    # 英文别名/已知多适应症品牌允许按行覆盖；普通中文品牌先保留原产品品牌
+    if re.fullmatch(r"[A-Za-z0-9 .&()\-]+", base) or base in {"诺和盈", "诺和泰", "诺和忻"}:
+        return ind
+    return base
+
+
 def _display_indication(raw: str) -> tuple[str, str]:
     """返回 (展示用大类, 细分)。哮喘按大类展示，但保留 SEA/过敏性等细分。"""
     text = re.sub(r"\s+", " ", str(raw or "")).strip()
@@ -267,8 +280,9 @@ def flatten_to_rows(data: dict) -> list:
 
         # 同一药品同一大类下有多个细分时，简称直接显示细分；只有一个时显示大类
         subtypes_by_display = {}
-        for display, subtype in display_info:
-            if subtype:
+        for idx, ind in enumerate(inds):
+            display, subtype = display_info[idx]
+            if ind.get("approval_country", "中国") == "中国" and subtype:
                 subtypes_by_display.setdefault(display, set()).add(subtype)
 
         processed_inds = []
@@ -317,7 +331,7 @@ def flatten_to_rows(data: dict) -> list:
             full_dosage = ind.get("dosage_full") or ind.get("dosage", "")
 
             rows.append({**base,
-                "brand_name": base.get("brand_name") or ind.get("brand_name", ""),
+                "brand_name": _resolve_brand(base.get("brand_name", ""), ind.get("brand_name", "")),
                 "specification": ind.get("specification") or base.get("specification", ""),
                 "indication_short": ind_name, "indication_subtype": ind_subtype,
                 "indication_full": ind.get("indication_full", ind_name),

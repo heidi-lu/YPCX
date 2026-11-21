@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import main
-from agent import _strength_from_text
+from agent import _clean_brand_name, _strength_from_text
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -199,6 +199,13 @@ def test_strength_from_text():
     assert _strength_from_text("醋酸戈舍瑞林缓释植入剂10.8mg【适应症】前列腺癌") == "10.8mg"
     assert _strength_from_text("3.6mg 前列腺癌；乳腺癌；子宫内膜异位症") == "3.6mg"
     assert _strength_from_text("10.8mg 和 3.6mg 两种规格") == ""
+
+
+def test_brand_alias_and_indication_override():
+    assert _clean_brand_name("Wegovy") == "诺和盈"
+    assert _clean_brand_name("Ozempic") == "诺和泰"
+    assert main._resolve_brand("诺和盈", "诺和泰") == "诺和泰"
+    assert main._resolve_brand("茁乐", "蜀阳舒乐") == "茁乐"
 
 
 def test_manufacturer_truncated_suffix():

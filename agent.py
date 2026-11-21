@@ -45,6 +45,13 @@ if os.path.exists("origin_manufacturers.json"):
     except Exception as e:
         logger.error(f"❌ 原研厂家字典加载失败: {e}")
 
+BRAND_ALIASES = {
+    "wegovy": "诺和盈",
+    "ozempic": "诺和泰",
+    "rybelsus": "诺和忻",
+}
+
+
 def _clean_brand_name(raw: str) -> str:
     if not raw: return ""
     b = re.sub(r'[®™]', '', str(raw)).strip()
@@ -53,7 +60,7 @@ def _clean_brand_name(raw: str) -> str:
         half = len(b) // 2
         if b[:half] == b[half:]:
             b = b[:half]
-    return b
+    return BRAND_ALIASES.get(b.lower(), b)
 
 def normalize_manufacturer(mfr: str) -> str:
     """修复截断的法人后缀，再统一简化为“泰州迈博太科”这种短名。"""
@@ -222,6 +229,11 @@ def _enrich_missing_brands(products: list[dict]) -> None:
         )
         for prod in products
     }
+    existing_brand_keys = {
+        (str(prod.get("generic_name", "")).strip(), str(prod.get("brand_name", "")).strip())
+        for prod in products
+        if str(prod.get("brand_name", "")).strip()
+    }
     additions: list[dict] = []
     addition_by_key: dict[tuple, dict] = {}
     enriched = 0
@@ -246,6 +258,8 @@ def _enrich_missing_brands(products: list[dict]) -> None:
             continue
         prompt = f"""你是药品数据核对员。根据资料，为下列通用名的适应症匹配商品名和厂家。
 只提取资料中明确出现的对应关系；不确定的留空，不要猜。
+注意同一通用名在不同适应症下可能有不同商品名；优先中文商品名。
+英文别名：Wegovy=诺和盈，Ozempic=诺和泰，Rybelsus=诺和忻。
 通用名：{generic}
 适应症：
 {indication_lines}
@@ -272,13 +286,21 @@ def _enrich_missing_brands(products: list[dict]) -> None:
             if matched_ind is None:
                 continue
 
-            # 资料厂家与现有厂家对不上：说明大概率是另一个商品/厂家，新增行，不改原行
+            # PDF/申报材料的企业名称是权威的；厂家不一致先看是不是授权企业
             if product_mfr and search_mfr and search_mfr not in product_mfr and product_mfr not in search_mfr:
+                # 原产品没有商品名：优先把商品名补到原企业，不要因为授权企业另造一行
+                if not prod.get("brand_name"):
+                    matched_ind["brand_name"] = brand
+                    logger.info(f"🌐 商品名补到申报企业: {generic} / {brand} / {product_mfr} (忽略搜索厂家 {search_mfr})")
+                    continue
                 key = (generic, brand, search_mfr)
                 new_ind = dict(matched_ind)
                 new_ind["brand_name"] = brand
                 if key in addition_by_key:
                     addition_by_key[key]["indications"].append(new_ind)
+                    continue
+                # 同一商品名已经存在：这是厂家/MAH 口径冲突，不要新增一个“仿制”行
+                if (generic, brand) in existing_brand_keys:
                     continue
                 if key in existing_keys:
                     continue
@@ -566,7 +588,14 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 if web_ov and web_ov.overseas_indications:
                     for ov in web_ov.overseas_indications:
                         ov_short = _normalize_disease_with_dict(ov.get("indication_short", ""))
-                        if ov_short in existing_china_inds: 
+                        if ov_short in existing_china_inds:
+                            continue
+                        # 海外“过敏性哮喘”不能在中国已有哮喘适应症时额外造细分
+                        if "哮喘" in ov_short and any(
+                            "哮喘" in i.get("indication_short", "")
+                            for i in prod["indications"]
+                            if i.get("approval_country", "中国") == "中国"
+                        ):
                             continue
                         if not any(ov_short == i["indication_short"] for i in prod["indications"]):
                             ov_date = _validate_date(ov.get("approval_date", ""))

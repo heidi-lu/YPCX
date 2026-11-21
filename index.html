@@ -367,6 +367,12 @@
                     if (q && name.includes(q)) return normalizeGroupName(q);
                     return normalizeGroupName(name);
                 };
+                const countryRank = (country) => {
+                    const c = String(country || "");
+                    if (c === "中国") return 0;
+                    if (!c) return 2;
+                    return 1;
+                };
                 const sortTableData = () => {
                     const rows = [...tableData.value];
                     rows.sort((a, b) => {
@@ -374,6 +380,12 @@
                         if (ai !== bi) return ai - bi;
                         const ag = groupForRow(a, ai), bg = groupForRow(b, bi);
                         if (ag !== bg) return ag.localeCompare(bg, "zh-Hans-CN");
+                        const ab = String(a.brand_name || "\uffff"), bb = String(b.brand_name || "\uffff");
+                        if (ab !== bb) return ab.localeCompare(bb, "zh-Hans-CN");
+                        const am = String(a.manufacturer || "\uffff"), bm = String(b.manufacturer || "\uffff");
+                        if (am !== bm) return am.localeCompare(bm, "zh-Hans-CN");
+                        const ac = countryRank(a.approval_country), bc = countryRank(b.approval_country);
+                        if (ac !== bc) return ac - bc;
                         const an = String(a.generic_name || ""), bn = String(b.generic_name || "");
                         if (an !== bn) return an.localeCompare(bn, "zh-Hans-CN");
                         const af = String(a.dosage_form || ""), bf = String(b.dosage_form || "");
