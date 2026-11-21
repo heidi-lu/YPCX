@@ -236,7 +236,17 @@ def _save_rows(name: str, rows: list) -> list:
                             break
 
             if ex:
-                # 已有行只补空字段，绝不用新值覆盖已有值
+                # 已入库行：只修复明显不合格的适应症简称，完整原文不动
+                old_short = str(ex.indication_short or "").strip()
+                new_short = str(row.get("indication_short") or "").strip()
+                bad_old = (
+                    len(old_short) > 14
+                    or old_short.startswith(("联合", "单药", "本品", "适用于", "用于", "至少经过"))
+                )
+                if ex.status == "APPROVED" and bad_old and new_short and len(new_short) <= 30:
+                    ex.indication_short = new_short
+
+                # 其余已有行只补空字段，绝不用新值覆盖已有值
                 for ck, v in row.items():
                     if not hasattr(Drug, ck) or v in (None, ""):
                         continue
