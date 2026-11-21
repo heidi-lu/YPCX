@@ -10,6 +10,7 @@ from scheduler import DrugDataScheduler
 from nhsa_crawler import find_drug_files
 from deepseek_search import search as ds_search
 from skill_vision_parser import extract_medical_pdf_vision
+from indication_regex import extract_indications_from_pdf
 
 logger = logging.getLogger(__name__)
 _client = OpenAI(api_key=MAIN_LLM_API_KEY, base_url=MAIN_LLM_BASE_URL)
@@ -598,6 +599,30 @@ def _enrich_missing_brands(products: list[dict]) -> None:
 
 
 # ================= 主流程 =================
+def _inherit_pdf_indication_fields(regex_inds: list[dict], original: list[dict]) -> None:
+    for orig in original:
+        guidelines = orig.get("guidelines") or []
+        gtext = " ".join(str(g.get("name", "")) for g in guidelines)
+        orig_full = str(orig.get("indication_full", ""))
+        for row in regex_inds:
+            full = str(row.get("indication_full", ""))
+            if "小细胞肺癌" in full and "非小细胞肺癌" not in full:
+                continue
+            matched = any(
+                key in full and key in gtext
+                for key in ("非小细胞肺癌", "小细胞肺癌", "霍奇金", "尿路上皮", "肝细胞癌", "食管", "鼻咽", "胃", "微卫星")
+            )
+            if not matched and orig.get("indication_short") and orig["indication_short"] in full:
+                matched = True
+            if not matched:
+                continue
+            if guidelines and not row.get("guidelines"):
+                row["guidelines"] = guidelines
+            for key in ("approval_date", "dosage_full", "specification"):
+                if orig.get(key) and not row.get(key):
+                    row[key] = orig[key]
+
+
 def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     emit = lambda p, s: progress_callback(p, s) if progress_callback else None
     
@@ -637,6 +662,11 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
             continue
         
         res = extract_medical_pdf_vision(pdf_b, ppt_b) or {}
+        if pdf_b:
+            regex_inds = extract_indications_from_pdf(pdf_b)
+            if regex_inds:
+                _inherit_pdf_indication_fields(regex_inds, res.get("indications", []))
+                res["indications"] = regex_inds
 
         final_name = res.get("cover_drug_name") or g_name
         for junk in ["企业名称", "企业", "申报", "药品名称"]:
