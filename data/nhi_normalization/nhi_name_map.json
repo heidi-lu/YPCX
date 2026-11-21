@@ -1,0 +1,7523 @@
+{
+  "丁细牙痛胶囊|胶囊": {
+    "canonical_name": "丁细牙痛胶囊",
+    "canonical_key": "丁细牙痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丁苯酞|口服常释剂型": {
+    "canonical_name": "丁苯酞软胶囊",
+    "canonical_key": "丁苯酞软胶囊|口服常释剂型",
+    "aliases": [
+      "丁苯酞"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丁苯酞氯化钠|注射剂": {
+    "canonical_name": "丁苯酞氯化钠注射液",
+    "canonical_key": "丁苯酞氯化钠注射液|注射剂",
+    "aliases": [
+      "丁苯酞氯化钠"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "万应胶囊|胶囊": {
+    "canonical_name": "万应胶囊",
+    "canonical_key": "万应胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "三七通舒胶囊|胶囊": {
+    "canonical_name": "三七通舒胶囊",
+    "canonical_key": "三七通舒胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "三金颗粒|颗粒": {
+    "canonical_name": "三金颗粒",
+    "canonical_key": "三金颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丙卡特罗|粉雾剂": {
+    "canonical_name": "盐酸丙卡特罗粉雾剂",
+    "canonical_key": "盐酸丙卡特罗粉雾剂|粉雾剂",
+    "aliases": [
+      "丙卡特罗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "中/长链脂肪乳（C624）-|注射剂": {
+    "canonical_name": "中/长链脂肪乳(C6-24)",
+    "canonical_key": "中/长链脂肪乳(C6-24)|注射剂",
+    "aliases": [
+      "中/长链脂肪乳（C624）-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "中/长链脂肪乳（C824）-中/长链脂肪乳（C8-24Ve）|注射剂": {
+    "canonical_name": "中/长链脂肪乳(C8-24)中/长链脂肪乳(C8-24Ve)",
+    "canonical_key": "中/长链脂肪乳(C8-24)中/长链脂肪乳(C8-24Ve)|注射剂",
+    "aliases": [
+      "中/长链脂肪乳（C824）-中/长链脂肪乳（C8-24Ve）"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹参益心胶囊|胶囊": {
+    "canonical_name": "丹参益心胶囊",
+    "canonical_key": "丹参益心胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹参舒心胶囊|胶囊": {
+    "canonical_name": "丹参舒心胶囊",
+    "canonical_key": "丹参舒心胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹参酮胶囊|胶囊": {
+    "canonical_name": "丹参酮胶囊",
+    "canonical_key": "丹参酮胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹珍头痛胶囊|胶囊": {
+    "canonical_name": "丹珍头痛胶囊",
+    "canonical_key": "丹珍头痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹膝颗粒|颗粒": {
+    "canonical_name": "丹膝颗粒",
+    "canonical_key": "丹膝颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹葶肺心颗粒|颗粒": {
+    "canonical_name": "丹葶肺心颗粒",
+    "canonical_key": "丹葶肺心颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹香清脂颗粒|颗粒": {
+    "canonical_name": "丹香清脂颗粒",
+    "canonical_key": "丹香清脂颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "丹鹿胶囊|胶囊": {
+    "canonical_name": "丹鹿胶囊",
+    "canonical_key": "丹鹿胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "乌灵胶囊|胶囊": {
+    "canonical_name": "乌灵胶囊",
+    "canonical_key": "乌灵胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "乌美溴铵维兰特罗|吸入粉雾剂": {
+    "canonical_name": "乌美溴铵维兰特罗吸入粉雾剂",
+    "canonical_key": "乌美溴铵维兰特罗吸入粉雾剂|吸入粉雾剂",
+    "aliases": [
+      "乌美溴铵维兰特罗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "乌鸡白凤颗粒|颗粒": {
+    "canonical_name": "乌鸡白凤颗粒",
+    "canonical_key": "乌鸡白凤颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "乙酰左卡尼汀|口服常释剂型": {
+    "canonical_name": "盐酸乙酰左卡尼汀片",
+    "canonical_key": "盐酸乙酰左卡尼汀片|口服常释剂型",
+    "aliases": [
+      "乙酰左卡尼汀"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "九味熄风颗粒|颗粒": {
+    "canonical_name": "九味熄风颗粒",
+    "canonical_key": "九味熄风颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "九味肝泰胶囊|胶囊": {
+    "canonical_name": "九味肝泰胶囊",
+    "canonical_key": "九味肝泰胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "九味镇心颗粒|颗粒": {
+    "canonical_name": "九味镇心颗粒",
+    "canonical_key": "九味镇心颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "乳宁颗粒|颗粒": {
+    "canonical_name": "乳宁颗粒",
+    "canonical_key": "乳宁颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "云南红药胶囊|胶囊": {
+    "canonical_name": "云南红药胶囊",
+    "canonical_key": "云南红药胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "五加生化胶囊|胶囊": {
+    "canonical_name": "五加生化胶囊",
+    "canonical_key": "五加生化胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "五灵胶囊|胶囊": {
+    "canonical_name": "五灵胶囊",
+    "canonical_key": "五灵胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "产复康颗粒|颗粒": {
+    "canonical_name": "产复康颗粒",
+    "canonical_key": "产复康颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "亮丙瑞林|缓释微球注射": {
+    "canonical_name": "亮丙瑞林",
+    "canonical_key": "亮丙瑞林|缓释微球注射剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "仁青芒觉仁青芒觉胶囊|胶囊": {
+    "canonical_name": "仁青芒觉、仁青芒觉胶囊",
+    "canonical_key": "仁青芒觉、仁青芒觉胶囊|胶囊剂",
+    "aliases": [
+      "仁青芒觉仁青芒觉胶囊"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "仑伐替尼|口服常释剂型": {
+    "canonical_name": "甲磺酸仑伐替尼胶囊",
+    "canonical_key": "甲磺酸仑伐替尼胶囊|口服常释剂型",
+    "aliases": [
+      "仑伐替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "他氟前列素|滴眼剂": {
+    "canonical_name": "他氟前列素滴眼液",
+    "canonical_key": "他氟前列素滴眼液|滴眼剂",
+    "aliases": [
+      "他氟前列素"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "仙灵骨葆胶囊|胶囊": {
+    "canonical_name": "仙灵骨葆胶囊",
+    "canonical_key": "仙灵骨葆胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "伊尼妥单抗|注射剂": {
+    "canonical_name": "注射用伊尼妥单抗",
+    "canonical_key": "注射用伊尼妥单抗|注射剂",
+    "aliases": [
+      "伊尼妥单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "伊布替尼|口服常释剂型": {
+    "canonical_name": "伊布替尼胶囊",
+    "canonical_key": "伊布替尼胶囊|口服常释剂型",
+    "aliases": [
+      "伊布替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "伊沙佐米|口服常释剂型": {
+    "canonical_name": "枸橼酸伊沙佐米胶囊",
+    "canonical_key": "枸橼酸伊沙佐米胶囊|口服常释剂型",
+    "aliases": [
+      "伊沙佐米"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "伏诺拉生|口服常释剂型": {
+    "canonical_name": "富马酸伏诺拉生片",
+    "canonical_key": "富马酸伏诺拉生片|口服常释剂型",
+    "aliases": [
+      "伏诺拉生"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "依维莫司|口服常释剂型": {
+    "canonical_name": "依维莫司片",
+    "canonical_key": "依维莫司片|口服常释剂型",
+    "aliases": [
+      "依维莫司"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "依达拉奉右莰醇|注射剂": {
+    "canonical_name": "依达拉奉右莰醇注射用浓溶液",
+    "canonical_key": "依达拉奉右莰醇注射用浓溶液|注射剂",
+    "aliases": [
+      "依达拉奉右莰醇"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "依达拉奉氯化钠|注射剂": {
+    "canonical_name": "依达拉奉氯化钠注射液",
+    "canonical_key": "依达拉奉氯化钠注射液|注射剂",
+    "aliases": [
+      "依达拉奉氯化钠"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "依那西普|注射剂": {
+    "canonical_name": "依那西普注射液",
+    "canonical_key": "依那西普注射液|注射剂",
+    "aliases": [
+      "依那西普"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "保宁半夏颗粒|颗粒": {
+    "canonical_name": "保宁半夏颗粒",
+    "canonical_key": "保宁半夏颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "信迪利单抗|注射剂": {
+    "canonical_name": "信迪利单抗注射液",
+    "canonical_key": "信迪利单抗注射液|注射剂",
+    "aliases": [
+      "信迪利单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "健肝乐颗粒|颗粒": {
+    "canonical_name": "健肝乐颗粒",
+    "canonical_key": "健肝乐颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "健胃消炎颗粒|颗粒": {
+    "canonical_name": "健胃消炎颗粒",
+    "canonical_key": "健胃消炎颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "健脾止泻宁颗粒|颗粒": {
+    "canonical_name": "健脾止泻宁颗粒",
+    "canonical_key": "健脾止泻宁颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "健脾益肾颗粒|颗粒": {
+    "canonical_name": "健脾益肾颗粒",
+    "canonical_key": "健脾益肾颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "儿泻停颗粒|颗粒": {
+    "canonical_name": "儿泻停颗粒",
+    "canonical_key": "儿泻停颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "儿脾醒颗粒|颗粒": {
+    "canonical_name": "儿脾醒颗粒",
+    "canonical_key": "儿脾醒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "克唑替尼|口服常释剂型": {
+    "canonical_name": "克唑替尼胶囊",
+    "canonical_key": "克唑替尼胶囊|口服常释剂型",
+    "aliases": [
+      "克唑替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "克淋通胶囊|胶囊": {
+    "canonical_name": "克淋通胶囊",
+    "canonical_key": "克淋通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "克痢痧胶囊|胶囊": {
+    "canonical_name": "克痢痧胶囊",
+    "canonical_key": "克痢痧胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "全杜仲胶囊|胶囊": {
+    "canonical_name": "全杜仲胶囊",
+    "canonical_key": "全杜仲胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "八味芪龙颗粒|颗粒": {
+    "canonical_name": "八味芪龙颗粒",
+    "canonical_key": "八味芪龙颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "八宝丹八宝丹胶囊|胶囊": {
+    "canonical_name": "八宝丹、八宝丹胶囊",
+    "canonical_key": "八宝丹、八宝丹胶囊|胶囊剂",
+    "aliases": [
+      "八宝丹八宝丹胶囊"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "六味安神胶囊|胶囊": {
+    "canonical_name": "六味安神胶囊",
+    "canonical_key": "六味安神胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "六味香连胶囊|胶囊": {
+    "canonical_name": "六味香连胶囊",
+    "canonical_key": "六味香连胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "六神胶囊|胶囊": {
+    "canonical_name": "六神胶囊",
+    "canonical_key": "六神胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "兰瑞肽|缓释注射剂（预充式）": {
+    "canonical_name": "醋酸兰瑞肽缓释注射液（预充式）",
+    "canonical_key": "醋酸兰瑞肽缓释注射液（预充式）|缓释注射剂（预充式）",
+    "aliases": [
+      "兰瑞肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "养心生脉颗粒|颗粒": {
+    "canonical_name": "养心生脉颗粒",
+    "canonical_key": "养心生脉颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "养正消积胶囊|胶囊": {
+    "canonical_name": "养正消积胶囊",
+    "canonical_key": "养正消积胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "养阴通秘胶囊|胶囊": {
+    "canonical_name": "养阴通秘胶囊",
+    "canonical_key": "养阴通秘胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "冠心舒通胶囊|胶囊": {
+    "canonical_name": "冠心舒通胶囊",
+    "canonical_key": "冠心舒通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "利司那肽|注射剂": {
+    "canonical_name": "利司那肽注射液",
+    "canonical_key": "利司那肽注射液|注射剂",
+    "aliases": [
+      "利司那肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "利多卡因|凝胶贴膏": {
+    "canonical_name": "利多卡因凝胶贴膏",
+    "canonical_key": "利多卡因凝胶贴膏|凝胶贴膏",
+    "aliases": [
+      "利多卡因"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "利奥西呱|口服常释剂型": {
+    "canonical_name": "利奥西呱片",
+    "canonical_key": "利奥西呱片|口服常释剂型",
+    "aliases": [
+      "利奥西呱"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "利拉鲁肽|注射剂": {
+    "canonical_name": "利拉鲁肽注射液",
+    "canonical_key": "利拉鲁肽注射液|注射剂",
+    "aliases": [
+      "利拉鲁肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "利舒康胶囊|胶囊": {
+    "canonical_name": "利舒康胶囊",
+    "canonical_key": "利舒康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "利那洛肽|口服常释剂型": {
+    "canonical_name": "利那洛肽胶囊",
+    "canonical_key": "利那洛肽胶囊|口服常释剂型",
+    "aliases": [
+      "利那洛肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "前列倍喜胶囊|胶囊": {
+    "canonical_name": "前列倍喜胶囊",
+    "canonical_key": "前列倍喜胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "前列平胶囊|胶囊": {
+    "canonical_name": "前列平胶囊",
+    "canonical_key": "前列平胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "前列欣胶囊|胶囊": {
+    "canonical_name": "前列欣胶囊",
+    "canonical_key": "前列欣胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "前列舒通胶囊|胶囊": {
+    "canonical_name": "前列舒通胶囊",
+    "canonical_key": "前列舒通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "加味天麻胶囊|胶囊": {
+    "canonical_name": "加味天麻胶囊",
+    "canonical_key": "加味天麻胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "加味生化颗粒|颗粒": {
+    "canonical_name": "加味生化颗粒",
+    "canonical_key": "加味生化颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "化滞柔肝颗粒|颗粒": {
+    "canonical_name": "化滞柔肝颗粒",
+    "canonical_key": "化滞柔肝颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "北豆根胶囊|胶囊": {
+    "canonical_name": "北豆根胶囊",
+    "canonical_key": "北豆根胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "十味蒂达胶囊|胶囊": {
+    "canonical_name": "十味蒂达胶囊",
+    "canonical_key": "十味蒂达胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "千喜胶囊|胶囊": {
+    "canonical_name": "千喜胶囊",
+    "canonical_key": "千喜胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "升血小板胶囊|胶囊": {
+    "canonical_name": "升血小板胶囊",
+    "canonical_key": "升血小板胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "半夏和胃颗粒|颗粒": {
+    "canonical_name": "半夏和胃颗粒",
+    "canonical_key": "半夏和胃颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "卡瑞利珠单抗|注射剂": {
+    "canonical_name": "注射用卡瑞利珠单抗",
+    "canonical_key": "注射用卡瑞利珠单抗|注射剂",
+    "aliases": [
+      "卡瑞利珠单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "参一胶囊|胶囊": {
+    "canonical_name": "参一胶囊",
+    "canonical_key": "参一胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "参丹散结胶囊|胶囊": {
+    "canonical_name": "参丹散结胶囊",
+    "canonical_key": "参丹散结胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "参倍固肠胶囊|胶囊": {
+    "canonical_name": "参倍固肠胶囊",
+    "canonical_key": "参倍固肠胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "参松养心胶囊|胶囊": {
+    "canonical_name": "参松养心胶囊",
+    "canonical_key": "参松养心胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "参桂胶囊|胶囊": {
+    "canonical_name": "参桂胶囊",
+    "canonical_key": "参桂胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "参芪消渴颗粒|颗粒": {
+    "canonical_name": "参芪消渴颗粒",
+    "canonical_key": "参芪消渴颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "双丹明目胶囊|胶囊": {
+    "canonical_name": "双丹明目胶囊",
+    "canonical_key": "双丹明目胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "双冬胶囊|胶囊": {
+    "canonical_name": "双冬胶囊",
+    "canonical_key": "双冬胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "双石通淋胶囊|胶囊": {
+    "canonical_name": "双石通淋胶囊",
+    "canonical_key": "双石通淋胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "双虎清肝颗粒|颗粒": {
+    "canonical_name": "双虎清肝颗粒",
+    "canonical_key": "双虎清肝颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "口炎清颗粒|颗粒": {
+    "canonical_name": "口炎清颗粒",
+    "canonical_key": "口炎清颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "可洛派韦|口服常释剂型": {
+    "canonical_name": "盐酸可洛派韦胶囊",
+    "canonical_key": "盐酸可洛派韦胶囊|口服常释剂型",
+    "aliases": [
+      "可洛派韦"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "司库奇尤单抗|注射剂": {
+    "canonical_name": "司库奇尤单抗注射液",
+    "canonical_key": "司库奇尤单抗注射液|注射剂",
+    "aliases": [
+      "司库奇尤单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "司来帕格|口服常释剂型": {
+    "canonical_name": "司来帕格片",
+    "canonical_key": "司来帕格片|口服常释剂型",
+    "aliases": [
+      "司来帕格"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "吗啉硝唑氯化钠|注射剂": {
+    "canonical_name": "吗啉硝唑氯化钠注射液",
+    "canonical_key": "吗啉硝唑氯化钠注射液|注射剂",
+    "aliases": [
+      "吗啉硝唑氯化钠"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "吡仑帕奈|口服常释剂型": {
+    "canonical_name": "吡仑帕奈片",
+    "canonical_key": "吡仑帕奈片|口服常释剂型",
+    "aliases": [
+      "吡仑帕奈"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "吡咯替尼|口服常释剂型": {
+    "canonical_name": "马来酸吡咯替尼片",
+    "canonical_key": "马来酸吡咯替尼片|口服常释剂型",
+    "aliases": [
+      "吡咯替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "呋喹替尼|口服常释剂型": {
+    "canonical_name": "呋喹替尼胶囊",
+    "canonical_key": "呋喹替尼胶囊|口服常释剂型",
+    "aliases": [
+      "呋喹替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "地奥心血康胶囊|胶囊": {
+    "canonical_name": "地奥心血康胶囊",
+    "canonical_key": "地奥心血康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "地舒单抗|注射剂": {
+    "canonical_name": "地舒单抗注射液",
+    "canonical_key": "地舒单抗注射液|注射剂",
+    "aliases": [
+      "地舒单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "地贞颗粒|颗粒": {
+    "canonical_name": "地贞颗粒",
+    "canonical_key": "地贞颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "坤泰胶囊|胶囊": {
+    "canonical_name": "坤泰胶囊",
+    "canonical_key": "坤泰胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "埃克替尼|口服常释剂型": {
+    "canonical_name": "盐酸埃克替尼片",
+    "canonical_key": "盐酸埃克替尼片|口服常释剂型",
+    "aliases": [
+      "埃克替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "培元通脑胶囊|胶囊": {
+    "canonical_name": "培元通脑胶囊",
+    "canonical_key": "培元通脑胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "培唑帕尼|口服常释剂型": {
+    "canonical_name": "培唑帕尼片",
+    "canonical_key": "培唑帕尼片|口服常释剂型",
+    "aliases": [
+      "培唑帕尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "培门冬酶|注射剂": {
+    "canonical_name": "培门冬酶注射液",
+    "canonical_key": "培门冬酶注射液|注射剂",
+    "aliases": [
+      "培门冬酶"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "塞瑞替尼|口服常释剂型": {
+    "canonical_name": "塞瑞替尼胶囊",
+    "canonical_key": "塞瑞替尼胶囊|口服常释剂型",
+    "aliases": [
+      "塞瑞替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "壮骨伸筋胶囊|胶囊": {
+    "canonical_name": "壮骨伸筋胶囊",
+    "canonical_key": "壮骨伸筋胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "壮骨止痛胶囊|胶囊": {
+    "canonical_name": "壮骨止痛胶囊",
+    "canonical_key": "壮骨止痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "壳脂胶囊|胶囊": {
+    "canonical_name": "壳脂胶囊",
+    "canonical_key": "壳脂胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方伤痛胶囊|胶囊": {
+    "canonical_name": "复方伤痛胶囊",
+    "canonical_key": "复方伤痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方斑蝥胶囊|胶囊": {
+    "canonical_name": "复方斑蝥胶囊",
+    "canonical_key": "复方斑蝥胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方木尼孜其颗粒|颗粒": {
+    "canonical_name": "复方木尼孜其颗粒",
+    "canonical_key": "复方木尼孜其颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方杜仲健骨颗粒|颗粒": {
+    "canonical_name": "复方杜仲健骨颗粒",
+    "canonical_key": "复方杜仲健骨颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方板蓝根颗粒|颗粒": {
+    "canonical_name": "复方板蓝根颗粒",
+    "canonical_key": "复方板蓝根颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方氨基酸（18AA）复方氨基酸（18AAⅠ）-复方氨基酸（18AAⅡ）-复方氨基酸（18AAⅢ）-复方氨基酸（18AAⅤ）-|注射剂": {
+    "canonical_name": "复方氨基酸(18AA)复方氨基酸(18AA-Ⅰ)复方氨基酸(18AA-Ⅱ)复方氨基酸(18AA-Ⅲ)复方氨基酸(18AA-Ⅴ)",
+    "canonical_key": "复方氨基酸(18AA)复方氨基酸(18AA-Ⅰ)复方氨基酸(18AA-Ⅱ)复方氨基酸(18AA-Ⅲ)复方氨基酸(18AA-Ⅴ)|注射剂",
+    "aliases": [
+      "复方氨基酸（18AA）复方氨基酸（18AAⅠ）-复方氨基酸（18AAⅡ）-复方氨基酸（18AAⅢ）-复方氨基酸（18AAⅤ）-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方珍珠口疮颗粒|颗粒": {
+    "canonical_name": "复方珍珠口疮颗粒",
+    "canonical_key": "复方珍珠口疮颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方红豆杉胶囊|胶囊": {
+    "canonical_name": "复方红豆杉胶囊",
+    "canonical_key": "复方红豆杉胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方罗布麻颗粒|颗粒": {
+    "canonical_name": "复方罗布麻颗粒",
+    "canonical_key": "复方罗布麻颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方胃痛胶囊|胶囊": {
+    "canonical_name": "复方胃痛胶囊",
+    "canonical_key": "复方胃痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方苁蓉益智胶囊|胶囊": {
+    "canonical_name": "复方苁蓉益智胶囊",
+    "canonical_key": "复方苁蓉益智胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方血栓通胶囊|胶囊": {
+    "canonical_name": "复方血栓通胶囊",
+    "canonical_key": "复方血栓通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方金钱草颗粒|颗粒": {
+    "canonical_name": "复方金钱草颗粒",
+    "canonical_key": "复方金钱草颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方银花解毒颗粒|颗粒": {
+    "canonical_name": "复方银花解毒颗粒",
+    "canonical_key": "复方银花解毒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方雪参胶囊|胶囊": {
+    "canonical_name": "复方雪参胶囊",
+    "canonical_key": "复方雪参胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方雪莲胶囊|胶囊": {
+    "canonical_name": "复方雪莲胶囊",
+    "canonical_key": "复方雪莲胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复方龙血竭胶囊|胶囊": {
+    "canonical_name": "复方龙血竭胶囊",
+    "canonical_key": "复方龙血竭胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "复脉定胶囊|胶囊": {
+    "canonical_name": "复脉定胶囊",
+    "canonical_key": "复脉定胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "夏荔芪胶囊|胶囊": {
+    "canonical_name": "夏荔芪胶囊",
+    "canonical_key": "夏荔芪胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "多拉司琼|注射剂": {
+    "canonical_name": "甲磺酸多拉司琼注射液",
+    "canonical_key": "甲磺酸多拉司琼注射液|注射剂",
+    "aliases": [
+      "多拉司琼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "多种油脂肪乳(C6～24)|注射剂": {
+    "canonical_name": "多种油脂肪乳(C6～24)注射液",
+    "canonical_key": "多种油脂肪乳(C6～24)注射液|注射剂",
+    "aliases": [
+      "多种油脂肪乳(C6～24)"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "大柴胡颗粒|颗粒": {
+    "canonical_name": "大柴胡颗粒",
+    "canonical_key": "大柴胡颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "天智颗粒|颗粒": {
+    "canonical_name": "天智颗粒",
+    "canonical_key": "天智颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "天芪降糖胶囊|胶囊": {
+    "canonical_name": "天芪降糖胶囊",
+    "canonical_key": "天芪降糖胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "天菊脑安胶囊|胶囊": {
+    "canonical_name": "天菊脑安胶囊",
+    "canonical_key": "天菊脑安胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "天麻醒脑胶囊|胶囊": {
+    "canonical_name": "天麻醒脑胶囊",
+    "canonical_key": "天麻醒脑胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "天麻钩藤颗粒|颗粒": {
+    "canonical_name": "天麻钩藤颗粒",
+    "canonical_key": "天麻钩藤颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "头孢托仑匹酯|颗粒剂": {
+    "canonical_name": "头孢托仑匹酯颗粒",
+    "canonical_key": "头孢托仑匹酯颗粒|颗粒剂",
+    "aliases": [
+      "头孢托仑匹酯"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "头痛宁胶囊|胶囊": {
+    "canonical_name": "头痛宁胶囊",
+    "canonical_key": "头痛宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "奈韦拉平齐多拉米双夫定|口服常释剂型": {
+    "canonical_name": "奈韦拉平齐多拉米双夫定片",
+    "canonical_key": "奈韦拉平齐多拉米双夫定片|口服常释剂型",
+    "aliases": [
+      "奈韦拉平齐多拉米双夫定"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "奥希替尼|口服常释剂型": {
+    "canonical_name": "甲磺酸奥希替尼片",
+    "canonical_key": "甲磺酸奥希替尼片|口服常释剂型",
+    "aliases": [
+      "奥希替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "奥拉帕利|口服常释剂型": {
+    "canonical_name": "奥拉帕利片",
+    "canonical_key": "奥拉帕利片|口服常释剂型",
+    "aliases": [
+      "奥拉帕利"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "奥普力农|注射剂": {
+    "canonical_name": "盐酸奥普力农注射液",
+    "canonical_key": "盐酸奥普力农注射液|注射剂",
+    "aliases": [
+      "奥普力农"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "奥曲肽|微球注射剂": {
+    "canonical_name": "注射用醋酸奥曲肽微球",
+    "canonical_key": "注射用醋酸奥曲肽微球|微球注射剂",
+    "aliases": [
+      "奥曲肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "女珍颗粒|颗粒": {
+    "canonical_name": "女珍颗粒",
+    "canonical_key": "女珍颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "妇可靖胶囊|胶囊": {
+    "canonical_name": "妇可靖胶囊",
+    "canonical_key": "妇可靖胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "妇炎平胶囊|胶囊": {
+    "canonical_name": "妇炎平胶囊",
+    "canonical_key": "妇炎平胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "妇炎消胶囊|胶囊": {
+    "canonical_name": "妇炎消胶囊",
+    "canonical_key": "妇炎消胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "妇科断红饮胶囊|胶囊": {
+    "canonical_name": "妇科断红饮胶囊",
+    "canonical_key": "妇科断红饮胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "威麦宁胶囊|胶囊": {
+    "canonical_name": "威麦宁胶囊",
+    "canonical_key": "威麦宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "宁心宝胶囊|胶囊": {
+    "canonical_name": "宁心宝胶囊",
+    "canonical_key": "宁心宝胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "宁泌泰胶囊|胶囊": {
+    "canonical_name": "宁泌泰胶囊",
+    "canonical_key": "宁泌泰胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "安宫止血颗粒|颗粒": {
+    "canonical_name": "安宫止血颗粒",
+    "canonical_key": "安宫止血颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "安康欣胶囊|胶囊": {
+    "canonical_name": "安康欣胶囊",
+    "canonical_key": "安康欣胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "安替可胶囊|胶囊": {
+    "canonical_name": "安替可胶囊",
+    "canonical_key": "安替可胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "安神补脑片（胶囊颗粒液）|胶囊": {
+    "canonical_name": "安神补脑片(胶囊、颗粒、液)",
+    "canonical_key": "安神补脑片(胶囊、颗粒、液)|胶囊剂",
+    "aliases": [
+      "安神补脑片（胶囊颗粒液）"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "安罗替尼|口服常释剂型": {
+    "canonical_name": "盐酸安罗替尼胶囊",
+    "canonical_key": "盐酸安罗替尼胶囊|口服常释剂型",
+    "aliases": [
+      "安罗替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "安胃疡胶囊|胶囊": {
+    "canonical_name": "安胃疡胶囊",
+    "canonical_key": "安胃疡胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "宫瘤消胶囊|胶囊": {
+    "canonical_name": "宫瘤消胶囊",
+    "canonical_key": "宫瘤消胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "宫血宁胶囊|胶囊": {
+    "canonical_name": "宫血宁胶囊",
+    "canonical_key": "宫血宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "寒喘祖帕颗粒|颗粒": {
+    "canonical_name": "寒喘祖帕颗粒",
+    "canonical_key": "寒喘祖帕颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿厌食颗粒|颗粒": {
+    "canonical_name": "小儿厌食颗粒",
+    "canonical_key": "小儿厌食颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿双清颗粒|颗粒": {
+    "canonical_name": "小儿双清颗粒",
+    "canonical_key": "小儿双清颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿双解止泻颗粒|颗粒": {
+    "canonical_name": "小儿双解止泻颗粒",
+    "canonical_key": "小儿双解止泻颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿咳喘颗粒|颗粒": {
+    "canonical_name": "小儿咳喘颗粒",
+    "canonical_key": "小儿咳喘颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿咽扁颗粒|颗粒": {
+    "canonical_name": "小儿咽扁颗粒",
+    "canonical_key": "小儿咽扁颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿复方氨基酸（18AAⅠ）-小儿复方氨基酸（18AAⅡ）-|注射剂": {
+    "canonical_name": "小儿复方氨基酸(18AA-Ⅰ)小儿复方氨基酸(18AA-Ⅱ)",
+    "canonical_key": "小儿复方氨基酸(18AA-Ⅰ)小儿复方氨基酸(18AA-Ⅱ)|注射剂",
+    "aliases": [
+      "小儿复方氨基酸（18AAⅠ）-小儿复方氨基酸（18AAⅡ）-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿复方氨基酸（19AAⅠ）-|注射剂": {
+    "canonical_name": "小儿复方氨基酸(19AA-Ⅰ)",
+    "canonical_key": "小儿复方氨基酸(19AA-Ⅰ)|注射剂",
+    "aliases": [
+      "小儿复方氨基酸（19AAⅠ）-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿宝泰康颗粒|颗粒": {
+    "canonical_name": "小儿宝泰康颗粒",
+    "canonical_key": "小儿宝泰康颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿宣肺止咳颗粒|颗粒": {
+    "canonical_name": "小儿宣肺止咳颗粒",
+    "canonical_key": "小儿宣肺止咳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿感冒舒颗粒|颗粒": {
+    "canonical_name": "小儿感冒舒颗粒",
+    "canonical_key": "小儿感冒舒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿感冒颗粒|颗粒": {
+    "canonical_name": "小儿感冒颗粒",
+    "canonical_key": "小儿感冒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿法罗培南|颗粒剂": {
+    "canonical_name": "小儿法罗培南钠颗粒",
+    "canonical_key": "小儿法罗培南钠颗粒|颗粒剂",
+    "aliases": [
+      "小儿法罗培南"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿泻速停颗粒|颗粒": {
+    "canonical_name": "小儿泻速停颗粒",
+    "canonical_key": "小儿泻速停颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿消积止咳颗粒|颗粒": {
+    "canonical_name": "小儿消积止咳颗粒",
+    "canonical_key": "小儿消积止咳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿肠胃康颗粒|颗粒": {
+    "canonical_name": "小儿肠胃康颗粒",
+    "canonical_key": "小儿肠胃康颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿肺咳颗粒|颗粒": {
+    "canonical_name": "小儿肺咳颗粒",
+    "canonical_key": "小儿肺咳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿肺热清颗粒|颗粒": {
+    "canonical_name": "小儿肺热清颗粒",
+    "canonical_key": "小儿肺热清颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿豉翘清热颗粒|颗粒": {
+    "canonical_name": "小儿豉翘清热颗粒",
+    "canonical_key": "小儿豉翘清热颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿青翘颗粒（小儿金翘颗粒）|颗粒": {
+    "canonical_name": "小儿青翘颗粒(小儿金翘颗粒)",
+    "canonical_key": "小儿青翘颗粒(小儿金翘颗粒)|颗粒剂",
+    "aliases": [
+      "小儿青翘颗粒（小儿金翘颗粒）"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿麻甘颗粒|颗粒": {
+    "canonical_name": "小儿麻甘颗粒",
+    "canonical_key": "小儿麻甘颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "小儿黄龙颗粒|颗粒": {
+    "canonical_name": "小儿黄龙颗粒",
+    "canonical_key": "小儿黄龙颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "尖吻蝮蛇血凝酶|注射剂": {
+    "canonical_name": "注射用尖吻蝮蛇血凝酶",
+    "canonical_key": "注射用尖吻蝮蛇血凝酶|注射剂",
+    "aliases": [
+      "尖吻蝮蛇血凝酶"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "尤瑞克林|注射剂": {
+    "canonical_name": "注射用尤瑞克林",
+    "canonical_key": "注射用尤瑞克林|注射剂",
+    "aliases": [
+      "尤瑞克林"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "尼妥珠单抗|注射剂": {
+    "canonical_name": "尼妥珠单抗注射液",
+    "canonical_key": "尼妥珠单抗注射液|注射剂",
+    "aliases": [
+      "尼妥珠单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "尼洛替尼|口服常释剂型": {
+    "canonical_name": "尼洛替尼胶囊",
+    "canonical_key": "尼洛替尼胶囊|口服常释剂型",
+    "aliases": [
+      "尼洛替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "尿感宁颗粒|颗粒": {
+    "canonical_name": "尿感宁颗粒",
+    "canonical_key": "尿感宁颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "尿毒清颗粒|颗粒": {
+    "canonical_name": "尿毒清颗粒",
+    "canonical_key": "尿毒清颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "尿清舒颗粒|颗粒": {
+    "canonical_name": "尿清舒颗粒",
+    "canonical_key": "尿清舒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "山蜡梅叶颗粒|颗粒": {
+    "canonical_name": "山蜡梅叶颗粒",
+    "canonical_key": "山蜡梅叶颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "川射干黄酮胶囊|胶囊": {
+    "canonical_name": "川射干黄酮胶囊",
+    "canonical_key": "川射干黄酮胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "川蛭通络胶囊|胶囊": {
+    "canonical_name": "川蛭通络胶囊",
+    "canonical_key": "川蛭通络胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "左氧氟沙星|眼用凝胶": {
+    "canonical_name": "左氧氟沙星",
+    "canonical_key": "左氧氟沙星|眼用凝胶剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "左沙丁胺醇|雾化吸入溶液": {
+    "canonical_name": "盐酸左沙丁胺醇雾化吸入溶液",
+    "canonical_key": "盐酸左沙丁胺醇雾化吸入溶液|雾化吸入溶液",
+    "aliases": [
+      "左沙丁胺醇"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "巴瑞替尼|口服常释剂型": {
+    "canonical_name": "巴瑞替尼片",
+    "canonical_key": "巴瑞替尼片|口服常释剂型",
+    "aliases": [
+      "巴瑞替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "布南色林|口服常释剂型": {
+    "canonical_name": "布南色林片",
+    "canonical_key": "布南色林片|口服常释剂型",
+    "aliases": [
+      "布南色林"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "布地格福|吸入气雾剂": {
+    "canonical_name": "布地格福吸入气雾剂",
+    "canonical_key": "布地格福吸入气雾剂|吸入气雾剂",
+    "aliases": [
+      "布地格福"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "布林佐胺噻吗洛尔|滴眼剂": {
+    "canonical_name": "布林佐胺噻吗洛尔滴眼液",
+    "canonical_key": "布林佐胺噻吗洛尔滴眼液|滴眼剂",
+    "aliases": [
+      "布林佐胺噻吗洛尔"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "布林佐胺溴莫尼定|滴眼剂": {
+    "canonical_name": "布林佐胺溴莫尼定滴眼液",
+    "canonical_key": "布林佐胺溴莫尼定滴眼液|滴眼剂",
+    "aliases": [
+      "布林佐胺溴莫尼定"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "帕妥珠单抗|注射剂": {
+    "canonical_name": "帕妥珠单抗注射液",
+    "canonical_key": "帕妥珠单抗注射液|注射剂",
+    "aliases": [
+      "帕妥珠单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "平眩胶囊|胶囊": {
+    "canonical_name": "平眩胶囊",
+    "canonical_key": "平眩胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "度拉糖肽|注射剂": {
+    "canonical_name": "度拉糖肽注射液",
+    "canonical_key": "度拉糖肽注射液|注射剂",
+    "aliases": [
+      "度拉糖肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "度普利尤单抗|注射剂": {
+    "canonical_name": "度普利尤单抗注射液",
+    "canonical_key": "度普利尤单抗注射液|注射剂",
+    "aliases": [
+      "度普利尤单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "康力欣胶囊|胶囊": {
+    "canonical_name": "康力欣胶囊",
+    "canonical_key": "康力欣胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "康妇炎胶囊|胶囊": {
+    "canonical_name": "康妇炎胶囊",
+    "canonical_key": "康妇炎胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "延丹胶囊|胶囊": {
+    "canonical_name": "延丹胶囊",
+    "canonical_key": "延丹胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "延参健胃胶囊|胶囊": {
+    "canonical_name": "延参健胃胶囊",
+    "canonical_key": "延参健胃胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "强骨胶囊|胶囊": {
+    "canonical_name": "强骨胶囊",
+    "canonical_key": "强骨胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "归芪活血胶囊|胶囊": {
+    "canonical_name": "归芪活血胶囊",
+    "canonical_key": "归芪活血胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "德拉马尼|口服常释剂型": {
+    "canonical_name": "德拉马尼片",
+    "canonical_key": "德拉马尼片|口服常释剂型",
+    "aliases": [
+      "德拉马尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "德谷门冬双胰岛素|注射剂": {
+    "canonical_name": "德谷门冬双胰岛素注射液",
+    "canonical_key": "德谷门冬双胰岛素注射液|注射剂",
+    "aliases": [
+      "德谷门冬双胰岛素"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "心元胶囊|胶囊": {
+    "canonical_name": "心元胶囊",
+    "canonical_key": "心元胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "心可宁胶囊|胶囊": {
+    "canonical_name": "心可宁胶囊",
+    "canonical_key": "心可宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "心安胶囊|胶囊": {
+    "canonical_name": "心安胶囊",
+    "canonical_key": "心安胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "心悦胶囊|胶囊": {
+    "canonical_name": "心悦胶囊",
+    "canonical_key": "心悦胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "心脑宁胶囊|胶囊": {
+    "canonical_name": "心脑宁胶囊",
+    "canonical_key": "心脑宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "心速宁胶囊|胶囊": {
+    "canonical_name": "心速宁胶囊",
+    "canonical_key": "心速宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "急支颗粒|颗粒": {
+    "canonical_name": "急支颗粒",
+    "canonical_key": "急支颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "恩扎卢胺|口服常释剂型": {
+    "canonical_name": "恩扎卢胺软胶囊",
+    "canonical_key": "恩扎卢胺软胶囊|口服常释剂型",
+    "aliases": [
+      "恩扎卢胺"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "愈伤灵胶囊|胶囊": {
+    "canonical_name": "愈伤灵胶囊",
+    "canonical_key": "愈伤灵胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "愈心痛胶囊|胶囊": {
+    "canonical_name": "愈心痛胶囊",
+    "canonical_key": "愈心痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "慈丹胶囊|胶囊": {
+    "canonical_name": "慈丹胶囊",
+    "canonical_key": "慈丹胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "戈舍瑞林|缓释植入剂": {
+    "canonical_name": "醋酸戈舍瑞林缓释植入剂",
+    "canonical_key": "醋酸戈舍瑞林缓释植入剂|缓释植入剂",
+    "aliases": [
+      "戈舍瑞林"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "扫日劳清肺止咳胶囊|胶囊": {
+    "canonical_name": "扫日劳清肺止咳胶囊",
+    "canonical_key": "扫日劳清肺止咳胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "扭伤归胶囊|胶囊": {
+    "canonical_name": "扭伤归胶囊",
+    "canonical_key": "扭伤归胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "抗妇炎胶囊|胶囊": {
+    "canonical_name": "抗妇炎胶囊",
+    "canonical_key": "抗妇炎胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "护肝布祖热颗粒|颗粒": {
+    "canonical_name": "护肝布祖热颗粒",
+    "canonical_key": "护肝布祖热颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "护骨胶囊|胶囊": {
+    "canonical_name": "护骨胶囊",
+    "canonical_key": "护骨胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "排石颗粒|颗粒": {
+    "canonical_name": "排石颗粒",
+    "canonical_key": "排石颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "散结镇痛胶囊|胶囊": {
+    "canonical_name": "散结镇痛胶囊",
+    "canonical_key": "散结镇痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "新复方芦荟胶囊|胶囊": {
+    "canonical_name": "新复方芦荟胶囊",
+    "canonical_key": "新复方芦荟胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "新清宁胶囊|胶囊": {
+    "canonical_name": "新清宁胶囊",
+    "canonical_key": "新清宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "昆仙胶囊|胶囊": {
+    "canonical_name": "昆仙胶囊",
+    "canonical_key": "昆仙胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "明目地黄胶囊|胶囊": {
+    "canonical_name": "明目地黄胶囊",
+    "canonical_key": "明目地黄胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "曲美替尼|口服常释剂型": {
+    "canonical_name": "曲美替尼片",
+    "canonical_key": "曲美替尼片|口服常释剂型",
+    "aliases": [
+      "曲美替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "更昔洛韦|眼用凝胶": {
+    "canonical_name": "更昔洛韦",
+    "canonical_key": "更昔洛韦|眼用凝胶剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "替雷利珠单抗|注射剂": {
+    "canonical_name": "替雷利珠单抗注射液",
+    "canonical_key": "替雷利珠单抗注射液|注射剂",
+    "aliases": [
+      "替雷利珠单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "木丹颗粒|颗粒": {
+    "canonical_name": "木丹颗粒",
+    "canonical_key": "木丹颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "本维莫德|乳膏剂": {
+    "canonical_name": "本维莫德乳膏",
+    "canonical_key": "本维莫德乳膏|乳膏",
+    "aliases": [
+      "本维莫德"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "本维莫德乳膏|乳膏剂": {
+    "canonical_name": "本维莫德乳膏",
+    "canonical_key": "本维莫德乳膏|乳膏",
+    "aliases": [
+      "本维莫德"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2020"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "杏贝止咳颗粒|颗粒": {
+    "canonical_name": "杏贝止咳颗粒",
+    "canonical_key": "杏贝止咳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "杜仲颗粒|颗粒": {
+    "canonical_name": "杜仲颗粒",
+    "canonical_key": "杜仲颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "来迪派韦索磷布韦|口服常释剂型": {
+    "canonical_name": "来迪派韦索磷布韦片",
+    "canonical_key": "来迪派韦索磷布韦片|口服常释剂型",
+    "aliases": [
+      "来迪派韦索磷布韦"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "松龄血脉康胶囊|胶囊": {
+    "canonical_name": "松龄血脉康胶囊",
+    "canonical_key": "松龄血脉康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "板蓝根颗粒|颗粒": {
+    "canonical_name": "板蓝根颗粒",
+    "canonical_key": "板蓝根颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "枣仁安神胶囊（颗粒液）|胶囊": {
+    "canonical_name": "枣仁安神胶囊(颗粒、液)",
+    "canonical_key": "枣仁安神胶囊(颗粒、液)|胶囊剂",
+    "aliases": [
+      "枣仁安神胶囊（颗粒液）"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "枳术宽中胶囊|胶囊": {
+    "canonical_name": "枳术宽中胶囊",
+    "canonical_key": "枳术宽中胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "柴石退热颗粒|颗粒": {
+    "canonical_name": "柴石退热颗粒",
+    "canonical_key": "柴石退热颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "格隆溴铵福莫特罗|吸入气雾剂": {
+    "canonical_name": "格隆溴铵福莫特罗吸入气雾剂",
+    "canonical_key": "格隆溴铵福莫特罗吸入气雾剂|吸入气雾剂",
+    "aliases": [
+      "格隆溴铵福莫特罗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "桂枝颗粒|颗粒": {
+    "canonical_name": "桂枝颗粒",
+    "canonical_key": "桂枝颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "桂黄清热颗粒|颗粒": {
+    "canonical_name": "桂黄清热颗粒",
+    "canonical_key": "桂黄清热颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "桂龙咳喘宁颗粒|颗粒": {
+    "canonical_name": "桂龙咳喘宁颗粒",
+    "canonical_key": "桂龙咳喘宁颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "榆栀止血颗粒|颗粒": {
+    "canonical_name": "榆栀止血颗粒",
+    "canonical_key": "榆栀止血颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "槐榆清热止血胶囊|胶囊": {
+    "canonical_name": "槐榆清热止血胶囊",
+    "canonical_key": "槐榆清热止血胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "槐耳颗粒|颗粒": {
+    "canonical_name": "槐耳颗粒",
+    "canonical_key": "槐耳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "橘红痰咳颗粒（煎膏液）|颗粒": {
+    "canonical_name": "橘红痰咳颗粒(煎膏、液)",
+    "canonical_key": "橘红痰咳颗粒(煎膏、液)|颗粒剂",
+    "aliases": [
+      "橘红痰咳颗粒（煎膏液）"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "止血镇痛胶囊|胶囊": {
+    "canonical_name": "止血镇痛胶囊",
+    "canonical_key": "止血镇痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "正柴胡饮颗粒|颗粒": {
+    "canonical_name": "正柴胡饮颗粒",
+    "canonical_key": "正柴胡饮颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "氘丁苯那嗪|口服常释剂型": {
+    "canonical_name": "氘丁苯那嗪片",
+    "canonical_key": "氘丁苯那嗪片|口服常释剂型",
+    "aliases": [
+      "氘丁苯那嗪"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "氟替美维|吸入粉雾剂": {
+    "canonical_name": "氟替美维吸入粉雾剂",
+    "canonical_key": "氟替美维吸入粉雾剂|吸入粉雾剂",
+    "aliases": [
+      "氟替美维"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "氟马替尼|口服常释剂型": {
+    "canonical_name": "甲磺酸氟马替尼片",
+    "canonical_key": "甲磺酸氟马替尼片|口服常释剂型",
+    "aliases": [
+      "氟马替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "沈阳红药沈阳红药胶囊|胶囊": {
+    "canonical_name": "沈阳红药、沈阳红药胶囊",
+    "canonical_key": "沈阳红药、沈阳红药胶囊|胶囊剂",
+    "aliases": [
+      "沈阳红药沈阳红药胶囊"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "沙库巴曲缬沙坦|口服常释剂型": {
+    "canonical_name": "沙库巴曲缬沙坦钠片",
+    "canonical_key": "沙库巴曲缬沙坦钠片|口服常释剂型",
+    "aliases": [
+      "沙库巴曲缬沙坦"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "治伤胶囊|胶囊": {
+    "canonical_name": "治伤胶囊",
+    "canonical_key": "治伤胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "泊沙康唑|口服液体剂": {
+    "canonical_name": "泊沙康唑口服混悬液",
+    "canonical_key": "泊沙康唑口服混悬液|口服液体剂",
+    "aliases": [
+      "泊沙康唑"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "泌宁胶囊|胶囊": {
+    "canonical_name": "泌宁胶囊",
+    "canonical_key": "泌宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "泌淋清胶囊|胶囊": {
+    "canonical_name": "泌淋清胶囊",
+    "canonical_key": "泌淋清胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "波生坦|口服常释剂型": {
+    "canonical_name": "波生坦片",
+    "canonical_key": "波生坦片|口服常释剂型",
+    "aliases": [
+      "波生坦"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "泻停胶囊|胶囊": {
+    "canonical_name": "泻停胶囊",
+    "canonical_key": "泻停胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "泽布替尼|口服常释剂型": {
+    "canonical_name": "泽布替尼胶囊",
+    "canonical_key": "泽布替尼胶囊|口服常释剂型",
+    "aliases": [
+      "泽布替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "海昆肾喜胶囊|胶囊": {
+    "canonical_name": "海昆肾喜胶囊",
+    "canonical_key": "海昆肾喜胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "海桂胶囊|胶囊": {
+    "canonical_name": "海桂胶囊",
+    "canonical_key": "海桂胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "消乳散结胶囊|胶囊": {
+    "canonical_name": "消乳散结胶囊",
+    "canonical_key": "消乳散结胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "消渴康颗粒|颗粒": {
+    "canonical_name": "消渴康颗粒",
+    "canonical_key": "消渴康颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "消渴清颗粒|颗粒": {
+    "canonical_name": "消渴清颗粒",
+    "canonical_key": "消渴清颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "消结安胶囊|胶囊": {
+    "canonical_name": "消结安胶囊",
+    "canonical_key": "消结安胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "消风止痒颗粒|颗粒": {
+    "canonical_name": "消风止痒颗粒",
+    "canonical_key": "消风止痒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "润燥止痒胶囊|胶囊": {
+    "canonical_name": "润燥止痒胶囊",
+    "canonical_key": "润燥止痒胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "清咳平喘颗粒|颗粒": {
+    "canonical_name": "清咳平喘颗粒",
+    "canonical_key": "清咳平喘颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "清喉咽颗粒|颗粒": {
+    "canonical_name": "清喉咽颗粒",
+    "canonical_key": "清喉咽颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "清宣止咳颗粒|颗粒": {
+    "canonical_name": "清宣止咳颗粒",
+    "canonical_key": "清宣止咳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "清热卡森颗粒|颗粒": {
+    "canonical_name": "清热卡森颗粒",
+    "canonical_key": "清热卡森颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "清肝降压胶囊|胶囊": {
+    "canonical_name": "清肝降压胶囊",
+    "canonical_key": "清肝降压胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "渴络欣胶囊|胶囊": {
+    "canonical_name": "渴络欣胶囊",
+    "canonical_key": "渴络欣胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "灯盏生脉胶囊|胶囊": {
+    "canonical_name": "灯盏生脉胶囊",
+    "canonical_key": "灯盏生脉胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "灯银脑通胶囊|胶囊": {
+    "canonical_name": "灯银脑通胶囊",
+    "canonical_key": "灯银脑通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "牛黄清感胶囊|胶囊": {
+    "canonical_name": "牛黄清感胶囊",
+    "canonical_key": "牛黄清感胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "特瑞普利单抗|注射剂": {
+    "canonical_name": "特瑞普利单抗注射液",
+    "canonical_key": "特瑞普利单抗注射液|注射剂",
+    "aliases": [
+      "特瑞普利单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "特立氟胺|口服常释剂型": {
+    "canonical_name": "特立氟胺片",
+    "canonical_key": "特立氟胺片|口服常释剂型",
+    "aliases": [
+      "特立氟胺"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "猪苓多糖胶囊|胶囊": {
+    "canonical_name": "猪苓多糖胶囊",
+    "canonical_key": "猪苓多糖胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "玉叶解毒颗粒|颗粒": {
+    "canonical_name": "玉叶解毒颗粒",
+    "canonical_key": "玉叶解毒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "玉屏风胶囊|胶囊": {
+    "canonical_name": "玉屏风胶囊",
+    "canonical_key": "玉屏风胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "玉屏风颗粒|颗粒": {
+    "canonical_name": "玉屏风颗粒",
+    "canonical_key": "玉屏风颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "玛木然止泻胶囊|胶囊": {
+    "canonical_name": "玛木然止泻胶囊",
+    "canonical_key": "玛木然止泻胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "琥珀消石颗粒|颗粒": {
+    "canonical_name": "琥珀消石颗粒",
+    "canonical_key": "琥珀消石颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "瑞戈非尼|口服常释剂型": {
+    "canonical_name": "瑞戈非尼片",
+    "canonical_key": "瑞戈非尼片|口服常释剂型",
+    "aliases": [
+      "瑞戈非尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "瓜霜退热灵胶囊|胶囊": {
+    "canonical_name": "瓜霜退热灵胶囊",
+    "canonical_key": "瓜霜退热灵胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "甘桔清咽颗粒|颗粒": {
+    "canonical_name": "甘桔清咽颗粒",
+    "canonical_key": "甘桔清咽颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "甘草酸单铵半胱氨酸氯化钠|注射剂": {
+    "canonical_name": "甘草酸单铵半胱氨酸氯化钠注射液",
+    "canonical_key": "甘草酸单铵半胱氨酸氯化钠注射液|注射剂",
+    "aliases": [
+      "甘草酸单铵半胱氨酸氯化钠"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "生脉饮(党参方)生脉片（颗粒）(党参方)|颗粒": {
+    "canonical_name": "生脉饮(党参方)、生脉片(颗粒)(党参方)",
+    "canonical_key": "生脉饮(党参方)、生脉片(颗粒)(党参方)|颗粒剂",
+    "aliases": [
+      "生脉饮(党参方)生脉片（颗粒）(党参方)"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "田七痛经胶囊|胶囊": {
+    "canonical_name": "田七痛经胶囊",
+    "canonical_key": "田七痛经胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "疏风解毒胶囊|胶囊": {
+    "canonical_name": "疏风解毒胶囊",
+    "canonical_key": "疏风解毒胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "痛泻宁颗粒|颗粒": {
+    "canonical_name": "痛泻宁颗粒",
+    "canonical_key": "痛泻宁颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "痛经宝颗粒|颗粒": {
+    "canonical_name": "痛经宝颗粒",
+    "canonical_key": "痛经宝颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "痛血康胶囊|胶囊": {
+    "canonical_name": "痛血康胶囊",
+    "canonical_key": "痛血康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "痫愈胶囊|胶囊": {
+    "canonical_name": "痫愈胶囊",
+    "canonical_key": "痫愈胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "痰热清胶囊|胶囊": {
+    "canonical_name": "痰热清胶囊",
+    "canonical_key": "痰热清胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "痹祺胶囊|胶囊": {
+    "canonical_name": "痹祺胶囊",
+    "canonical_key": "痹祺胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "癫痫康胶囊|胶囊": {
+    "canonical_name": "癫痫康胶囊",
+    "canonical_key": "癫痫康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "白百抗痨颗粒|颗粒": {
+    "canonical_name": "白百抗痨颗粒",
+    "canonical_key": "白百抗痨颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "百乐眠胶囊|胶囊": {
+    "canonical_name": "百乐眠胶囊",
+    "canonical_key": "百乐眠胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "百蕊颗粒|颗粒": {
+    "canonical_name": "百蕊颗粒",
+    "canonical_key": "百蕊颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "皮敏消胶囊|胶囊": {
+    "canonical_name": "皮敏消胶囊",
+    "canonical_key": "皮敏消胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "益心巴迪然吉布亚颗粒|颗粒": {
+    "canonical_name": "益心巴迪然吉布亚颗粒",
+    "canonical_key": "益心巴迪然吉布亚颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "益气和胃胶囊|胶囊": {
+    "canonical_name": "益气和胃胶囊",
+    "canonical_key": "益气和胃胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "益气通便颗粒|颗粒": {
+    "canonical_name": "益气通便颗粒",
+    "canonical_key": "益气通便颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "益肾化湿颗粒|颗粒": {
+    "canonical_name": "益肾化湿颗粒",
+    "canonical_key": "益肾化湿颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "石斛夜光颗粒|颗粒": {
+    "canonical_name": "石斛夜光颗粒",
+    "canonical_key": "石斛夜光颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "石椒草咳喘颗粒|颗粒": {
+    "canonical_name": "石椒草咳喘颗粒",
+    "canonical_key": "石椒草咳喘颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "硝呋太尔制霉菌素-|栓剂": {
+    "canonical_name": "硝呋太尔-制霉菌素",
+    "canonical_key": "硝呋太尔-制霉菌素|栓剂",
+    "aliases": [
+      "硝呋太尔制霉菌素-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.95,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "硫培非格司亭|注射剂": {
+    "canonical_name": "硫培非格司亭注射液",
+    "canonical_key": "硫培非格司亭注射液|注射剂",
+    "aliases": [
+      "硫培非格司亭"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "祖卡木颗粒|颗粒": {
+    "canonical_name": "祖卡木颗粒",
+    "canonical_key": "祖卡木颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "祛痰止咳胶囊|胶囊": {
+    "canonical_name": "祛痰止咳胶囊",
+    "canonical_key": "祛痰止咳胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "祛痰止咳颗粒|颗粒": {
+    "canonical_name": "祛痰止咳颗粒",
+    "canonical_key": "祛痰止咳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "秋泻灵颗粒|颗粒": {
+    "canonical_name": "秋泻灵颗粒",
+    "canonical_key": "秋泻灵颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "米拉贝隆|缓释控释剂型": {
+    "canonical_name": "米拉贝隆缓释片",
+    "canonical_key": "米拉贝隆缓释片|缓释控释剂型",
+    "aliases": [
+      "米拉贝隆"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "精氨酸谷氨酸|注射剂": {
+    "canonical_name": "精氨酸谷氨酸注射液",
+    "canonical_key": "精氨酸谷氨酸注射液|注射剂",
+    "aliases": [
+      "精氨酸谷氨酸"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "索磷布韦维帕他韦|口服常释剂型": {
+    "canonical_name": "索磷布韦维帕他韦片",
+    "canonical_key": "索磷布韦维帕他韦片|口服常释剂型",
+    "aliases": [
+      "索磷布韦维帕他韦"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "紫杉醇|脂质体注射剂": {
+    "canonical_name": "注射用紫杉醇脂质体",
+    "canonical_key": "注射用紫杉醇脂质体|脂质体注射剂",
+    "aliases": [
+      "紫杉醇"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "经前舒颗粒|颗粒": {
+    "canonical_name": "经前舒颗粒",
+    "canonical_key": "经前舒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "结构脂肪乳（C624）-|注射剂": {
+    "canonical_name": "结构脂肪乳(C6-24)",
+    "canonical_key": "结构脂肪乳(C6-24)|注射剂",
+    "aliases": [
+      "结构脂肪乳（C624）-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "结石康胶囊|胶囊": {
+    "canonical_name": "结石康胶囊",
+    "canonical_key": "结石康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "维得利珠单抗|注射剂": {
+    "canonical_name": "注射用维得利珠单抗",
+    "canonical_key": "注射用维得利珠单抗|注射剂",
+    "aliases": [
+      "维得利珠单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "维莫非尼|口服常释剂型": {
+    "canonical_name": "维莫非尼片",
+    "canonical_key": "维莫非尼片|口服常释剂型",
+    "aliases": [
+      "维莫非尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "罗沙司他|口服常释剂型": {
+    "canonical_name": "罗沙司他胶囊",
+    "canonical_key": "罗沙司他胶囊|口服常释剂型",
+    "aliases": [
+      "罗沙司他"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "聚乙二醇干扰素α2a|注射剂": {
+    "canonical_name": "聚乙二醇干扰素α-2a",
+    "canonical_key": "聚乙二醇干扰素α-2a|注射剂",
+    "aliases": [
+      "聚乙二醇干扰素α2a"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.95,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "聚乙二醇干扰素α2b|注射剂": {
+    "canonical_name": "聚乙二醇干扰素α-2b",
+    "canonical_key": "聚乙二醇干扰素α-2b|注射剂",
+    "aliases": [
+      "聚乙二醇干扰素α2b"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.95,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "聚乙二醇洛塞那肽|注射剂": {
+    "canonical_name": "聚乙二醇洛塞那肽注射液",
+    "canonical_key": "聚乙二醇洛塞那肽注射液|注射剂",
+    "aliases": [
+      "聚乙二醇洛塞那肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "肝泰舒胶囊|胶囊": {
+    "canonical_name": "肝泰舒胶囊",
+    "canonical_key": "肝泰舒胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "肝爽颗粒|颗粒": {
+    "canonical_name": "肝爽颗粒",
+    "canonical_key": "肝爽颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "肠胃舒胶囊|胶囊": {
+    "canonical_name": "肠胃舒胶囊",
+    "canonical_key": "肠胃舒胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "肤痒颗粒|颗粒": {
+    "canonical_name": "肤痒颗粒",
+    "canonical_key": "肤痒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "肾安胶囊|胶囊": {
+    "canonical_name": "肾安胶囊",
+    "canonical_key": "肾安胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "肾舒颗粒|颗粒": {
+    "canonical_name": "肾舒颗粒",
+    "canonical_key": "肾舒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "肿痛安胶囊|胶囊": {
+    "canonical_name": "肿痛安胶囊",
+    "canonical_key": "肿痛安胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "胃力康颗粒|颗粒": {
+    "canonical_name": "胃力康颗粒",
+    "canonical_key": "胃力康颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "胃康胶囊|胶囊": {
+    "canonical_name": "胃康胶囊",
+    "canonical_key": "胃康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "胃痞消颗粒|颗粒": {
+    "canonical_name": "胃痞消颗粒",
+    "canonical_key": "胃痞消颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "胃苏颗粒|颗粒": {
+    "canonical_name": "胃苏颗粒",
+    "canonical_key": "胃苏颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "胆石通胶囊|胶囊": {
+    "canonical_name": "胆石通胶囊",
+    "canonical_key": "胆石通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "胆胃康胶囊|胶囊": {
+    "canonical_name": "胆胃康胶囊",
+    "canonical_key": "胆胃康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脂必妥胶囊|胶囊": {
+    "canonical_name": "脂必妥胶囊",
+    "canonical_key": "脂必妥胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脂必泰胶囊|胶囊": {
+    "canonical_name": "脂必泰胶囊",
+    "canonical_key": "脂必泰胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脂肪乳（C1424）[指大豆油]-|注射剂": {
+    "canonical_name": "脂肪乳(C14-24)[指大豆油]",
+    "canonical_key": "脂肪乳(C14-24)[指大豆油]|注射剂",
+    "aliases": [
+      "脂肪乳（C1424）[指大豆油]-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脑心安胶囊|胶囊": {
+    "canonical_name": "脑心安胶囊",
+    "canonical_key": "脑心安胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脑栓康复胶囊|胶囊": {
+    "canonical_name": "脑栓康复胶囊",
+    "canonical_key": "脑栓康复胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脑栓通胶囊|胶囊": {
+    "canonical_name": "脑栓通胶囊",
+    "canonical_key": "脑栓通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脑脉利颗粒|颗粒": {
+    "canonical_name": "脑脉利颗粒",
+    "canonical_key": "脑脉利颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "脑脉泰胶囊|胶囊": {
+    "canonical_name": "脑脉泰胶囊",
+    "canonical_key": "脑脉泰胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "腰痛宁胶囊|胶囊": {
+    "canonical_name": "腰痛宁胶囊",
+    "canonical_key": "腰痛宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "腰痹通胶囊|胶囊": {
+    "canonical_name": "腰痹通胶囊",
+    "canonical_key": "腰痹通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "至灵胶囊|胶囊": {
+    "canonical_name": "至灵胶囊",
+    "canonical_key": "至灵胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "致康胶囊|胶囊": {
+    "canonical_name": "致康胶囊",
+    "canonical_key": "致康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "舒泌通胶囊|胶囊": {
+    "canonical_name": "舒泌通胶囊",
+    "canonical_key": "舒泌通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "舒筋通络颗粒|颗粒": {
+    "canonical_name": "舒筋通络颗粒",
+    "canonical_key": "舒筋通络颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "舒肝解郁胶囊|胶囊": {
+    "canonical_name": "舒肝解郁胶囊",
+    "canonical_key": "舒肝解郁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾博韦泰|注射剂": {
+    "canonical_name": "注射用艾博韦泰",
+    "canonical_key": "注射用艾博韦泰|注射剂",
+    "aliases": [
+      "艾博韦泰"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾司氯胺酮|注射剂": {
+    "canonical_name": "盐酸艾司氯胺酮注射液",
+    "canonical_key": "盐酸艾司氯胺酮注射液|注射剂",
+    "aliases": [
+      "艾司氯胺酮"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾塞那肽|注射剂": {
+    "canonical_name": "艾塞那肽注射液",
+    "canonical_key": "艾塞那肽注射液|注射剂",
+    "aliases": [
+      "艾塞那肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾尔巴韦格拉瑞韦|口服常释剂型": {
+    "canonical_name": "艾尔巴韦格拉瑞韦片",
+    "canonical_key": "艾尔巴韦格拉瑞韦片|口服常释剂型",
+    "aliases": [
+      "艾尔巴韦格拉瑞韦"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾愈胶囊|胶囊": {
+    "canonical_name": "艾愈胶囊",
+    "canonical_key": "艾愈胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾托格列净|口服常释剂型": {
+    "canonical_name": "艾托格列净片",
+    "canonical_key": "艾托格列净片|口服常释剂型",
+    "aliases": [
+      "艾托格列净"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾普拉唑|注射剂": {
+    "canonical_name": "注射用艾普拉唑钠",
+    "canonical_key": "注射用艾普拉唑钠|注射剂",
+    "aliases": [
+      "艾普拉唑"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾曲泊帕乙醇胺|口服常释剂型": {
+    "canonical_name": "艾曲泊帕乙醇胺片",
+    "canonical_key": "艾曲泊帕乙醇胺片|口服常释剂型",
+    "aliases": [
+      "艾曲泊帕乙醇胺"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "艾考恩丙替|口服常释剂型": {
+    "canonical_name": "艾考恩丙替片",
+    "canonical_key": "艾考恩丙替片|口服常释剂型",
+    "aliases": [
+      "艾考恩丙替"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芍杞颗粒|颗粒": {
+    "canonical_name": "芍杞颗粒",
+    "canonical_key": "芍杞颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芦可替尼|口服常释剂型": {
+    "canonical_name": "磷酸芦可替尼片",
+    "canonical_key": "磷酸芦可替尼片|口服常释剂型",
+    "aliases": [
+      "芦可替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪丹通络颗粒|颗粒": {
+    "canonical_name": "芪丹通络颗粒",
+    "canonical_key": "芪丹通络颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪参胶囊|胶囊": {
+    "canonical_name": "芪参胶囊",
+    "canonical_key": "芪参胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪参通络胶囊|胶囊": {
+    "canonical_name": "芪参通络胶囊",
+    "canonical_key": "芪参通络胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪明颗粒|颗粒": {
+    "canonical_name": "芪明颗粒",
+    "canonical_key": "芪明颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪珍胶囊|胶囊": {
+    "canonical_name": "芪珍胶囊",
+    "canonical_key": "芪珍胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪胶升白胶囊|胶囊": {
+    "canonical_name": "芪胶升白胶囊",
+    "canonical_key": "芪胶升白胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪芎通络胶囊|胶囊": {
+    "canonical_name": "芪芎通络胶囊",
+    "canonical_key": "芪芎通络胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪苈强心胶囊|胶囊": {
+    "canonical_name": "芪苈强心胶囊",
+    "canonical_key": "芪苈强心胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪骨胶囊|胶囊": {
+    "canonical_name": "芪骨胶囊",
+    "canonical_key": "芪骨胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪黄颗粒|颗粒": {
+    "canonical_name": "芪黄颗粒",
+    "canonical_key": "芪黄颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芪龙胶囊|胶囊": {
+    "canonical_name": "芪龙胶囊",
+    "canonical_key": "芪龙胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "芬戈莫德|口服常释剂型": {
+    "canonical_name": "盐酸芬戈莫德胶囊",
+    "canonical_key": "盐酸芬戈莫德胶囊|口服常释剂型",
+    "aliases": [
+      "芬戈莫德"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "苁蓉益肾颗粒|颗粒": {
+    "canonical_name": "苁蓉益肾颗粒",
+    "canonical_key": "苁蓉益肾颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "苏黄止咳胶囊|胶囊": {
+    "canonical_name": "苏黄止咳胶囊",
+    "canonical_key": "苏黄止咳胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "苓桂咳喘宁胶囊|胶囊": {
+    "canonical_name": "苓桂咳喘宁胶囊",
+    "canonical_key": "苓桂咳喘宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "苦黄颗粒|颗粒": {
+    "canonical_name": "苦黄颗粒",
+    "canonical_key": "苦黄颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "英夫利西单抗|注射剂": {
+    "canonical_name": "注射用英夫利西单抗",
+    "canonical_key": "注射用英夫利西单抗|注射剂",
+    "aliases": [
+      "英夫利西单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "茜芷胶囊|胶囊": {
+    "canonical_name": "茜芷胶囊",
+    "canonical_key": "茜芷胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "茵芪肝复颗粒|颗粒": {
+    "canonical_name": "茵芪肝复颗粒",
+    "canonical_key": "茵芪肝复颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "茵陈退黄胶囊|胶囊": {
+    "canonical_name": "茵陈退黄胶囊",
+    "canonical_key": "茵陈退黄胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "荆肤止痒颗粒|颗粒": {
+    "canonical_name": "荆肤止痒颗粒",
+    "canonical_key": "荆肤止痒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "荜铃胃痛颗粒|颗粒": {
+    "canonical_name": "荜铃胃痛颗粒",
+    "canonical_key": "荜铃胃痛颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "葆宫止血颗粒|颗粒": {
+    "canonical_name": "葆宫止血颗粒",
+    "canonical_key": "葆宫止血颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "葛酮通络胶囊|胶囊": {
+    "canonical_name": "葛酮通络胶囊",
+    "canonical_key": "葛酮通络胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "蒲参胶囊|胶囊": {
+    "canonical_name": "蒲参胶囊",
+    "canonical_key": "蒲参胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "蛤蚧定喘胶囊|胶囊": {
+    "canonical_name": "蛤蚧定喘胶囊",
+    "canonical_key": "蛤蚧定喘胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "血栓通胶囊|胶囊": {
+    "canonical_name": "血栓通胶囊",
+    "canonical_key": "血栓通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "血滞通胶囊|胶囊": {
+    "canonical_name": "血滞通胶囊",
+    "canonical_key": "血滞通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "血脂平胶囊|胶囊": {
+    "canonical_name": "血脂平胶囊",
+    "canonical_key": "血脂平胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "血脂康胶囊|胶囊": {
+    "canonical_name": "血脂康胶囊",
+    "canonical_key": "血脂康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "补肺活血胶囊|胶囊": {
+    "canonical_name": "补肺活血胶囊",
+    "canonical_key": "补肺活血胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "补肾通淋颗粒|颗粒": {
+    "canonical_name": "补肾通淋颗粒",
+    "canonical_key": "补肾通淋颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "补虚通瘀颗粒|颗粒": {
+    "canonical_name": "补虚通瘀颗粒",
+    "canonical_key": "补虚通瘀颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "补血生乳颗粒|颗粒": {
+    "canonical_name": "补血生乳颗粒",
+    "canonical_key": "补血生乳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "表虚感冒颗粒|颗粒": {
+    "canonical_name": "表虚感冒颗粒",
+    "canonical_key": "表虚感冒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "西他沙星|口服常释剂型": {
+    "canonical_name": "西他沙星片",
+    "canonical_key": "西他沙星片|口服常释剂型",
+    "aliases": [
+      "西他沙星"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "西妥昔单抗|注射剂": {
+    "canonical_name": "西妥昔单抗注射液",
+    "canonical_key": "西妥昔单抗注射液|注射剂",
+    "aliases": [
+      "西妥昔单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "西尼莫德|口服常释剂型": {
+    "canonical_name": "西尼莫德片",
+    "canonical_key": "西尼莫德片|口服常释剂型",
+    "aliases": [
+      "西尼莫德"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "西达本胺|口服常释剂型": {
+    "canonical_name": "西达本胺片",
+    "canonical_key": "西达本胺片|口服常释剂型",
+    "aliases": [
+      "西达本胺"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "豨莶通栓胶囊|胶囊": {
+    "canonical_name": "豨莶通栓胶囊",
+    "canonical_key": "豨莶通栓胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "贝利尤单抗|注射剂": {
+    "canonical_name": "注射用贝利尤单抗",
+    "canonical_key": "注射用贝利尤单抗|注射剂",
+    "aliases": [
+      "贝利尤单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "贝达喹啉|口服常释剂型": {
+    "canonical_name": "富马酸贝达喹啉片",
+    "canonical_key": "富马酸贝达喹啉片|口服常释剂型",
+    "aliases": [
+      "贝达喹啉"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "贝那鲁肽|注射剂": {
+    "canonical_name": "贝那鲁肽注射液",
+    "canonical_key": "贝那鲁肽注射液|注射剂",
+    "aliases": [
+      "贝那鲁肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "辛芩颗粒|颗粒": {
+    "canonical_name": "辛芩颗粒",
+    "canonical_key": "辛芩颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "达拉非尼|口服常释剂型": {
+    "canonical_name": "甲磺酸达拉非尼胶囊",
+    "canonical_key": "甲磺酸达拉非尼胶囊|口服常释剂型",
+    "aliases": [
+      "达拉非尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "达格列净|口服常释剂型": {
+    "canonical_name": "达格列净片",
+    "canonical_key": "达格列净片|口服常释剂型",
+    "aliases": [
+      "达格列净"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "达立通颗粒|颗粒": {
+    "canonical_name": "达立通颗粒",
+    "canonical_key": "达立通颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "连番止泻胶囊|胶囊": {
+    "canonical_name": "连番止泻胶囊",
+    "canonical_key": "连番止泻胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "退热清咽颗粒|颗粒": {
+    "canonical_name": "退热清咽颗粒",
+    "canonical_key": "退热清咽颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "逐瘀通脉胶囊|胶囊": {
+    "canonical_name": "逐瘀通脉胶囊",
+    "canonical_key": "逐瘀通脉胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "通便灵胶囊|胶囊": {
+    "canonical_name": "通便灵胶囊",
+    "canonical_key": "通便灵胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "通心舒胶囊|胶囊": {
+    "canonical_name": "通心舒胶囊",
+    "canonical_key": "通心舒胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "醒脾养儿颗粒|颗粒": {
+    "canonical_name": "醒脾养儿颗粒",
+    "canonical_key": "醒脾养儿颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "醒脾胶囊|胶囊": {
+    "canonical_name": "醒脾胶囊",
+    "canonical_key": "醒脾胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人TNK组织型纤溶酶原激活剂|注射剂": {
+    "canonical_name": "注射用重组人TNK组织型纤溶酶原激活剂",
+    "canonical_key": "注射用重组人TNK组织型纤溶酶原激活剂|注射剂",
+    "aliases": [
+      "重组人TNK组织型纤溶酶原激活剂"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人Ⅱ型肿瘤坏死因子受体抗体融-合蛋白|注射剂": {
+    "canonical_name": "重组人Ⅱ型肿瘤坏死因子受体-抗体融合蛋白",
+    "canonical_key": "重组人Ⅱ型肿瘤坏死因子受体-抗体融合蛋白|注射剂",
+    "aliases": [
+      "重组人Ⅱ型肿瘤坏死因子受体抗体融-合蛋白"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017"
+    ],
+    "confidence": 0.95,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人凝血因子Ⅶa|注射剂": {
+    "canonical_name": "注射用重组人凝血因子Ⅶa",
+    "canonical_key": "注射用重组人凝血因子Ⅶa|注射剂",
+    "aliases": [
+      "重组人凝血因子Ⅶa"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人尿激酶原|注射剂": {
+    "canonical_name": "注射用重组人尿激酶原",
+    "canonical_key": "注射用重组人尿激酶原|注射剂",
+    "aliases": [
+      "重组人尿激酶原"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人白介素11（Ⅰ）-|注射剂": {
+    "canonical_name": "重组人白介素-11(Ⅰ)",
+    "canonical_key": "重组人白介素-11(Ⅰ)|注射剂",
+    "aliases": [
+      "重组人白介素11（Ⅰ）-"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.92,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人组织型纤溶酶原激酶衍生物|注射剂": {
+    "canonical_name": "注射用重组人组织型纤溶酶原激酶衍生物",
+    "canonical_key": "注射用重组人组织型纤溶酶原激酶衍生物|注射剂",
+    "aliases": [
+      "重组人组织型纤溶酶原激酶衍生物"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人脑利钠肽|注射剂": {
+    "canonical_name": "注射用重组人脑利钠肽",
+    "canonical_key": "注射用重组人脑利钠肽|注射剂",
+    "aliases": [
+      "重组人脑利钠肽"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人血小板生成素|注射剂": {
+    "canonical_name": "重组人血小板生成素注射液",
+    "canonical_key": "重组人血小板生成素注射液|注射剂",
+    "aliases": [
+      "重组人血小板生成素"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组人血管内皮抑制素|注射剂": {
+    "canonical_name": "重组人血管内皮抑制素注射液",
+    "canonical_key": "重组人血管内皮抑制素注射液|注射剂",
+    "aliases": [
+      "重组人血管内皮抑制素"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组牛碱性成纤维细胞生长因子|眼用凝胶": {
+    "canonical_name": "重组牛碱性成纤维细胞生长因子",
+    "canonical_key": "重组牛碱性成纤维细胞生长因子|眼用凝胶剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "重组细胞因子基因衍生蛋白|注射剂": {
+    "canonical_name": "重组细胞因子基因衍生蛋白注射液",
+    "canonical_key": "重组细胞因子基因衍生蛋白注射液|注射剂",
+    "aliases": [
+      "重组细胞因子基因衍生蛋白"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金乌骨通胶囊|胶囊": {
+    "canonical_name": "金乌骨通胶囊",
+    "canonical_key": "金乌骨通胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金叶败毒颗粒|颗粒": {
+    "canonical_name": "金叶败毒颗粒",
+    "canonical_key": "金叶败毒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金天格胶囊|胶囊": {
+    "canonical_name": "金天格胶囊",
+    "canonical_key": "金天格胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金胃泰胶囊|胶囊": {
+    "canonical_name": "金胃泰胶囊",
+    "canonical_key": "金胃泰胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金花清感颗粒|颗粒": {
+    "canonical_name": "金花清感颗粒",
+    "canonical_key": "金花清感颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金蝉止痒胶囊|胶囊": {
+    "canonical_name": "金蝉止痒胶囊",
+    "canonical_key": "金蝉止痒胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金钱胆通颗粒|颗粒": {
+    "canonical_name": "金钱胆通颗粒",
+    "canonical_key": "金钱胆通颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金黄利胆胶囊|胶囊": {
+    "canonical_name": "金黄利胆胶囊",
+    "canonical_key": "金黄利胆胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "金龙胶囊|胶囊": {
+    "canonical_name": "金龙胶囊",
+    "canonical_key": "金龙胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "钆布醇|注射剂": {
+    "canonical_name": "钆布醇注射液",
+    "canonical_key": "钆布醇注射液|注射剂",
+    "aliases": [
+      "钆布醇"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "钆特醇|注射剂": {
+    "canonical_name": "钆特醇注射液",
+    "canonical_key": "钆特醇注射液|注射剂",
+    "aliases": [
+      "钆特醇"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "镇脑宁胶囊|胶囊": {
+    "canonical_name": "镇脑宁胶囊",
+    "canonical_key": "镇脑宁胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "门冬氨酸鸟氨酸|颗粒剂": {
+    "canonical_name": "门冬氨酸鸟氨酸颗粒",
+    "canonical_key": "门冬氨酸鸟氨酸颗粒|颗粒剂",
+    "aliases": [
+      "门冬氨酸鸟氨酸"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿伐曲泊帕|口服常释剂型": {
+    "canonical_name": "马来酸阿伐曲泊帕片",
+    "canonical_key": "马来酸阿伐曲泊帕片|口服常释剂型",
+    "aliases": [
+      "阿伐曲泊帕"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿利沙坦酯|口服常释剂型": {
+    "canonical_name": "阿利沙坦酯片",
+    "canonical_key": "阿利沙坦酯片|口服常释剂型",
+    "aliases": [
+      "阿利沙坦酯"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿卡波糖|咀嚼片": {
+    "canonical_name": "阿卡波糖咀嚼片",
+    "canonical_key": "阿卡波糖咀嚼片|咀嚼片",
+    "aliases": [
+      "阿卡波糖"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿帕替尼|口服常释剂型": {
+    "canonical_name": "甲磺酸阿帕替尼片",
+    "canonical_key": "甲磺酸阿帕替尼片|口服常释剂型",
+    "aliases": [
+      "阿帕替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿昔替尼|口服常释剂型": {
+    "canonical_name": "阿昔替尼片",
+    "canonical_key": "阿昔替尼片|口服常释剂型",
+    "aliases": [
+      "阿昔替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿替普酶|注射剂": {
+    "canonical_name": "注射用阿替普酶",
+    "canonical_key": "注射用阿替普酶|注射剂",
+    "aliases": [
+      "阿替普酶"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿来替尼|口服常释剂型": {
+    "canonical_name": "盐酸阿来替尼胶囊",
+    "canonical_key": "盐酸阿来替尼胶囊|口服常释剂型",
+    "aliases": [
+      "阿来替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿比多尔|颗粒剂": {
+    "canonical_name": "盐酸阿比多尔颗粒",
+    "canonical_key": "盐酸阿比多尔颗粒|颗粒剂",
+    "aliases": [
+      "阿比多尔"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "阿美替尼|口服常释剂型": {
+    "canonical_name": "甲磺酸阿美替尼片",
+    "canonical_key": "甲磺酸阿美替尼片|口服常释剂型",
+    "aliases": [
+      "阿美替尼"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "降脂通便胶囊|胶囊": {
+    "canonical_name": "降脂通便胶囊",
+    "canonical_key": "降脂通便胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "降脂通脉胶囊|胶囊": {
+    "canonical_name": "降脂通脉胶囊",
+    "canonical_key": "降脂通脉胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "雷珠单抗|注射剂": {
+    "canonical_name": "雷珠单抗注射液",
+    "canonical_key": "雷珠单抗注射液|注射剂",
+    "aliases": [
+      "雷珠单抗"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2017",
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "颈复康颗粒|颗粒": {
+    "canonical_name": "颈复康颗粒",
+    "canonical_key": "颈复康颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "颈痛颗粒|颗粒": {
+    "canonical_name": "颈痛颗粒",
+    "canonical_key": "颈痛颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "颈舒颗粒|颗粒": {
+    "canonical_name": "颈舒颗粒",
+    "canonical_key": "颈舒颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "颈通颗粒|颗粒": {
+    "canonical_name": "颈通颗粒",
+    "canonical_key": "颈通颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "风湿祛痛胶囊|胶囊": {
+    "canonical_name": "风湿祛痛胶囊",
+    "canonical_key": "风湿祛痛胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "马昔腾坦|口服常释剂型": {
+    "canonical_name": "马昔腾坦片",
+    "canonical_key": "马昔腾坦片|口服常释剂型",
+    "aliases": [
+      "马昔腾坦"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "骨康胶囊|胶囊": {
+    "canonical_name": "骨康胶囊",
+    "canonical_key": "骨康胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "骨折挫伤胶囊|胶囊": {
+    "canonical_name": "骨折挫伤胶囊",
+    "canonical_key": "骨折挫伤胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "骨龙胶囊|胶囊": {
+    "canonical_name": "骨龙胶囊",
+    "canonical_key": "骨龙胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "鲁拉西酮|口服常释剂型": {
+    "canonical_name": "盐酸鲁拉西酮片",
+    "canonical_key": "盐酸鲁拉西酮片|口服常释剂型",
+    "aliases": [
+      "鲁拉西酮"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "鲜益母草胶囊|胶囊": {
+    "canonical_name": "鲜益母草胶囊",
+    "canonical_key": "鲜益母草胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "麦格司他|口服常释剂型": {
+    "canonical_name": "麦格司他胶囊",
+    "canonical_key": "麦格司他胶囊|口服常释剂型",
+    "aliases": [
+      "麦格司他"
+    ],
+    "evidence": "原名列",
+    "years": [
+      "2019",
+      "2020"
+    ],
+    "confidence": 1.0,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv",
+      "2020年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "麻杏宣肺颗粒|颗粒": {
+    "canonical_name": "麻杏宣肺颗粒",
+    "canonical_key": "麻杏宣肺颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "麻芩消咳颗粒|颗粒": {
+    "canonical_name": "麻芩消咳颗粒",
+    "canonical_key": "麻芩消咳颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "黄莪胶囊|胶囊": {
+    "canonical_name": "黄莪胶囊",
+    "canonical_key": "黄莪胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "黄葵胶囊|胶囊": {
+    "canonical_name": "黄葵胶囊",
+    "canonical_key": "黄葵胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "黑骨藤追风活络胶囊|胶囊": {
+    "canonical_name": "黑骨藤追风活络胶囊",
+    "canonical_key": "黑骨藤追风活络胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "鼻咽清毒颗粒（鼻咽清毒剂）|颗粒": {
+    "canonical_name": "鼻咽清毒颗粒(鼻咽清毒剂)",
+    "canonical_key": "鼻咽清毒颗粒(鼻咽清毒剂)|颗粒剂",
+    "aliases": [
+      "鼻咽清毒颗粒（鼻咽清毒剂）"
+    ],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "鼻渊通窍颗粒|颗粒": {
+    "canonical_name": "鼻渊通窍颗粒",
+    "canonical_key": "鼻渊通窍颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "龙加通络胶囊|胶囊": {
+    "canonical_name": "龙加通络胶囊",
+    "canonical_key": "龙加通络胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "龙心素胶囊|胶囊": {
+    "canonical_name": "龙心素胶囊",
+    "canonical_key": "龙心素胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "龙牡壮骨颗粒|颗粒": {
+    "canonical_name": "龙牡壮骨颗粒",
+    "canonical_key": "龙牡壮骨颗粒|颗粒剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "龙生蛭胶囊|胶囊": {
+    "canonical_name": "龙生蛭胶囊",
+    "canonical_key": "龙生蛭胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "龙血通络胶囊|胶囊": {
+    "canonical_name": "龙血通络胶囊",
+    "canonical_key": "龙血通络胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2017",
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2017年国家医保药品目录_2022通用名版.csv",
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  },
+  "龙金通淋胶囊|胶囊": {
+    "canonical_name": "龙金通淋胶囊",
+    "canonical_key": "龙金通淋胶囊|胶囊剂",
+    "aliases": [],
+    "evidence": "规范化",
+    "years": [
+      "2019"
+    ],
+    "confidence": 0.9,
+    "source_files": [
+      "2019年国家医保药品目录_2022通用名版.csv"
+    ]
+  }
+}
