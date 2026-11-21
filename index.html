@@ -294,6 +294,11 @@
             );
         };
 
+        function insuranceStatusFormatter(cell) {
+            const val = cell.getValue() || cell.getRow().getData().indication_insurance_date || "未纳入";
+            return `<div style="white-space:pre-line;line-height:1.5">${escapeHtml(val)}</div>`;
+        }
+
         function statusFormatter(cell) {
             const v = cell.getValue() || "FEEDBACK";
             const label = { DRAFT: "草稿", MACHINE: "机器初判", FEEDBACK: "反馈待补全", APPROVED: "已入库", REJECTED: "不予入库" }[v] || v;
@@ -341,7 +346,7 @@
                     { title: "药品上市时间", field: "china_approval_date", width: 120 },
                     { title: "适应症全称", field: "indication_full", width: 250, formatter: longTextFormatter },
                     { title: "适应症获批时间", field: "indication_approval_date", width: 130 },
-                    { title: "适应症进医保时间", field: "insurance_status_text", width: 190, formatter: (cell) => cell.getValue() || cell.getRow().getData().indication_insurance_date || "未纳入" },
+                    { title: "适应症进医保时间", field: "insurance_status_text", width: 210, formatter: insuranceStatusFormatter },
                     { title: "指南提及", field: "guideline_recommendation", width: 200, formatter: longTextFormatter },
                     { title: "指南名称", field: "guideline_name", width: 180, formatter: longTextFormatter },
                     { title: "医保局PDF", field: "nhsa_pdf_url", width: 100, formatter: linkFormatter },
