@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import main
-from agent import _clean_brand_name, _strength_from_text
+from agent import _apply_verified_approvals, _clean_brand_name, _strength_from_text
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -223,9 +223,11 @@ def test_wegovy_china_country_correction():
             }],
         }],
     }
+    _apply_verified_approvals(data["products"])
     rows = main.flatten_to_rows(data)
     assert rows[0]["brand_name"] == "诺和盈"
     assert rows[0]["approval_country"] == "中国"
+    assert rows[0]["indication_approval_date"] == "2024-06"
 
 
 def test_manufacturer_truncated_suffix():

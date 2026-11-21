@@ -31,6 +31,16 @@ if os.path.exists("medical_aliases.json"):
     except Exception as e:
         logger.error(f"❌ 医学字典加载失败: {e}")
 
+# ================= 加载已核实的适应症获批记录 =================
+VERIFIED_APPROVALS = []
+if os.path.exists("data/verified_approvals.json"):
+    try:
+        with open("data/verified_approvals.json", "r", encoding="utf-8") as f:
+            VERIFIED_APPROVALS = json.load(f)
+        logger.info(f"✅ 已核实适应症记录加载成功，共 {len(VERIFIED_APPROVALS)} 条。")
+    except Exception as e:
+        logger.error(f"❌ 已核实适应症记录加载失败: {e}")
+
 # ================= 加载原研厂家字典 =================
 ORIGIN_MFR_MAPPING = {} 
 if os.path.exists("origin_manufacturers.json"):
@@ -202,6 +212,11 @@ class BrandByIndicationItem(BaseModel):
 class BrandByIndicationResult(BaseModel):
     indications: List[BrandByIndicationItem] = Field(default_factory=list)
 
+class BrandFromMetaResult(BaseModel):
+    brand_names: List[str] = Field(default_factory=list)
+    manufacturer: str | None = ""
+    evidence: str | None = ""
+
 # ================= LLM 调用封装 =================
 def _parse_dosage_fields(dosage_text: str) -> dict:
     if not dosage_text: return {}
@@ -226,6 +241,98 @@ def _call_llm(prompt, schema_cls, timeout=40):
             logger.warning(f"❌ [LLM API fail] 第{att+1}次重试 | 错误: {e}")
             time.sleep(2)
     return None
+
+def _fill_brand_from_metadata(products: list[dict]) -> None:
+    """解析后第一步：用通用名+厂家+上市时间找本品商品名；只填空，且只接受唯一品牌。"""
+    filled = 0
+    for prod in products:
+        if filled >= 8:
+            break
+        if str(prod.get("brand_name", "")).strip():
+            continue
+        generic = str(prod.get("generic_name", "")).strip()
+        mfr = normalize_manufacturer(prod.get("manufacturer", ""))
+        if not generic or not mfr:
+            continue
+        date = str(prod.get("china_approval_date", "") or "")
+        query = f"{generic} {mfr} {date} 商品名 获批上市".replace("  ", " ").strip()
+        hits = ds_search(query, 5)
+        if not hits:
+            continue
+        prompt = f"""从资料中找出这个药品的商品名。严格输出 JSON：
+{{"brand_names":["商品名"],"manufacturer":"厂家","evidence":"原文依据"}}
+只输出资料中明确出现的商品名；可能对应多个商品名时全部列出；不确定就返回空数组。
+通用名：{generic}
+厂家：{mfr}
+上市时间：{date}
+资料：{hits}"""
+        result = _call_llm(prompt, BrandFromMetaResult)
+        if not result:
+            continue
+        brands = []
+        for raw in result.brand_names or []:
+            brand = _clean_brand_name(raw)
+            if brand and brand not in brands:
+                brands.append(brand)
+        if len(brands) != 1:
+            logger.info(f"🌐 本品商品名不唯一，留空: {generic} {brands}")
+            continue
+        search_mfr = normalize_manufacturer(result.manufacturer or "")
+        if search_mfr and mfr not in search_mfr and search_mfr not in mfr:
+            logger.info(f"🌐 本品商品名厂家不匹配，跳过: {generic} {brands[0]} {search_mfr} != {mfr}")
+            continue
+        prod["brand_name"] = brands[0]
+        filled += 1
+        logger.info(f"🌐 本品商品名: {generic} / {mfr} -> {brands[0]}")
+
+
+def _apply_verified_approvals(products: list[dict]) -> None:
+    """数据驱动的官方获批记录：补/校正中国适应症，不写死药品名。"""
+    for prod in products:
+        generic = str(prod.get("generic_name", "")).replace(" ", "")
+        brand = _clean_brand_name(prod.get("brand_name", ""))
+        if not generic or not brand:
+            continue
+        for record in VERIFIED_APPROVALS:
+            rec_generic = str(record.get("generic_name", "")).replace(" ", "")
+            rec_brand = _clean_brand_name(record.get("brand_name", ""))
+            if not rec_generic or rec_generic not in generic:
+                continue
+            if record.get("exclude"):
+                terms = [str(t) for t in record.get("indication_contains", []) if t]
+                prod["indications"] = [
+                    ind for ind in prod.get("indications", [])
+                    if not any(term in f"{ind.get('indication_short', '')}{ind.get('indication_full', '')}" for term in terms)
+                ]
+                continue
+            if rec_brand and rec_brand != brand:
+                continue
+            terms = [str(t) for t in record.get("indication_contains", []) if t]
+            excludes = [str(t) for t in record.get("exclude_contains", []) if t]
+            matched = False
+            for ind in prod.get("indications", []):
+                text = f"{ind.get('indication_short', '')}{ind.get('indication_full', '')}"
+                if any(term in text for term in excludes):
+                    continue
+                if any(term in text for term in terms):
+                    ind["approval_country"] = record.get("country", "中国")
+                    if record.get("approval_date"):
+                        ind["approval_date"] = record["approval_date"]
+                    if rec_brand and not ind.get("brand_name"):
+                        ind["brand_name"] = rec_brand
+                    matched = True
+            if not matched and record.get("indication_short"):
+                prod.setdefault("indications", []).append({
+                    "indication_short": record["indication_short"],
+                    "indication_full": record["indication_short"],
+                    "brand_name": rec_brand,
+                    "approval_country": record.get("country", "中国"),
+                    "approval_date": record.get("approval_date", ""),
+                    "dosage_full": "",
+                    "guidelines": [],
+                })
+                logger.info(f"🌐 补官方适应症: {generic} / {rec_brand} / {record['indication_short']}")
+
 
 def _enrich_missing_brands(products: list[dict]) -> None:
     """最后一个网搜步骤：只补缺失商品名；厂家不同时新增产品，不污染原行。"""
@@ -507,6 +614,10 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
         }
         all_extracted_products.append(prod)
 
+    # ================= 第一步半：用通用名+厂家+上市时间补本品商品名 =================
+    emit(45, "补本品商品名")
+    _fill_brand_from_metadata(all_extracted_products)
+
     # ================= 第二步：网搜查漏补缺 =================
     emit(50, "全网搜索兜底")
     
@@ -589,13 +700,18 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     for prod in all_extracted_products:
         if prod.get("origin_type") == "原研":
             brand = prod["brand_name"] or prod["generic_name"]
-            hits_ov = ds_search(f"{brand} FDA获批 适应症", 4)
+            hits_ov = ds_search(f"{brand} FDA获批 适应症 商品名", 4)
             if hits_ov:
-                prompt_ov = f"""提取国外获批适应症。输出JSON：{{"overseas_indications": [{{"country": "美国", "indication_short": "", "approval_date": ""}}]}}资料：{hits_ov}"""
+                prompt_ov = f"""提取国外获批适应症，并带上该适应症对应的商品名。输出JSON：
+{{"overseas_indications": [{{"brand_name": "", "country": "美国", "indication_short": "", "approval_date": ""}}]}}
+资料：{hits_ov}"""
                 web_ov = _call_llm(prompt_ov, WebPatchResult)
                 if web_ov and web_ov.overseas_indications:
                     for ov in web_ov.overseas_indications:
                         ov_short = _normalize_disease_with_dict(ov.get("indication_short", ""))
+                        ov_brand = _clean_brand_name(ov.get("brand_name") or (prod.get("brand_name") or ""))
+                        if not ov_brand:
+                            continue
                         if ov_short in existing_china_inds:
                             continue
                         # 海外“过敏性哮喘”不能在中国已有哮喘适应症时额外造细分
@@ -621,6 +737,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                             
                             prod["indications"].append({
                                 "indication_short": ov_short, "indication_full": ov_short,
+                                "brand_name": ov_brand,
                                 "approval_country": ov.get("country", "美国"), "approval_date": ov_date,
                                 "dosage_full": "", "guidelines": []
                             })
@@ -628,6 +745,9 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     # ================= 第三步半：商品名缺失补全 =================
     emit(88, "网搜补全商品名")
     _enrich_missing_brands(all_extracted_products)
+
+    # ================= 第三步半之后：官方获批记录校正 =================
+    _apply_verified_approvals(all_extracted_products)
 
     # ================= 第四步：时间兜底 =================
     for prod in all_extracted_products:

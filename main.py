@@ -227,8 +227,12 @@ def _save_rows(name: str, rows: list) -> list:
             ).first()
             
             if ex:
+                # 已有行只补空字段，绝不用新值覆盖已有值
                 for ck, v in row.items():
-                    if hasattr(Drug, ck) and v not in (None, ""): setattr(ex, ck, v)
+                    if not hasattr(Drug, ck) or v in (None, ""):
+                        continue
+                    if getattr(ex, ck) in (None, ""):
+                        setattr(ex, ck, v)
             else: 
                 safe_row = {ck: cv for ck, cv in row.items() if hasattr(Drug, ck) and cv is not None}
                 s.add(Drug(**safe_row))
@@ -292,12 +296,6 @@ def flatten_to_rows(data: dict) -> list:
             match_name = ind_subtype or ind_name
             row_brand = _resolve_brand(product.get("brand_name", ""), ind.get("brand_name", ""))
             country = ind.get("approval_country", "中国")
-            # 诺和盈（Wegovy）已在中国上市；肥胖/体重管理适应症按中国记录展示
-            if row_brand == "诺和盈" and any(
-                k in f"{ind.get('indication_short', '')}{ind.get('indication_full', '')}"
-                for k in ("肥胖", "体重", "减重", "低卡")
-            ):
-                country = "中国"
             
             if is_generic and not has_nhsa_file:
                 ind_ins_year = _derive_insurance_year(target_nhi, match_name, ind.get("approval_date", ""), is_generic=True, p0_ins_year=p0_ins_year) if target_nhi else "未纳入医保"
