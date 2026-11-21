@@ -25,7 +25,6 @@ nhsa_split/
 # OS / editor
 .DS_Store
 .idea/
-.vscode/
 
 # personal instruction overlays
 AGENTS.local.md

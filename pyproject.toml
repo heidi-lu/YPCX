@@ -1,0 +1,15 @@
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+exclude = [".git", ".venv", "venv", "__pycache__"]
+
+[tool.ruff.lint]
+# Keep CI focused on syntax errors and undefined names first. The existing
+# codebase has a number of unused imports; clean them in a dedicated change.
+select = ["E9", "F"]
+ignore = ["F401", "F841"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

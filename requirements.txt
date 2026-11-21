@@ -1,3 +1,4 @@
+# Human-readable ranges. Use requirements.lock for reproducible installs.
 fastapi>=0.115.0
 uvicorn[standard]>=0.30.6
 openai>=1.51.0
@@ -17,5 +18,4 @@ cryptography>=46.0.1
 tenacity>=8.3.0
 json-repair>=0.58.0
 certifi
-beautifulsoup4
 markdownify
