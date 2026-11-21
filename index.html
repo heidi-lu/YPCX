@@ -386,7 +386,9 @@
                     return normalizeGroupName(name);
                 };
                 const indicationOrder = (row) => {
-                    const m = String(row.indication_full || "").match(/【(\d+)】/);
+                    const text = String(row.indication_full || row.indication_short || "").trim();
+                    let m = text.match(/(?:【|\[)\s*(\d{1,2})\s*(?:】|\])/);
+                    if (!m) m = text.match(/^\s*(\d{1,2})\s*[.、]/);
                     return m ? parseInt(m[1], 10) : 9999;
                 };
                 const indicationDate = (row) => String(row.indication_approval_date || "");
@@ -411,6 +413,15 @@
                         if (ao !== bo) return ao - bo;
                         const ag = groupForRow(a, ai), bg = groupForRow(b, bi);
                         if (ag !== bg) return ag.localeCompare(bg, "zh-Hans-CN");
+                        if (indicationSortMode.value === "number") {
+                            const ao2 = indicationOrder(a), bo2 = indicationOrder(b);
+                            if (ao2 !== bo2) return ao2 - bo2;
+                        } else {
+                            const ad = indicationDate(a), bd = indicationDate(b);
+                            if (ad !== bd) return ad.localeCompare(bd);
+                            const ao2 = indicationOrder(a), bo2 = indicationOrder(b);
+                            if (ao2 !== bo2) return ao2 - bo2;
+                        }
                         const ab = String(a.brand_name || "\uffff"), bb = String(b.brand_name || "\uffff");
                         if (ab !== bb) return ab.localeCompare(bb, "zh-Hans-CN");
                         const am = String(a.manufacturer || "\uffff"), bm = String(b.manufacturer || "\uffff");
@@ -421,13 +432,6 @@
                         if (an !== bn) return an.localeCompare(bn, "zh-Hans-CN");
                         const af = String(a.dosage_form || ""), bf = String(b.dosage_form || "");
                         if (af !== bf) return af.localeCompare(bf, "zh-Hans-CN");
-                        if (indicationSortMode.value === "number") {
-                            const ao2 = indicationOrder(a), bo2 = indicationOrder(b);
-                            if (ao2 !== bo2) return ao2 - bo2;
-                        } else {
-                            const ad = indicationDate(a), bd = indicationDate(b);
-                            if (ad !== bd) return ad.localeCompare(bd);
-                        }
                         return String(a.indication_subtype || a.indication_short || "")
                             .localeCompare(String(b.indication_subtype || b.indication_short || ""), "zh-Hans-CN");
                     });
@@ -436,7 +440,10 @@
 
                 const resortTable = () => {
                     sortTableData();
-                    if (table) table.setData(tableData.value).then(() => table.redraw());
+                    if (table) {
+                        table.setSort([]);
+                        table.setData(tableData.value).then(() => table.redraw());
+                    }
                 };
 
                 const fetchHistory = async () => {
