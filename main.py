@@ -168,10 +168,20 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
     valid_years = sorted([y for y in timeline.keys() if y.isdigit()], key=int)
     if not valid_years: return "未纳入医保"
 
-    app_year = 0
-    if approval_date:
-        m = re.search(r"(\d{4})", str(approval_date))
-        if m: app_year = int(m.group(1))
+    def _ym(value: str):
+        text = str(value or "")
+        m = re.search(r"(\d{4})\D{0,3}(\d{1,2})", text)
+        if m:
+            month = int(m.group(2))
+            if 1 <= month <= 12:
+                return int(m.group(1)), month
+        m = re.search(r"(\d{4})", text)
+        return (int(m.group(1)), 1) if m else None
+
+    app_ym = _ym(approval_date)
+
+    def _release_ym(year: str):
+        return _ym(execution_dates.get(str(year), f"{year}年1月1日"))
 
     terms = _disease_terms(ind_short)
     matched_year = None
@@ -180,13 +190,14 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
         unrestricted = restriction == "无限制"
         explicit = any(_term_in_text(term, restriction) for term in terms)
         if unrestricted:
-            # “无限制”只代表目录没写限定，不能给获批时间未知的新适应症硬套年份
-            if app_year and int(year) >= app_year:
-                matched_year = year
-                break
-            continue
+            if not app_ym:
+                continue
+            if _release_ym(year) and _release_ym(year) < app_ym:
+                continue
+            matched_year = year
+            break
         if explicit:
-            if app_year and int(year) < app_year:
+            if app_ym and _release_ym(year) and _release_ym(year) < app_ym:
                 continue
             matched_year = year
             break
@@ -194,13 +205,18 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
     if not matched_year: return "未纳入医保"
 
     if is_generic:
-        p0_year = 0
-        if p0_ins_year and p0_ins_year != "未纳入医保":
-            m = re.search(r"(\d{4})", p0_ins_year)
-            if m: p0_year = int(m.group(1))
-        final_y = max(int(matched_year), app_year, p0_year)
-        final_key = str(final_y)
-        return execution_dates.get(final_key, final_key) if final_y > 0 else "未纳入医保"
+        p0_ym = _ym(p0_ins_year) if p0_ins_year and p0_ins_year != "未纳入医保" else None
+        year_candidates = [int(matched_year)]
+        if app_ym: year_candidates.append(app_ym[0])
+        if p0_ym: year_candidates.append(p0_ym[0])
+        final_y = max(year_candidates)
+        while final_y <= max(int(y) for y in valid_years):
+            key = str(final_y)
+            release = _release_ym(key)
+            if not app_ym or not release or release >= app_ym:
+                return execution_dates.get(key, key)
+            final_y += 1
+        return "待核实"
     return execution_dates.get(matched_year, matched_year)
 
 

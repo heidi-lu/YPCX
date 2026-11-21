@@ -156,7 +156,7 @@ def test_indication_alias_matching():
     assert main._derive_insurance_year(mepo, "EGPA维持治疗", "") == "2025年1月1日"
 
     beli = main._match_nhi("注射用贝利尤单抗", "注射剂")
-    assert main._derive_insurance_year(beli, "狼疮性肾炎", "2024-03") == "2024年1月1日"
+    assert main._derive_insurance_year(beli, "狼疮性肾炎", "2024-03") == "2025年1月1日"
 
 
 def test_multi_subtype_uses_detail_in_short():
