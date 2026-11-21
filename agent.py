@@ -59,6 +59,7 @@ BRAND_ALIASES = {
     "wegovy": "诺和盈",
     "ozempic": "诺和泰",
     "rybelsus": "诺和忻",
+    "zoladex": "诺雷得",
 }
 
 
@@ -305,8 +306,6 @@ def _apply_verified_approvals(products: list[dict]) -> None:
                     if not any(term in f"{ind.get('indication_short', '')}{ind.get('indication_full', '')}" for term in terms)
                 ]
                 continue
-            if rec_brand and rec_brand != brand:
-                continue
             terms = [str(t) for t in record.get("indication_contains", []) if t]
             excludes = [str(t) for t in record.get("exclude_contains", []) if t]
             matched = False
@@ -318,14 +317,17 @@ def _apply_verified_approvals(products: list[dict]) -> None:
                     ind["approval_country"] = record.get("country", "中国")
                     if record.get("approval_date"):
                         ind["approval_date"] = record["approval_date"]
-                    if rec_brand and not ind.get("brand_name"):
+                    if rec_brand:
                         ind["brand_name"] = rec_brand
+                        if rec_brand != brand:
+                            ind["brand_override"] = True
                     matched = True
-            if not matched and record.get("indication_short"):
+            if not matched and record.get("indication_short") and (not rec_brand or not brand or rec_brand == brand):
                 prod.setdefault("indications", []).append({
                     "indication_short": record["indication_short"],
                     "indication_full": record["indication_short"],
                     "brand_name": rec_brand,
+                    "brand_override": bool(rec_brand and rec_brand != brand),
                     "approval_country": record.get("country", "中国"),
                     "approval_date": record.get("approval_date", ""),
                     "dosage_full": "",

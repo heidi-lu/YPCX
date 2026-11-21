@@ -294,7 +294,10 @@ def flatten_to_rows(data: dict) -> list:
             display, ind_subtype = display_info[idx]
             ind_name = ind_subtype if ind_subtype and len(subtypes_by_display.get(display, set())) > 1 else display
             match_name = ind_subtype or ind_name
-            row_brand = _resolve_brand(product.get("brand_name", ""), ind.get("brand_name", ""))
+            if ind.get("brand_override") and ind.get("brand_name"):
+                row_brand = ind["brand_name"]
+            else:
+                row_brand = _resolve_brand(product.get("brand_name", ""), ind.get("brand_name", ""))
             country = ind.get("approval_country", "中国")
             
             if is_generic and not has_nhsa_file:
@@ -304,7 +307,7 @@ def flatten_to_rows(data: dict) -> list:
             
             processed_inds.append({
                 "ind": ind, "ind_name": ind_name, "ind_subtype": ind_subtype,
-                "country": country, "ind_ins_year": ind_ins_year
+                "brand_name": row_brand, "country": country, "ind_ins_year": ind_ins_year
             })
 
         # 👇 移除了 market_data 组装
@@ -327,6 +330,7 @@ def flatten_to_rows(data: dict) -> list:
             ind = pi["ind"]
             ind_name = pi["ind_name"]
             ind_subtype = pi["ind_subtype"]
+            row_brand = pi["brand_name"]
             country = pi["country"]
             ind_ins_year = pi["ind_ins_year"]
             
