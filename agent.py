@@ -204,6 +204,9 @@ class BrandFromMetaResult(BaseModel):
     manufacturer: str | None = ""
     evidence: str | None = ""
 
+class DosageTextResult(BaseModel):
+    dosage_full: str | None = ""
+
 # ================= LLM 调用封装 =================
 def _parse_dosage_fields(dosage_text: str) -> dict:
     if not dosage_text: return {}
@@ -271,6 +274,39 @@ def _fill_brand_from_metadata(products: list[dict]) -> None:
         prod["brand_name"] = brands[0]
         filled += 1
         logger.info(f"🌐 本品商品名: {generic} / {mfr} -> {brands[0]}")
+
+
+def _enrich_missing_dosage(products: list[dict]) -> None:
+    """只补空 dosage_full；不覆盖已有用法用量。"""
+    filled = 0
+    for prod in products:
+        if filled >= 12:
+            break
+        generic = str(prod.get("generic_name", "")).strip()
+        brand = _clean_brand_name(prod.get("brand_name", ""))
+        if not generic:
+            continue
+        for ind in prod.get("indications", []):
+            if filled >= 12:
+                break
+            if str(ind.get("dosage_full") or ind.get("dosage") or "").strip() not in ("", "未提供", "未提及", "未知", "暂无"):
+                continue
+            short = str(ind.get("indication_short", "")).strip()
+            if not short:
+                continue
+            hits = ds_search(f"{generic} {brand} {short} 用法用量 说明书", 3)
+            if not hits:
+                continue
+            prompt = f"""只提取下面资料中【{generic}】针对【{short}】的用法用量原文。
+严格输出 JSON：{{"dosage_full":"完整用法用量"}}
+资料没有明确用法用量就返回空字符串，不要编。
+资料：{hits}"""
+            result = _call_llm(prompt, DosageTextResult)
+            dosage = str(result.dosage_full or "").strip() if result else ""
+            if dosage and dosage not in {"未提供", "未提及", "未知", "暂无"}:
+                ind["dosage_full"] = dosage
+                filled += 1
+                logger.info(f"🌐 补用法用量: {generic} / {short}")
 
 
 def _enrich_missing_brands(products: list[dict]) -> None:
@@ -700,6 +736,10 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     # ================= 第三步半：商品名缺失补全 =================
     emit(88, "网搜补全商品名")
     _enrich_missing_brands(all_extracted_products)
+
+    # ================= 第三步半之后：补缺失用法用量 =================
+    emit(90, "补用法用量")
+    _enrich_missing_dosage(all_extracted_products)
 
     # ================= 第四步：时间兜底 =================
     for prod in all_extracted_products:

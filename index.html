@@ -106,6 +106,7 @@
         .tabulator .tabulator-row:hover { background-color: rgba(239, 246, 255, 0.8) !important; }
         
         .long-text-cell { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; line-height: 1.5; font-size: 12px; color: #475569; word-break: break-all; }
+        .full-text-link { display: inline-block; margin-top: 4px; color: #2563eb; font-size: 12px; cursor: pointer; text-decoration: underline; }
         .link-btn { color: #2563eb; text-decoration: none; font-weight: 500; }
         
         .empty-hint { display: flex; flex-direction: column; align-items: center; padding: 80px 20px; color: #94a3b8; }
@@ -275,8 +276,16 @@
         function longTextFormatter(cell) {
             const val = cell.getValue();
             if (!val) return "";
-            return `<div class="long-text-cell" title="${escapeHtml(val)}">${escapeHtml(val)}</div>`;
+            return `<div><div class="long-text-cell" title="${escapeHtml(val)}">${escapeHtml(val)}</div><span class="full-text-link" data-text="${escapeHtml(val)}" onclick="showLongText(this.dataset.text)">查看全文</span></div>`;
         }
+
+        window.showLongText = (text) => {
+            ElMessageBox.alert(
+                `<div style="white-space:pre-wrap;max-height:60vh;overflow:auto;line-height:1.7">${escapeHtml(text)}</div>`,
+                "全文",
+                { dangerouslyUseHTMLString: true, confirmButtonText: "关闭" }
+            );
+        };
 
         function statusFormatter(cell) {
             const v = cell.getValue() || "FEEDBACK";
