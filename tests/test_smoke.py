@@ -11,7 +11,6 @@ from agent import (
     _split_numbered_indications,
     _strength_from_text,
 )
-from skill_vision_parser import _extract_full_indications_from_text, _extract_ppt_guidelines
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -222,51 +221,6 @@ def test_insurance_status_entry_and_exit():
     }
     assert main._insurance_status_text(nhi, "经典型霍奇金淋巴瘤", "霍奇金淋巴瘤") == "2021年进入，2026年退出"
     assert main._insurance_status_text(nhi, "尿路上皮癌", "尿路上皮癌") == "2021年进入"
-
-
-def test_full_indications_from_pdf_text():
-    text = """说明书全部适应症/功能主治
-【1】经典型霍奇金淋巴瘤 本品适用于至少经过二线系统化疗的复发或难治性经典型霍奇金淋巴瘤的治疗。
-【2】非鳞状非小细胞肺癌 （1）本品联合培美曲塞和铂类化疗，用于不可手术切除的局部晚期患者。
-现行医保目录的医保支付范围
-1.经典型霍奇金淋巴瘤..."""
-    rows = _extract_full_indications_from_text(text)
-    assert [r["indication_short"] for r in rows] == ["经典型霍奇金淋巴瘤", "非鳞状非小细胞肺癌"]
-    assert rows[0]["indication_full"].startswith("【1】")
-    assert rows[1]["indication_full"].startswith("【2】")
-
-
-def test_ppt_guidelines_extraction():
-    text = """《非小细胞肺癌诊疗指南（2025版）》 I级推荐（1A类证据）
-《中国肺癌免疫治疗规范化应用指南（2024版）》 强推荐（1类证据）
-《免疫检查点抑制剂临床应用指南（2024版）》 II级推荐（1A类证据）"""
-    rows = _extract_ppt_guidelines(text)
-    assert len(rows) == 3
-    assert rows[0]["name"] == "非小细胞肺癌诊疗指南（2025版）"
-    assert "I级推荐" in rows[0]["recommendation"]
-
-
-def test_inline_sequential_indications_from_pdf_text():
-    text = """说明书全部适应症/功能主治
-1.本品适用于经典型霍奇金淋巴瘤的治疗。2.本品适用于非鳞状非小细胞肺癌的一线治疗。3.本品适用于鳞状非小细胞肺癌的一线治疗。
-现行医保目录的医保支付范围
-1.经典型..."""
-    rows = _extract_full_indications_from_text(text)
-    assert len(rows) == 3
-    assert all(r["indication_short"] for r in rows)
-    assert rows[0]["indication_full"].startswith("1.")
-
-
-def test_interleaved_numbering_uses_main_sequence():
-    text = """说明书全部适应症/功能主治
-1.疾病A 本品适用于A。2.疾病B 本品适用于B。3.疾病C 本品适用于C。
-1.支付范围一 2.支付范围二 3.支付范围三
-4.疾病D 本品适用于D。
-现行医保目录的医保支付范围"""
-    rows = _extract_full_indications_from_text(text)
-    assert len(rows) == 4
-    assert rows[0]["indication_full"].startswith("1.")
-    assert rows[-1]["indication_full"].startswith("4.")
 
 
 def test_numbered_indications_split_rules():

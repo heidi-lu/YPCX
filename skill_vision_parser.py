@@ -50,64 +50,6 @@ def _call_vlm(image_urls: list[str], prompt: str) -> str:
     )
     return resp.choices[0].message.content
 
-def _extract_full_indications_from_text(full_text: str) -> list[dict]:
-    """从申报材料原文的“说明书全部适应症/功能主治”块按【n】拆出完整段落。"""
-    text = str(full_text or "").replace("\u3000", " ")
-    match = re.search(
-        r"说明书全部适应症(?:/功能主治)?\s*(.*?)(?:现行医保目录|说明书用法用量|所治疗疾病)",
-        text,
-        re.S,
-    )
-    if not match:
-        return []
-    block = re.sub(r"\s+", "", match.group(1))
-    # 申报表把“医保支付范围调整”的 1./2./3. 插进了适应症正文，先删掉这段
-    block = re.sub(
-        r"1\.20\d{2}年12月31日协议到期.*?其他药品。",
-        "",
-        block,
-        flags=re.S,
-    )
-    result = []
-    parts = []
-    if len(re.findall(r"【\d+】", block)) >= 2:
-        parts = [p.strip() for p in re.split(r"(?=【\d+】)", block) if re.match(r"【\d+】", p.strip())]
-        marker = re.compile(r"^【\d+】")
-    else:
-        # 兼容 1. 2. 3. ... 这种连续编号，必须从 1 开始且连续
-        matches = list(re.finditer(r"(?<!\d)(\d{1,2})\s*[.、]\s*", block))
-        # 正文里可能插入“1. 2. 3.”的医保支付范围子列表，只取从 1 开始连续递增的主编号
-        selected = []
-        expected = 1
-        for match in matches:
-            if int(match.group(1)) == expected:
-                selected.append(match)
-                expected += 1
-        if len(selected) >= 2:
-            for match in selected:
-                raw_index = matches.index(match)
-                end = matches[raw_index + 1].start() if raw_index + 1 < len(matches) else len(block)
-                parts.append(block[match.start():end].strip())
-        marker = re.compile(r"^\d{1,2}\s*[.、]\s*")
-
-    for part in parts:
-        body = marker.sub("", part).strip()
-        short = re.split(r"本品|用于|适用|联合|（|\(", body, maxsplit=1)[0].strip()
-        short = re.sub(r"\s+", "", short)
-        if not short:
-            # 1.2.3. 这种没有病名标题的条目：至少保留可展示的短名，不丢条目
-            fallback = re.sub(r"^本品(?:适用于|用于)?", "", body).strip()
-            short = fallback[:60]
-        if not short:
-            continue
-        result.append({
-            "indication_short": short,
-            "indication_full": part,
-            "approval_country": "中国",
-        })
-    return result
-
-
 def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
     res = {}
     try:
@@ -132,66 +74,19 @@ def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
                     if val: res["cover_drug_name"] = re.sub(r'[_ \s]', '', val)
                     break
                         
-            # 优先取“企业名称”，不要取“授权企业”；企业名可能跨两行
-            m_ent = re.search(
-                r"企业名称\s*[：:]\s*(.{0,100}?(?:有限公司|有限责任公司|股份有限公司|集团|分公司))",
-                full_text,
-                re.S,
-            )
-            if m_ent:
-                res["manufacturer"] = re.sub(r"[_ \s]", "", m_ent.group(1))
-            else:
-                for i, line in enumerate(lines):
-                    if "上市许可持有人" in line:
-                        matched = re.search(r'上市许可持有人(?:（授权企业）)?\s*[：:]\s*(.*)', line)
-                        val = matched.group(1).strip() if matched else ""
-                        if not val and i + 1 < len(lines):
-                            val = lines[i + 1].strip()
-                        val = re.sub(r'[_ \s]', '', val)
-                        if val and "持有人" not in val and "授权企业" not in val:
-                            res["manufacturer"] = val
-                        break
+            for i, line in enumerate(lines):
+                if "企业名称" in line or "上市许可持有人" in line:
+                    val = re.sub(r'.*?(?:企业名称|上市许可持有人)\s*[：:]\s*', '', line).strip()
+                    if not val and i+1 < len(lines): val = lines[i+1].strip()
+                    if val: res["manufacturer"] = re.sub(r'[_ \s]', '', val)
+                    break
             
             clean_text = re.sub(r'\s+', '', full_text)
             m_reg = re.search(r'(?:药品)?注册分类[：:]?([\u4e00-\u9fa5a-zA-Z0-9\.]+)', clean_text)
             if m_reg: res["registration_category"] = m_reg.group(1).strip()
-            res["full_indications"] = _extract_full_indications_from_text(full_text)
-            m_spec = re.search(
-                r"说明书全部注册规格\s*(.*?)(?:上市许可持有人|说明书全部适应症)",
-                full_text,
-                re.S,
-            )
-            if m_spec:
-                res["specification"] = re.sub(r"\s+", "", m_spec.group(1))
     except Exception as e:
         logger.warning(f"PDF 本地解析失败: {e}")
     return res
-
-def _extract_ppt_guidelines(text: str) -> list[dict]:
-    """从 PPT 文本提取《...指南...》和推荐等级。"""
-    lines = [ln.strip() for ln in str(text or "").splitlines() if ln.strip()]
-    result = []
-    seen = set()
-    for i, line in enumerate(lines):
-        for name in re.findall(r"《([^》]*指南[^》]*)》", line):
-            context = line
-            if i + 1 < len(lines):
-                context += " " + lines[i + 1]
-            level_match = re.search(
-                r"((?:I{1,3}|IV|强|弱)?\s*级?推荐\s*[（(][^）)]*[）)])",
-                context,
-            )
-            level = level_match.group(1).strip() if level_match else ""
-            if not level:
-                level_match = re.search(r"((?:I{1,3}|IV|强|弱)\s*级推荐)", context)
-                level = level_match.group(1).strip() if level_match else ""
-            key = (name, level)
-            if key in seen:
-                continue
-            seen.add(key)
-            result.append({"name": name, "recommendation": level, "level": level})
-    return result
-
 
 def _extract_ppt_info(ppt_bytes: bytes) -> dict:
     res = {}
@@ -221,7 +116,6 @@ def _extract_ppt_info(ppt_bytes: bytes) -> dict:
             except: pass
             
     if not text.strip(): return {}
-    res["ppt_guidelines"] = _extract_ppt_guidelines(text)
 
     clean_text = re.sub(r'\s+', '', text)
     m_reg = re.search(r'(?:药品)?注册分类[：:]?([\u4e00-\u9fa5a-zA-Z0-9\.]+)', clean_text)
@@ -262,7 +156,6 @@ def _extract_body_info(pdf_bytes: bytes) -> dict:
         prompt = """提取正文信息。严格输出JSON：
         {"dosage_form":"", "specification":"", "indications":[{
             "indication_short":"极简疾病名", "indication_full":"完整原话", 
-            "specification":"该适应症对应规格(如10.8mg)，没写填''",
             "approval_date":"获批时间(YYYY-MM)，没写填''",
             "dosage_full":"用法用量", "guidelines":[{"name":"", "recommendation":"", "level":""}]
         }]}
@@ -274,8 +167,7 @@ def _extract_body_info(pdf_bytes: bytes) -> dict:
 def extract_medical_pdf_vision(pdf_bytes: bytes | None, ppt_bytes: bytes | None = None) -> dict:
     res = {"cover_drug_name": "", "manufacturer": "", "registration_category": "", 
            "china_approval_date": "", "dosage_form": "", "specification": "", 
-           "indications": [], "full_indications": [], "brand_name": "", "indication_approval_times": [],
-           "ppt_guidelines": []}
+           "indications": [], "brand_name": "", "indication_approval_times": []}
 
     if pdf_bytes:
         res.update(_extract_pdf_key_info(pdf_bytes))
