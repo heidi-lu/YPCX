@@ -347,10 +347,17 @@ def _country_dedupe_rows(rows: list[dict]) -> list[dict]:
     """同一药品同一适应症，中国获批优先，去掉美国/海外重复行。"""
     groups: dict[tuple, list[dict]] = {}
     for row in rows:
+        short = _normalize_disease_with_dict(row.get("indication_short", ""))
+        # 鼻窦炎是上位名，和“慢性鼻窦炎伴鼻息肉”合并成同一组
+        if short == "鼻窦炎":
+            short = "慢性鼻窦炎伴鼻息肉"
+        # 同一疾病的不同中文写法
+        if short == "结节性瘙痒症":
+            short = "结节性痒疹"
         key = (
             str(row.get("generic_name", "")).strip(),
             str(row.get("manufacturer", "")).strip(),
-            _normalize_disease_with_dict(row.get("indication_short", "")),
+            short,
         )
         groups.setdefault(key, []).append(row)
 
@@ -360,8 +367,8 @@ def _country_dedupe_rows(rows: list[dict]) -> list[dict]:
         if china_rows:
             result.extend(china_rows)
             continue
-        # 没有中国行时，海外只保留一条，避免美国/全球重复
-        result.append(group[0])
+        # 没有中国行时，海外只保留最具体的一条，避免上位名/子类重复
+        result.append(max(group, key=lambda r: len(str(r.get("indication_full", "")))))
     return result
 
 
