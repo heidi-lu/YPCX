@@ -323,22 +323,12 @@ def _brand_matches_generic(generic: str, brand: str) -> bool:
     return True
 
 
-def _needs_short_cleanup(ind: dict) -> bool:
-    short = str(ind.get("indication_short", "")).strip()
-    full = str(ind.get("indication_full", "")).strip()
-    if not full:
-        return False
-    if len(short) > 14:
-        return True
-    return any(short.startswith(prefix) for prefix in ("联合", "单药", "本品", "适用于", "用于", "至少经过"))
-
-
 def _normalize_short_indications(products: list[dict]) -> None:
     """用完整适应症原文让 LLM 提取纯疾病名，作为适应症简。"""
     for prod in products:
         items = []
         for idx, ind in enumerate(prod.get("indications", []), start=1):
-            if _needs_short_cleanup(ind):
+            if str(ind.get("indication_full") or "").strip():
                 items.append((idx, ind))
         if not items:
             continue
@@ -347,6 +337,9 @@ def _normalize_short_indications(products: list[dict]) -> None:
         )
         prompt = f"""下面是药品的完整适应症原文。请为每条提取一个“纯疾病名”作为适应症简称。
 只输出病名，不要包含：本品、联合、单药、用于、适用于、治疗、患者、一线/二线、方案。
+【硬规则】除“非小细胞肺癌”外，简称最多 6 个汉字；超过必须继续删减。
+必须删除“鳞状、腺癌、细胞癌、结合部、或、及”等细分修饰，保留常用大类病名。
+简称优先采用“器官/部位 + 癌”的形式（如食管癌、胃癌），不要把鳞癌、腺癌、细胞癌当成简称。
 保留疾病大类，但不要继续上卷：非小细胞肺癌的各亚型统一为“非小细胞肺癌”，不要归成“肺癌”。
 输出 JSON：{{"items":[{{"index":1,"indication_short":"纯疾病名"}}]}}
 {lines}"""
