@@ -10,6 +10,7 @@ from agent import (
     _split_numbered_indications,
     _strength_from_text,
 )
+from skill_vision_parser import _extract_full_indications_from_text
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -198,6 +199,18 @@ def test_row_level_specification_and_brand_precedence():
     rows = main.flatten_to_rows(data)
     assert [r["specification"] for r in rows] == ["10.8mg", "3.6mg"]
     assert all(r["brand_name"] == "原商品名" for r in rows)
+
+
+def test_full_indications_from_pdf_text():
+    text = """说明书全部适应症/功能主治
+【1】经典型霍奇金淋巴瘤 本品适用于至少经过二线系统化疗的复发或难治性经典型霍奇金淋巴瘤的治疗。
+【2】非鳞状非小细胞肺癌 （1）本品联合培美曲塞和铂类化疗，用于不可手术切除的局部晚期患者。
+现行医保目录的医保支付范围
+1.经典型霍奇金淋巴瘤..."""
+    rows = _extract_full_indications_from_text(text)
+    assert [r["indication_short"] for r in rows] == ["经典型霍奇金淋巴瘤", "非鳞状非小细胞肺癌"]
+    assert rows[0]["indication_full"].startswith("【1】")
+    assert rows[1]["indication_full"].startswith("【2】")
 
 
 def test_numbered_indications_split_rules():

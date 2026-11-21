@@ -523,6 +523,26 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
             continue
         
         res = extract_medical_pdf_vision(pdf_b, ppt_b) or {}
+
+        # PDF 原文“说明书全部适应症”块优先，保留【n】完整段落
+        if res.get("full_indications"):
+            old_by_short = {}
+            for old in res.get("indications", []):
+                key = _normalize_disease_with_dict(old.get("indication_short", ""))
+                if key:
+                    old_by_short[key] = old
+            merged = []
+            for full in res["full_indications"]:
+                key = _normalize_disease_with_dict(full.get("indication_short", ""))
+                old = old_by_short.get(key, {})
+                merged.append({
+                    **full,
+                    "approval_date": old.get("approval_date", ""),
+                    "dosage_full": old.get("dosage_full", ""),
+                    "specification": old.get("specification", ""),
+                    "guidelines": old.get("guidelines", []),
+                })
+            res["indications"] = merged
         
         final_name = res.get("cover_drug_name") or g_name
         for junk in ["企业名称", "企业", "申报", "药品名称"]:

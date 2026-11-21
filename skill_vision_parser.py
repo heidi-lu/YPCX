@@ -50,6 +50,35 @@ def _call_vlm(image_urls: list[str], prompt: str) -> str:
     )
     return resp.choices[0].message.content
 
+def _extract_full_indications_from_text(full_text: str) -> list[dict]:
+    """从申报材料原文的“说明书全部适应症/功能主治”块按【n】拆出完整段落。"""
+    text = str(full_text or "").replace("\u3000", " ")
+    match = re.search(
+        r"说明书全部适应症(?:/功能主治)?\s*(.*?)(?:现行医保目录|说明书用法用量|所治疗疾病)",
+        text,
+        re.S,
+    )
+    if not match:
+        return []
+    block = re.sub(r"\s+", "", match.group(1))
+    result = []
+    for part in re.split(r"(?=【\d+】)", block):
+        part = part.strip()
+        if not re.match(r"【\d+】", part):
+            continue
+        body = re.sub(r"^【\d+】", "", part)
+        short = re.split(r"本品|用于|适用|联合|（|\(", body, maxsplit=1)[0].strip()
+        short = re.sub(r"\s+", "", short)
+        if not short:
+            continue
+        result.append({
+            "indication_short": short,
+            "indication_full": part,
+            "approval_country": "中国",
+        })
+    return result
+
+
 def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
     res = {}
     try:
@@ -97,6 +126,7 @@ def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
             clean_text = re.sub(r'\s+', '', full_text)
             m_reg = re.search(r'(?:药品)?注册分类[：:]?([\u4e00-\u9fa5a-zA-Z0-9\.]+)', clean_text)
             if m_reg: res["registration_category"] = m_reg.group(1).strip()
+            res["full_indications"] = _extract_full_indications_from_text(full_text)
     except Exception as e:
         logger.warning(f"PDF 本地解析失败: {e}")
     return res
@@ -181,7 +211,7 @@ def _extract_body_info(pdf_bytes: bytes) -> dict:
 def extract_medical_pdf_vision(pdf_bytes: bytes | None, ppt_bytes: bytes | None = None) -> dict:
     res = {"cover_drug_name": "", "manufacturer": "", "registration_category": "", 
            "china_approval_date": "", "dosage_form": "", "specification": "", 
-           "indications": [], "brand_name": "", "indication_approval_times": []}
+           "indications": [], "full_indications": [], "brand_name": "", "indication_approval_times": []}
 
     if pdf_bytes:
         res.update(_extract_pdf_key_info(pdf_bytes))
