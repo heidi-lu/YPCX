@@ -301,6 +301,7 @@ def main():
             stats[f"时间来源:{date_source}"] += 1
 
             restriction = _clean_html(get_val(row, col_idx.get('restriction', -1))) or "无限制"
+            restriction = re.sub(r"\s+", "", restriction)
             catalog_type = get_val(row, col_idx.get('catalog_type', -1)) or "基本医保"
             drug_class = get_val(row, col_idx.get('drug_class', -1))
             insurance_category = get_val(row, col_idx.get('insurance_category', -1))
