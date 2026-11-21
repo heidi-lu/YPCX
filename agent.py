@@ -351,6 +351,15 @@ def _call_llm(prompt, schema_cls, timeout=40):
             time.sleep(2)
     return None
 
+def _is_plausible_brand(brand: str) -> bool:
+    text = str(brand or "").strip()
+    if not text or len(text) > 6:
+        return False
+    if text.endswith("单抗") or "注射液" in text or "片" in text:
+        return False
+    return True
+
+
 def _brand_matches_generic(generic: str, brand: str) -> bool:
     """二次确认品牌是否真的是这个通用名的商品名。"""
     if not generic or not brand:
@@ -534,7 +543,7 @@ def _enrich_missing_brands(products: list[dict]) -> None:
         product_mfr = normalize_manufacturer(prod.get("manufacturer", ""))
         for item in result.indications:
             brand = _clean_brand_name(item.brand_name or "")
-            if not brand or not _is_chinese_brand(brand):
+            if not brand or not _is_chinese_brand(brand) or not _is_plausible_brand(brand):
                 continue
             if not _brand_matches_generic(generic, brand):
                 continue
@@ -822,7 +831,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
         if base_obj and base_obj.products:
             for p in base_obj.products:
                 clean_brand = _clean_brand_name(p.get("brand_name", ""))
-                if not clean_brand or not _is_chinese_brand(clean_brand):
+                if not clean_brand or not _is_chinese_brand(clean_brand) or not _is_plausible_brand(clean_brand):
                     continue
                 if not _brand_matches_generic(drug_name, clean_brand):
                     continue

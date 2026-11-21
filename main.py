@@ -441,6 +441,9 @@ def flatten_to_rows(data: dict) -> list:
             ind_subtype = pi["ind_subtype"]
             row_brand = pi["brand_name"]
             country = pi["country"]
+            ind_full = ind.get("indication_full", "")
+            if country == "中国" and ind_full and not re.search(r"[\u4e00-\u9fa5]", ind_full):
+                continue
             ind_ins_year = pi["ind_ins_year"]
             ind_ins_status = _insurance_status_text(local_nhi or target_nhi, ind.get("indication_full", ""), ind_name)
             
