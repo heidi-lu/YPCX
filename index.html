@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>医药数据大脑 · 药品基础库</title>
+    <title>药品信息查询 · 药品基础库</title>
     <link rel="stylesheet" href="https://unpkg.com/element-plus@2.5.6/dist/index.css" />
     <link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
     
@@ -165,11 +165,11 @@
             <div class="logo-group">
                 <div class="logo-area">
                     <span class="logo-icon">💊</span>
-                    <span>医药数据大脑</span>
+                    <span>药品信息查询</span>
                 </div>
                 <div class="nav-links">
                     <button class="nav-btn active">药品基础库</button>
-                    <button class="nav-btn" onclick="window.location.href='market.html'">市场情报库</button>
+                    <button class="nav-btn" onclick="window.location.href='market.html'">市场信息</button>
                 </div>
             </div>
         </header>
@@ -235,6 +235,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="适应症简"><el-input v-model="editForm.indication_short"></el-input></el-form-item>
+                <el-form-item label="适应症细分"><el-input v-model="editForm.indication_subtype"></el-input></el-form-item>
                 <el-form-item label="药品上市时间"><el-input v-model="editForm.china_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
                 <el-form-item label="适应症获批时间"><el-input v-model="editForm.indication_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
                 <el-form-item label="进医保时间"><el-input v-model="editForm.indication_insurance_date" placeholder="YYYY年M月D日"></el-input></el-form-item>
@@ -319,6 +320,7 @@
                     { title: "厂家", field: "manufacturer", width: 180 },
                     { title: "原研/仿制", field: "origin_type", width: 100 },
                     { title: "适应症简", field: "indication_short", width: 150 },
+                    { title: "适应症细分", field: "indication_subtype", width: 160 },
                     { title: "获批国家", field: "approval_country", width: 90 },
                     { title: "药品上市时间", field: "china_approval_date", width: 120 },
                     { title: "适应症全称", field: "indication_full", width: 250, formatter: longTextFormatter },
@@ -344,7 +346,45 @@
 
                 const statusLabel = (s) => ({ running: "进行中", success: "完成", error: "失败", cached: "缓存命中" }[s] || s);
                 const progressStatusOf = (s) => (s === "success" ? "success" : s === "error" ? "exception" : "");
-                const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.indication_short || ""}`;
+                const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.indication_short || ""}|${d.indication_subtype || ""}`;
+
+                const normalizeGroupName = (name) => {
+                    let s = String(name || "").replace(/\s+/g, "");
+                    s = s.replace(/^(注射用|注射剂|冻干|重组)/, "");
+                    s = s.replace(/(注射液|注射剂|片剂|片|胶囊|颗粒|口服液|滴丸|丸|散|乳膏|软膏|凝胶|喷雾剂|吸入剂|贴剂|栓|酊|膏|水|液|注)$/, "");
+                    s = s.replace(/[αβγδ]$/, "");
+                    return s || String(name || "");
+                };
+                const queryIndexForRow = (row) => {
+                    const hay = `${row.generic_name || ""} ${row.brand_name || ""}`.replace(/\s+/g, "");
+                    for (let i = 0; i < drugNames.value.length; i++) {
+                        const q = String(drugNames.value[i] || "").replace(/\s+/g, "");
+                        if (q && hay.includes(q)) return i;
+                    }
+                    return 999;
+                };
+                const groupForRow = (row, queryIndex) => {
+                    const q = String(drugNames.value[queryIndex] || "").replace(/\s+/g, "");
+                    const name = String(row.generic_name || "").replace(/\s+/g, "");
+                    if (q && name.includes(q)) return normalizeGroupName(q);
+                    return normalizeGroupName(name);
+                };
+                const sortTableData = () => {
+                    const rows = [...tableData.value];
+                    rows.sort((a, b) => {
+                        const ai = queryIndexForRow(a), bi = queryIndexForRow(b);
+                        if (ai !== bi) return ai - bi;
+                        const ag = groupForRow(a, ai), bg = groupForRow(b, bi);
+                        if (ag !== bg) return ag.localeCompare(bg, "zh-Hans-CN");
+                        const an = String(a.generic_name || ""), bn = String(b.generic_name || "");
+                        if (an !== bn) return an.localeCompare(bn, "zh-Hans-CN");
+                        const af = String(a.dosage_form || ""), bf = String(b.dosage_form || "");
+                        if (af !== bf) return af.localeCompare(bf, "zh-Hans-CN");
+                        return String(a.indication_subtype || a.indication_short || "")
+                            .localeCompare(String(b.indication_subtype || b.indication_short || ""), "zh-Hans-CN");
+                    });
+                    tableData.value = rows;
+                };
 
                 const fetchHistory = async () => {
                     try {
@@ -376,7 +416,9 @@
                         const res = JSON.parse(e.data);
                         upsertProgress(res.drug, { status: "cached", stage: "已加载缓存" });
                         tableData.value = tableData.value.filter((d) => !res.data.some((x) => rowKey(x) === rowKey(d)));
-                        tableData.value = [...tableData.value, ...res.data]; 
+                        tableData.value = [...tableData.value, ...res.data];
+                        sortTableData();
+                        table.setSort([]);
                         table.setData(tableData.value).then(() => table.redraw());
                     });
 
@@ -399,7 +441,9 @@
                         upsertProgress(res.drug, { status: "success", percent: 100 });
                         
                         tableData.value = tableData.value.filter((d) => !res.data.some((x) => rowKey(x) === rowKey(d)));
-                        tableData.value = [...tableData.value, ...res.data]; 
+                        tableData.value = [...tableData.value, ...res.data];
+                        sortTableData();
+                        table.setSort([]);
                         
                         table.setData(tableData.value).then(() => {
                             applyFilters();
@@ -479,13 +523,7 @@
                         layout: "fitColumns", 
                         columns: columnDefs, 
                         placeholder: "暂无数据", 
-                        tooltips: true,
-                        initialSort: [
-                            {column: "origin_type", dir: "desc"}, 
-                            {column: "manufacturer", dir: "asc"},
-                            {column: "brand_name", dir: "asc"},
-                            {column: "generic_name", dir: "asc"}
-                        ]
+                        tooltips: true
                     });
                     
                     table.on("tableBuilt", function() { table.redraw(); });

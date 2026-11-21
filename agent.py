@@ -55,14 +55,31 @@ def _clean_brand_name(raw: str) -> str:
             b = b[:half]
     return b
 
-def _local_simplify_manufacturer(mfr: str) -> str:
-    """本地清洗：去括号和废话后缀，保留地名（如上海医药）"""
-    if not mfr: return ""
-    res = re.sub(r'[（(].*?[）)]', '', str(mfr).strip())
+def normalize_manufacturer(mfr: str) -> str:
+    """修复截断的法人后缀，再统一简化为“泰州迈博太科”这种短名。"""
+    if not mfr:
+        return ""
+    original = str(mfr).strip()
+    res = re.sub(r'[（(].*?[）)]', '', original).strip()
+    # PDF/LLM 常见截断：有限公 / 有限责任公 / 股份有限公
+    repairs = [
+        ("股份有限公", "股份有限公司"),
+        ("有限责任公", "有限责任公司"),
+        ("有限公", "有限公司"),
+    ]
+    for broken, full in repairs:
+        if res.endswith(broken):
+            res = res[:-len(broken)] + full
+            break
     suffixes = ["股份有限公司", "有限责任公司", "有限公司", "集团", "分公司", "制药", "药业"]
-    for s in suffixes:
-        res = res.replace(s, "")
-    return res.strip() if res.strip() else str(mfr)
+    for suffix in suffixes:
+        res = res.replace(suffix, "")
+    res = res.strip(" ，,;；")
+    return res if res else original
+
+
+def _local_simplify_manufacturer(mfr: str) -> str:
+    return normalize_manufacturer(mfr)
 
 def _validate_date(date_str: str) -> str:
     if not date_str: return ""
@@ -154,6 +171,14 @@ class WebPatchResult(BaseModel):
     indications: List[dict] = Field(default_factory=list)
     overseas_indications: List[dict] = Field(default_factory=list)
 
+class BrandByIndicationItem(BaseModel):
+    indication_short: str | None = ""
+    brand_name: str | None = ""
+    manufacturer: str | None = ""
+
+class BrandByIndicationResult(BaseModel):
+    indications: List[BrandByIndicationItem] = Field(default_factory=list)
+
 # ================= LLM 调用封装 =================
 def _parse_dosage_fields(dosage_text: str) -> dict:
     if not dosage_text: return {}
@@ -178,6 +203,59 @@ def _call_llm(prompt, schema_cls, timeout=40):
             logger.warning(f"❌ [LLM API fail] 第{att+1}次重试 | 错误: {e}")
             time.sleep(2)
     return None
+
+def _enrich_missing_brands(products: list[dict]) -> None:
+    """最后一个网搜步骤：只补 PDF/PPT 缺失的商品名，按适应症写入。"""
+    enriched = 0
+    for prod in products:
+        if enriched >= 8:
+            break
+        generic = str(prod.get("generic_name", "")).strip()
+        inds = prod.get("indications", [])
+        missing = [
+            ind for ind in inds
+            if not _clean_brand_name(ind.get("brand_name", ""))
+        ]
+        if not generic or not missing:
+            continue
+        indication_lines = "\n".join(
+            f"- {ind.get('indication_short', '')}" for ind in missing[:12]
+        )
+        hits = ds_search(f"{generic} 商品名 适应症 获批 上市", 5)
+        if not hits:
+            continue
+        prompt = f"""你是药品数据核对员。根据资料，为下列通用名的适应症匹配商品名。
+只提取资料中明确出现的对应关系；不确定的留空，不要猜。
+通用名：{generic}
+适应症：
+{indication_lines}
+输出 JSON：
+{{"indications":[{{"indication_short":"适应症名","brand_name":"商品名","manufacturer":"厂家"}}]}}
+资料：{hits}"""
+        result = _call_llm(prompt, BrandByIndicationResult)
+        if not result:
+            continue
+        for item in result.indications:
+            brand = _clean_brand_name(item.brand_name or "")
+            if not brand:
+                continue
+            target = _normalize_disease_with_dict(item.indication_short or "")
+            for ind in missing:
+                ind_norm = _normalize_disease_with_dict(ind.get("indication_short", ""))
+                if target and ind_norm and (target == ind_norm or target in ind_norm or ind_norm in target):
+                    ind["brand_name"] = brand
+                    if item.manufacturer:
+                        mfr = normalize_manufacturer(item.manufacturer)
+                        if mfr and not prod.get("manufacturer"):
+                            prod["manufacturer"] = mfr
+                    break
+
+        brands = {ind.get("brand_name") for ind in inds if ind.get("brand_name")}
+        if not prod.get("brand_name") and len(brands) == 1:
+            prod["brand_name"] = next(iter(brands))
+        enriched += 1
+        logger.info(f"🌐 商品名补全: {generic} -> {sorted(brands)}")
+
 
 # ================= 主流程 =================
 def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
@@ -444,6 +522,10 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                                 "approval_country": ov.get("country", "美国"), "approval_date": ov_date,
                                 "dosage_full": "", "guidelines": []
                             })
+
+    # ================= 第三步半：商品名缺失补全 =================
+    emit(88, "网搜补全商品名")
+    _enrich_missing_brands(all_extracted_products)
 
     # ================= 第四步：时间兜底 =================
     for prod in all_extracted_products:

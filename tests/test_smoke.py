@@ -127,7 +127,33 @@ def test_flatten_returns_execution_date():
     rows = main.flatten_to_rows(data)
     assert rows
     assert rows[0]["insurance_date"] == "2017年"
-    assert rows[0]["indication_insurance_date"] == "2017年"
+    # 适应症 2020 年才获批，不能早于获批时间
+    assert rows[0]["indication_insurance_date"] == "2020年1月1日"
+
+
+def test_asthma_display_keeps_subtype():
+    display, subtype = main._display_indication("重度嗜酸粒细胞性哮喘")
+    assert display == "哮喘"
+    assert subtype == "重度嗜酸粒细胞性哮喘"
+
+    display, subtype = main._display_indication("过敏性哮喘")
+    assert display == "哮喘"
+    assert subtype == "过敏性哮喘"
+
+
+def test_indication_alias_matching():
+    mepo = main._match_nhi("美泊利珠单抗注射液", "注射剂")
+    assert main._derive_insurance_year(mepo, "COPD维持治疗", "2025-12") == "2027年1月1日"
+    assert main._derive_insurance_year(mepo, "SEA维持治疗", "") == "2025年1月1日"
+    assert main._derive_insurance_year(mepo, "EGPA维持治疗", "") == "2025年1月1日"
+
+    beli = main._match_nhi("注射用贝利尤单抗", "注射剂")
+    assert main._derive_insurance_year(beli, "狼疮性肾炎", "2024-03") == "2024年1月1日"
+
+
+def test_manufacturer_truncated_suffix():
+    assert main.normalize_manufacturer("泰州迈博太科有限公") == "泰州迈博太科"
+    assert main.normalize_manufacturer("泰州迈博太科有限公司") == "泰州迈博太科"
 
 
 def test_drug_to_dict_strips_control_characters():

@@ -15,14 +15,14 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from market_module.models import MarketInsight, SessionLocalMarket, MarketBase, engine
 from config import MAIN_LLM_API_KEY, MAIN_LLM_BASE_URL, MAIN_LLM_MODEL
 
-app = FastAPI(title="市场情报独立服务")
+app = FastAPI(title="市场信息独立服务")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 # 👇 核心修复：服务启动时强行建表
 @app.on_event("startup")
 def startup():
     print("========================================")
-    print("🚀 [Market DB] 正在检查并初始化市场情报表...")
+    print("🚀 [Market DB] 正在检查并初始化市场信息表...")
     try:
         MarketBase.metadata.create_all(bind=engine)
         print("✅ [Market DB] 数据库表初始化完成！")

@@ -13,12 +13,22 @@ from datetime import datetime
 
 from db import init_db, get_db, SessionLocal
 from models import Drug, Feedback
-from agent import fetch_new_drug, update_existing_drug
+from agent import fetch_new_drug, update_existing_drug, normalize_manufacturer, _normalize_disease_with_dict
 
 os.environ["ANYIO_BACKEND"] = "asyncio"
 
 logger = logging.getLogger(__name__)
-app = FastAPI(title="药品信息 Agent")
+_DISEASE_ALIASES = {}
+try:
+    if os.path.exists("medical_aliases.json"):
+        with open("medical_aliases.json", "r", encoding="utf-8") as _f:
+            _raw_aliases = json.load(_f)
+        for _canonical, _data in _raw_aliases.items():
+            _DISEASE_ALIASES[_canonical] = [str(a) for a in _data.get("aliases", []) if a]
+except Exception as _e:
+    logger.warning(f"疾病别名加载失败: {_e}")
+
+app = FastAPI(title="药品信息查询")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 NHI_DICT, _NHI_INDEX, _NHI_ALIAS, _NHI_ALIAS_NAME, _NHI_NORM, _NHI_NORM_NAME = {}, {}, {}, {}, {}, {}
@@ -96,6 +106,41 @@ def _match_nhi(generic_name: str, dosage_form: str = ""):
     return None
 
 
+def _term_in_text(term: str, text: str) -> bool:
+    term = str(term or "").strip()
+    if not term:
+        return False
+    if re.fullmatch(r"[A-Za-z0-9\-]+", term):
+        return bool(re.search(rf"(?<![A-Za-z0-9]){re.escape(term)}(?![A-Za-z0-9])", text, re.I))
+    return term in text
+
+
+def _disease_terms(raw: str) -> set[str]:
+    canonical = _normalize_disease_with_dict(raw) or str(raw or "").strip()
+    terms = {canonical, str(raw or "").strip()}
+    for alias in _DISEASE_ALIASES.get(canonical, []):
+        terms.add(alias)
+    return {t for t in terms if t}
+
+
+def _display_indication(raw: str) -> tuple[str, str]:
+    """返回 (展示用大类, 细分)。哮喘按大类展示，但保留 SEA/过敏性等细分。"""
+    text = re.sub(r"\s+", " ", str(raw or "")).strip()
+    if not text:
+        return "", ""
+    specific = _normalize_disease_with_dict(text) or text
+    upper = specific.upper()
+    if "哮喘" in specific or "SEA" in upper or "ASTHMA" in upper:
+        return "哮喘", specific
+    if "COPD" in upper or "慢性阻塞" in specific or "慢阻肺" in specific:
+        return "慢性阻塞性肺疾病", ""
+    if "CRSWNP" in upper or "慢性鼻窦炎伴鼻息肉" in specific:
+        return "慢性鼻窦炎伴鼻息肉", ""
+    if "EGPA" in upper or "嗜酸性肉芽肿" in specific:
+        return "嗜酸性肉芽肿性多血管炎", ""
+    return specific, ""
+
+
 def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, is_generic: bool = False, p0_ins_year: str = "") -> str:
     if not nhi_data: return "未纳入医保"
     timeline = nhi_data.get("restriction_timeline", {})
@@ -103,22 +148,30 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
     if not isinstance(execution_dates, dict):
         execution_dates = {}
     if not timeline: return "未纳入医保"
-    
+
     valid_years = sorted([y for y in timeline.keys() if y.isdigit()], key=int)
     if not valid_years: return "未纳入医保"
-    
+
     app_year = 0
     if approval_date:
-        m = re.search(r'(\d{4})', str(approval_date))
+        m = re.search(r"(\d{4})", str(approval_date))
         if m: app_year = int(m.group(1))
 
-    target = re.sub(r'【.*?】', '', ind_short or "").strip()
-    target = re.sub(r'[（(][^）)]*[）)]', '', target).strip()
-    
+    terms = _disease_terms(ind_short)
     matched_year = None
     for year in valid_years:
-        restriction = timeline[year]
-        if restriction == "无限制" or (target and target in restriction):
+        restriction = re.sub(r"\s+", "", str(timeline.get(year, "")))
+        unrestricted = restriction == "无限制"
+        explicit = any(_term_in_text(term, restriction) for term in terms)
+        if unrestricted:
+            # “无限制”只代表目录没写限定，不能给获批时间未知的新适应症硬套年份
+            if app_year and int(year) >= app_year:
+                matched_year = year
+                break
+            continue
+        if explicit:
+            if app_year and int(year) < app_year:
+                continue
             matched_year = year
             break
 
@@ -127,13 +180,13 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
     if is_generic:
         p0_year = 0
         if p0_ins_year and p0_ins_year != "未纳入医保":
-            m = re.search(r'(\d{4})', p0_ins_year)
+            m = re.search(r"(\d{4})", p0_ins_year)
             if m: p0_year = int(m.group(1))
-        matched_y = int(matched_year)
-        final_y = max(matched_y, app_year, p0_year)
+        final_y = max(int(matched_year), app_year, p0_year)
         final_key = str(final_y)
         return execution_dates.get(final_key, final_key) if final_y > 0 else "未纳入医保"
     return execution_dates.get(matched_year, matched_year)
+
 
 def _save_rows(name: str, rows: list) -> list:
     with SessionLocal() as s:
@@ -143,14 +196,16 @@ def _save_rows(name: str, rows: list) -> list:
                 if isinstance(v, str):
                     v = re.sub(r'[\x00-\x1F\x7F]', '', v).strip()
                     if k == "brand_name" and re.search(r'[^\w\u4e00-\u9fa5®™\-\s]', v): v = ""
+                    if k == "manufacturer":
+                        v = normalize_manufacturer(v)
                     row[k] = v
 
-            k = (row.get("generic_name",""), row.get("brand_name",""), row.get("manufacturer",""), row.get("dosage_form",""), row.get("indication_short",""))
+            k = (row.get("generic_name",""), row.get("brand_name",""), row.get("manufacturer",""), row.get("dosage_form",""), row.get("indication_short",""), row.get("indication_subtype",""))
             if k in seen: continue
             seen.add(k)
             
             ex = s.query(Drug).filter(
-                Drug.generic_name==k[0], Drug.brand_name==k[1], Drug.manufacturer==k[2], Drug.dosage_form==k[3], Drug.indication_short==k[4]
+                Drug.generic_name==k[0], Drug.brand_name==k[1], Drug.manufacturer==k[2], Drug.dosage_form==k[3], Drug.indication_short==k[4], Drug.indication_subtype==k[5]
             ).first()
             
             if ex:
@@ -201,17 +256,20 @@ def flatten_to_rows(data: dict) -> list:
 
         processed_inds = []
         for ind in inds:
-            ind_name = re.sub(r'^(降低|存在|疾病进展|风险的)+', '', ind.get("indication_short", "")).strip()
-            ind_name = re.sub(r'[（(][^）)]*[）)]', '', ind_name).strip()
+            raw_ind_name = re.sub(r'^(降低|存在|疾病进展|风险的)+', '', ind.get("indication_short", "")).strip()
+            raw_ind_name = re.sub(r'[（(][^）)]*[）)]', '', raw_ind_name).strip()
+            ind_name, ind_subtype = _display_indication(raw_ind_name)
+            match_name = ind_subtype or ind_name
             country = ind.get("approval_country", "中国")
             
             if is_generic and not has_nhsa_file:
-                ind_ins_year = _derive_insurance_year(target_nhi, ind_name, ind.get("approval_date", ""), is_generic=True, p0_ins_year=p0_ins_year) if target_nhi else "未纳入医保"
+                ind_ins_year = _derive_insurance_year(target_nhi, match_name, ind.get("approval_date", ""), is_generic=True, p0_ins_year=p0_ins_year) if target_nhi else "未纳入医保"
             else:
-                ind_ins_year = _derive_insurance_year(local_nhi, ind_name, ind.get("approval_date", ""), is_generic=is_generic, p0_ins_year=p0_ins_year) if local_nhi else "未纳入医保"
+                ind_ins_year = _derive_insurance_year(local_nhi, match_name, ind.get("approval_date", ""), is_generic=is_generic, p0_ins_year=p0_ins_year) if local_nhi else "未纳入医保"
             
             processed_inds.append({
-                "ind": ind, "ind_name": ind_name, "country": country, "ind_ins_year": ind_ins_year
+                "ind": ind, "ind_name": ind_name, "ind_subtype": ind_subtype,
+                "country": country, "ind_ins_year": ind_ins_year
             })
 
         # 👇 移除了 market_data 组装
@@ -233,6 +291,7 @@ def flatten_to_rows(data: dict) -> list:
         for pi in processed_inds:
             ind = pi["ind"]
             ind_name = pi["ind_name"]
+            ind_subtype = pi["ind_subtype"]
             country = pi["country"]
             ind_ins_year = pi["ind_ins_year"]
             
@@ -241,8 +300,10 @@ def flatten_to_rows(data: dict) -> list:
             g_recs = " / ".join([g.get("recommendation", "") for g in guidelines if g.get("recommendation")])
             full_dosage = ind.get("dosage_full") or ind.get("dosage", "")
 
-            rows.append({**base, 
-                "indication_short": ind_name, "indication_full": ind.get("indication_full", ind_name),
+            rows.append({**base,
+                "brand_name": ind.get("brand_name") or base.get("brand_name", ""),
+                "indication_short": ind_name, "indication_subtype": ind_subtype,
+                "indication_full": ind.get("indication_full", ind_name),
                 "approval_country": country, "indication_approval_date": ind.get("approval_date", ""),
                 "indication_insurance_date": ind_ins_year, "dosage": full_dosage, 
                 "dosage_single": ind.get("dosage_single", ""), "frequency": ind.get("frequency", ""), 

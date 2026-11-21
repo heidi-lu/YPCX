@@ -8,8 +8,8 @@ class Drug(Base):
     __tablename__ = "drugs"
     
     __table_args__ = (
-        UniqueConstraint('generic_name', 'brand_name', 'manufacturer', 'dosage_form', 'indication_short',
-                         name='uix_drug_identity'),
+        UniqueConstraint('generic_name', 'brand_name', 'manufacturer', 'dosage_form',
+                         'indication_short', 'indication_subtype', name='uix_drug_identity'),
     )
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -23,6 +23,7 @@ class Drug(Base):
     registration_category = Column(String(100), default="")
 
     indication_short = Column(String(300), nullable=False, default="")
+    indication_subtype = Column(String(300), default="")
     indication_full = Column(Text, default="")
     approval_country = Column(String(50), default="中国")
     
