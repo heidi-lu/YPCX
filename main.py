@@ -220,6 +220,15 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
     return execution_dates.get(matched_year, matched_year)
 
 
+def _year_month(value) -> tuple[int, int] | None:
+    text = str(value or "")
+    m = re.search(r"(\d{4})\D{0,3}(\d{1,2})", text)
+    if m and 1 <= int(m.group(2)) <= 12:
+        return int(m.group(1)), int(m.group(2))
+    m = re.search(r"(\d{4})", text)
+    return (int(m.group(1)), 1) if m else None
+
+
 def _indication_text_key(value) -> str:
     return re.sub(r"[\s（）()]+", "", str(value or ""))
 
@@ -265,6 +274,12 @@ def _save_rows(name: str, rows: list) -> list:
                             break
 
             if ex:
+                # 已入库行如果医保日期早于获批日期，允许用本次重算值修正
+                if ex.status == "APPROVED" and row.get("indication_insurance_date"):
+                    old_app = _year_month(ex.indication_approval_date)
+                    old_ins = _year_month(ex.indication_insurance_date)
+                    if old_app and old_ins and old_ins < old_app:
+                        ex.indication_insurance_date = row["indication_insurance_date"]
                 # 已有行只补空字段，绝不用新值覆盖已有值
                 for ck, v in row.items():
                     if not hasattr(Drug, ck) or v in (None, ""):
