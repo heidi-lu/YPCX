@@ -654,12 +654,23 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 v = _validate_date(item.get("approval_date", ""))
                 if k and v: ppt_time_dict[k] = v
             
-            for ind in res.get("indications", []):
-                ind_short = _normalize_disease_with_dict(ind.get("indication_short", ""))
-                for k, v in ppt_time_dict.items():
-                    if k == ind_short:
-                        ind["approval_date"] = v
-                        break
+            for k, v in ppt_time_dict.items():
+                candidates = [
+                    ind for ind in res.get("indications", [])
+                    if _normalize_disease_with_dict(ind.get("indication_short", "")) == k
+                ]
+                if not candidates:
+                    continue
+                # 同名多条时，优先给围术期/新辅助那条，否则给最后一条
+                target = next(
+                    (
+                        ind for ind in candidates
+                        if "新辅助" in str(ind.get("indication_full", ""))
+                        or "可切除" in str(ind.get("indication_full", ""))
+                    ),
+                    candidates[-1],
+                )
+                target["approval_date"] = v
 
         cleaned_inds = []
         raw_inds = res.get("indications", [])
