@@ -273,6 +273,13 @@ class BrandMatchResult(BaseModel):
     match: bool = False
     evidence: str | None = ""
 
+class ShortIndicationItem(BaseModel):
+    index: int = 0
+    indication_short: str | None = ""
+
+class ShortIndicationResult(BaseModel):
+    items: List[ShortIndicationItem] = Field(default_factory=list)
+
 # ================= LLM 调用封装 =================
 def _parse_dosage_fields(dosage_text: str) -> dict:
     if not dosage_text: return {}
@@ -314,6 +321,44 @@ def _brand_matches_generic(generic: str, brand: str) -> bool:
         logger.info(f"🌐 品牌校验未通过: {generic} / {brand}")
         return False
     return True
+
+
+def _needs_short_cleanup(ind: dict) -> bool:
+    short = str(ind.get("indication_short", "")).strip()
+    full = str(ind.get("indication_full", "")).strip()
+    if not full:
+        return False
+    if len(short) > 14:
+        return True
+    return any(short.startswith(prefix) for prefix in ("联合", "单药", "本品", "适用于", "用于", "至少经过"))
+
+
+def _normalize_short_indications(products: list[dict]) -> None:
+    """用完整适应症原文让 LLM 提取纯疾病名，作为适应症简。"""
+    for prod in products:
+        items = []
+        for idx, ind in enumerate(prod.get("indications", []), start=1):
+            if _needs_short_cleanup(ind):
+                items.append((idx, ind))
+        if not items:
+            continue
+        lines = "\n".join(
+            f"{idx}. 原文：{ind.get('indication_full', '')}" for idx, ind in items[:20]
+        )
+        prompt = f"""下面是药品的完整适应症原文。请为每条提取一个“纯疾病名”作为适应症简称。
+只输出病名，不要包含：本品、联合、单药、用于、适用于、治疗、患者、一线/二线、方案。
+输出 JSON：{{"items":[{{"index":1,"indication_short":"纯疾病名"}}]}}
+{lines}"""
+        result = _call_llm(prompt, ShortIndicationResult)
+        if not result:
+            continue
+        by_index = {item.index: str(item.indication_short or "").strip() for item in result.items}
+        for idx, ind in items:
+            short = by_index.get(idx, "")
+            short = re.sub(r"[（(].*?[）)]", "", short).strip()
+            short = re.sub(r"^[0-9]+[.、]\s*", "", short).strip()
+            if short and len(short) <= 30 and not any(x in short for x in ("本品", "联合", "单药", "适用于", "用于治疗")):
+                ind["indication_short"] = short
 
 
 def _fill_brand_from_metadata(products: list[dict]) -> None:
@@ -698,6 +743,8 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
             "nhsa_ppt_url": latest_ppt["url"] if latest_ppt else ""
         }
         all_extracted_products.append(prod)
+
+    _normalize_short_indications(all_extracted_products)
 
     # ================= 第一步半：用通用名+厂家+上市时间补本品商品名 =================
     emit(45, "补本品商品名")
