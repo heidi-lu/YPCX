@@ -66,7 +66,15 @@ _load_dict()
 _save_lock = asyncio.Lock()
 
 @app.on_event("startup")
-def startup(): init_db()
+def startup():
+    init_db()
+    # 清理历史未入库缓存；只保留 APPROVED
+    try:
+        with SessionLocal() as s:
+            s.query(Drug).filter(Drug.status != "APPROVED").delete(synchronize_session=False)
+            s.commit()
+    except Exception as e:
+        logger.warning(f"清理未入库缓存失败: {e}")
 
 def _normalize_dosage_form(raw_form: str) -> str:
     if not raw_form: return ""
@@ -360,19 +368,14 @@ async def query_stream(request: Request, drug_names: str):
     
     async def process_drug(name):
         try:
-            with SessionLocal() as s:
-                cached_rows = [_drug_to_dict(r) for r in s.query(Drug).filter((Drug.generic_name.contains(name)) | (Drug.brand_name.contains(name))).all()]
-            if cached_rows:
-                await queue.put({"type":"done","drug":name,"data":cached_rows})
-                return
-
             data = await loop.run_in_executor(None, lambda: fetch_new_drug(name, lambda p,s: progress_cb(name,p,s)))
-            if "error" in data: 
+            if "error" in data:
                 return await queue.put({"type":"biz_error","drug":name,"error":str(data["error"])})
-            
-            async with _save_lock: 
-                saved = await loop.run_in_executor(None, _save_rows, data.get("generic_name", name), flatten_to_rows(data))
-            await queue.put({"type":"done","drug":name,"data":saved})
+
+            # 查询结果只在内存里展示；不写库、不读缓存。
+            # 只有前端点击“入库”时才 POST /drugs 落库。
+            rows = await loop.run_in_executor(None, flatten_to_rows, data)
+            await queue.put({"type":"done","drug":name,"data":rows})
         except Exception as e:
             logger.error(f"查询 {name} 严重报错: {e}", exc_info=True)
             await queue.put({"type":"biz_error","drug":name,"error":f"系统异常: {e}"})
@@ -393,7 +396,7 @@ async def query_stream(request: Request, drug_names: str):
 
 @app.get("/drugs")
 def list_drugs(db: Session = Depends(get_db)): 
-    return [_drug_to_dict(r) for r in db.query(Drug).order_by(Drug.updated_at.desc()).all()]
+    return [_drug_to_dict(r) for r in db.query(Drug).filter(Drug.status == "APPROVED").order_by(Drug.updated_at.desc()).all()]
 
 
 @app.post("/drugs")

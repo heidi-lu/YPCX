@@ -418,6 +418,9 @@
                 const handleSearch = () => {
                     if (!drugNames.value.length) { ElMessage.warning("请添加药品"); return; }
                     loading.value = true; progressItems.value = [];
+                    // 未入库结果不保留：新查询先清空当前表格
+                    tableData.value = [];
+                    if (table) table.setData([]);
                     drugNames.value.forEach((d) => progressItems.value.push({ drug: d, percent: 0, stage: "准备中", status: "running" }));
                     expectedCount = drugNames.value.length; doneCount = 0;
                     stats.value = { ...stats.value, currentQuery: expectedCount, done: 0, failed: 0 };
@@ -519,9 +522,8 @@
                 const saveEdit = async () => {
                     try {
                         const id = editForm.value.id;
-                        if (!id) throw new Error("缺少记录 ID");
-                        const res = await fetch(`${API_BASE}/drugs/${id}`, {
-                            method: "PATCH",
+                        const res = await fetch(id ? `${API_BASE}/drugs/${id}` : `${API_BASE}/drugs`, {
+                            method: id ? "PATCH" : "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(editForm.value)
                         });
