@@ -367,6 +367,12 @@
                     if (q && name.includes(q)) return normalizeGroupName(q);
                     return normalizeGroupName(name);
                 };
+                const originRank = (value) => {
+                    const v = String(value || "");
+                    if (v === "原研") return 0;
+                    if (v === "仿制") return 1;
+                    return 2;
+                };
                 const countryRank = (country) => {
                     const c = String(country || "");
                     if (c === "中国") return 0;
@@ -378,6 +384,8 @@
                     rows.sort((a, b) => {
                         const ai = queryIndexForRow(a), bi = queryIndexForRow(b);
                         if (ai !== bi) return ai - bi;
+                        const ao = originRank(a.origin_type), bo = originRank(b.origin_type);
+                        if (ao !== bo) return ao - bo;
                         const ag = groupForRow(a, ai), bg = groupForRow(b, bi);
                         if (ag !== bg) return ag.localeCompare(bg, "zh-Hans-CN");
                         const ab = String(a.brand_name || "\uffff"), bb = String(b.brand_name || "\uffff");

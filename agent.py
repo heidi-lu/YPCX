@@ -662,8 +662,9 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 if web_ov and web_ov.overseas_indications:
                     for ov in web_ov.overseas_indications:
                         ov_short = _normalize_disease_with_dict(ov.get("indication_short", ""))
+                        # 海外行允许英文商品名；没有就回退到产品已有品牌
                         ov_brand = _clean_brand_name(ov.get("brand_name") or (prod.get("brand_name") or ""))
-                        if not ov_brand or not _is_chinese_brand(ov_brand):
+                        if not ov_brand:
                             continue
                         if ov_short in existing_china_inds:
                             continue
