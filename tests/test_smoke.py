@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import main
-from agent import _apply_verified_approvals, _clean_brand_name, _strength_from_text
+from agent import _clean_brand_name, _is_chinese_brand, _strength_from_text
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -201,33 +201,12 @@ def test_strength_from_text():
     assert _strength_from_text("10.8mg 和 3.6mg 两种规格") == ""
 
 
-def test_brand_alias_and_indication_override():
-    assert _clean_brand_name("Wegovy") == "诺和盈"
-    assert _clean_brand_name("Ozempic") == "诺和泰"
-    assert main._resolve_brand("诺和盈", "诺和泰") == "诺和泰"
+def test_chinese_brand_filter_and_no_override():
+    assert _is_chinese_brand("诺和盈")
+    assert not _is_chinese_brand("Wegovy")
+    assert _clean_brand_name("Wegovy") == "Wegovy"
+    assert main._resolve_brand("诺和盈", "诺和泰") == "诺和盈"
     assert main._resolve_brand("茁乐", "蜀阳舒乐") == "茁乐"
-
-
-def test_wegovy_china_country_correction():
-    data = {
-        "generic_name": "司美格鲁肽注射液",
-        "products": [{
-            "generic_name": "司美格鲁肽注射液",
-            "brand_name": "诺和盈",
-            "origin_type": "原研",
-            "dosage_form": "注射剂",
-            "indications": [{
-                "indication_short": "肥胖症或超重伴体重相关合并症",
-                "indication_full": "肥胖症或超重",
-                "approval_country": "美国",
-            }],
-        }],
-    }
-    _apply_verified_approvals(data["products"])
-    rows = main.flatten_to_rows(data)
-    assert rows[0]["brand_name"] == "诺和盈"
-    assert rows[0]["approval_country"] == "中国"
-    assert rows[0]["indication_approval_date"] == "2024-06"
 
 
 def test_manufacturer_truncated_suffix():

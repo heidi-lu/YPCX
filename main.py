@@ -131,9 +131,7 @@ def _resolve_brand(base_brand: str, ind_brand: str) -> str:
         return base
     if not base:
         return ind
-    # 英文别名/已知多适应症品牌允许按行覆盖；普通中文品牌先保留原产品品牌
-    if re.fullmatch(r"[A-Za-z0-9 .&()\-]+", base) or base in {"诺和盈", "诺和泰", "诺和忻"}:
-        return ind
+    # 已有产品品牌优先；只在产品品牌为空时使用适应症品牌
     return base
 
 

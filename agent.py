@@ -31,16 +31,6 @@ if os.path.exists("medical_aliases.json"):
     except Exception as e:
         logger.error(f"❌ 医学字典加载失败: {e}")
 
-# ================= 加载已核实的适应症获批记录 =================
-VERIFIED_APPROVALS = []
-if os.path.exists("data/verified_approvals.json"):
-    try:
-        with open("data/verified_approvals.json", "r", encoding="utf-8") as f:
-            VERIFIED_APPROVALS = json.load(f)
-        logger.info(f"✅ 已核实适应症记录加载成功，共 {len(VERIFIED_APPROVALS)} 条。")
-    except Exception as e:
-        logger.error(f"❌ 已核实适应症记录加载失败: {e}")
-
 # ================= 加载原研厂家字典 =================
 ORIGIN_MFR_MAPPING = {} 
 if os.path.exists("origin_manufacturers.json"):
@@ -55,14 +45,6 @@ if os.path.exists("origin_manufacturers.json"):
     except Exception as e:
         logger.error(f"❌ 原研厂家字典加载失败: {e}")
 
-BRAND_ALIASES = {
-    "wegovy": "诺和盈",
-    "ozempic": "诺和泰",
-    "rybelsus": "诺和忻",
-    "zoladex": "诺雷得",
-}
-
-
 def _clean_brand_name(raw: str) -> str:
     if not raw: return ""
     b = re.sub(r'[®™]', '', str(raw)).strip()
@@ -71,7 +53,7 @@ def _clean_brand_name(raw: str) -> str:
         half = len(b) // 2
         if b[:half] == b[half:]:
             b = b[:half]
-    return BRAND_ALIASES.get(b.lower(), b)
+    return b
 
 PLACEHOLDER_MANUFACTURERS = {
     "上市许可持有人", "上市许可持有人（授权企业）", "企业名称", "授权企业",
@@ -102,6 +84,10 @@ def normalize_manufacturer(mfr: str) -> str:
         res = res.replace(suffix, "")
     res = res.strip(" ，,;；")
     return res if res else original
+
+
+def _is_chinese_brand(brand: str) -> bool:
+    return bool(re.search(r"[\u4e00-\u9fa5]", str(brand or "")))
 
 
 def _local_simplify_manufacturer(mfr: str) -> str:
@@ -256,13 +242,13 @@ def _fill_brand_from_metadata(products: list[dict]) -> None:
         if not generic or not mfr:
             continue
         date = str(prod.get("china_approval_date", "") or "")
-        query = f"{generic} {mfr} {date} 商品名 获批上市".replace("  ", " ").strip()
+        query = f"{generic} {mfr} {date} 中文商品名 获批上市".replace("  ", " ").strip()
         hits = ds_search(query, 5)
         if not hits:
             continue
         prompt = f"""从资料中找出这个药品的商品名。严格输出 JSON：
 {{"brand_names":["商品名"],"manufacturer":"厂家","evidence":"原文依据"}}
-只输出资料中明确出现的商品名；可能对应多个商品名时全部列出；不确定就返回空数组。
+只输出资料中明确出现的中文商品名；不要输出英文商品名；可能对应多个商品名时全部列出；不确定就返回空数组。
 通用名：{generic}
 厂家：{mfr}
 上市时间：{date}
@@ -273,7 +259,7 @@ def _fill_brand_from_metadata(products: list[dict]) -> None:
         brands = []
         for raw in result.brand_names or []:
             brand = _clean_brand_name(raw)
-            if brand and brand not in brands:
+            if brand and _is_chinese_brand(brand) and brand not in brands:
                 brands.append(brand)
         if len(brands) != 1:
             logger.info(f"🌐 本品商品名不唯一，留空: {generic} {brands}")
@@ -285,55 +271,6 @@ def _fill_brand_from_metadata(products: list[dict]) -> None:
         prod["brand_name"] = brands[0]
         filled += 1
         logger.info(f"🌐 本品商品名: {generic} / {mfr} -> {brands[0]}")
-
-
-def _apply_verified_approvals(products: list[dict]) -> None:
-    """数据驱动的官方获批记录：补/校正中国适应症，不写死药品名。"""
-    for prod in products:
-        generic = str(prod.get("generic_name", "")).replace(" ", "")
-        brand = _clean_brand_name(prod.get("brand_name", ""))
-        if not generic or not brand:
-            continue
-        for record in VERIFIED_APPROVALS:
-            rec_generic = str(record.get("generic_name", "")).replace(" ", "")
-            rec_brand = _clean_brand_name(record.get("brand_name", ""))
-            if not rec_generic or rec_generic not in generic:
-                continue
-            if record.get("exclude"):
-                terms = [str(t) for t in record.get("indication_contains", []) if t]
-                prod["indications"] = [
-                    ind for ind in prod.get("indications", [])
-                    if not any(term in f"{ind.get('indication_short', '')}{ind.get('indication_full', '')}" for term in terms)
-                ]
-                continue
-            terms = [str(t) for t in record.get("indication_contains", []) if t]
-            excludes = [str(t) for t in record.get("exclude_contains", []) if t]
-            matched = False
-            for ind in prod.get("indications", []):
-                text = f"{ind.get('indication_short', '')}{ind.get('indication_full', '')}"
-                if any(term in text for term in excludes):
-                    continue
-                if any(term in text for term in terms):
-                    ind["approval_country"] = record.get("country", "中国")
-                    if record.get("approval_date"):
-                        ind["approval_date"] = record["approval_date"]
-                    if rec_brand:
-                        ind["brand_name"] = rec_brand
-                        if rec_brand != brand:
-                            ind["brand_override"] = True
-                    matched = True
-            if not matched and record.get("indication_short") and (not rec_brand or not brand or rec_brand == brand):
-                prod.setdefault("indications", []).append({
-                    "indication_short": record["indication_short"],
-                    "indication_full": record["indication_short"],
-                    "brand_name": rec_brand,
-                    "brand_override": bool(rec_brand and rec_brand != brand),
-                    "approval_country": record.get("country", "中国"),
-                    "approval_date": record.get("approval_date", ""),
-                    "dosage_full": "",
-                    "guidelines": [],
-                })
-                logger.info(f"🌐 补官方适应症: {generic} / {rec_brand} / {record['indication_short']}")
 
 
 def _enrich_missing_brands(products: list[dict]) -> None:
@@ -390,7 +327,7 @@ def _enrich_missing_brands(products: list[dict]) -> None:
         product_mfr = normalize_manufacturer(prod.get("manufacturer", ""))
         for item in result.indications:
             brand = _clean_brand_name(item.brand_name or "")
-            if not brand:
+            if not brand or not _is_chinese_brand(brand):
                 continue
             search_mfr = normalize_manufacturer(item.manufacturer or "")
             target = _normalize_disease_with_dict(item.indication_short or "")
@@ -628,14 +565,16 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     origin_generic_names = [p["generic_name"] for p in all_extracted_products if p.get("origin_type") == "原研"]
     primary_generic_name = origin_generic_names[0] if origin_generic_names else drug_name
 
-    r1 = ds_search(f"{drug_name} 有哪些商品名 获批上市", 5)
+    r1 = ds_search(f"{drug_name} 有哪些中文商品名 获批上市", 5)
     if r1:
-        prompt_base = f"""提取商品名及厂家。输出JSON：{{"products":[{{"brand_name":"", "manufacturer":""}}]}}资料：{r1}"""
+        prompt_base = f"""提取中文商品名及厂家。只输出资料中明确出现的中文商品名，英文商品名不要。输出JSON：{{"products":[{{"brand_name":"", "manufacturer":""}}]}}资料：{r1}"""
         base_obj = _call_llm(prompt_base, BaseInfoResult)
         
         if base_obj and base_obj.products:
             for p in base_obj.products:
                 clean_brand = _clean_brand_name(p.get("brand_name", ""))
+                if not clean_brand or not _is_chinese_brand(clean_brand):
+                    continue
                 
                 raw_mfr = _local_simplify_manufacturer(p.get("manufacturer", "").strip())
                 if not raw_mfr or raw_mfr in ["未提及", "未知", "暂无"]:
@@ -650,9 +589,6 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                         final_mfr = standard_name
                         break
                 
-                if not clean_brand or clean_brand in existing_brands: 
-                    continue
-
                 hits_all = ds_search(f"{primary_generic_name} {clean_brand} 获批上市 适应症 获批时间 (site:bydrug.pharmcube.com OR site:cnpharm.com)", 5)
                 prompt_all = f"""请从以下资料中，提取【{clean_brand}】的所有核心信息。严格输出JSON：
                 {{"china_listing_date": "首次上市时间(YYYY-MM)","indications": [{{"indication_short": "极简病名","indication_full": "完整描述","approval_date": "获批时间(YYYY-MM)","dosage_full": "用法用量"}}]}}
@@ -690,12 +626,27 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                                         ind["approval_date"] = f"{m.group(1)}-{int(m.group(2)):02d}"
 
                 if new_inds:
-                    all_extracted_products.append({
-                        "generic_name": primary_generic_name, "brand_name": clean_brand, "manufacturer": final_mfr, 
-                        "origin_type": "原研" if is_origin_match else "", 
-                        "china_approval_date": web_listing_date, 
-                        "dosage_form": "注射剂", "specification": "", "indications": new_inds, "nhsa_pdf_url": "", "nhsa_ppt_url": ""
-                    })
+                    existing_products = [
+                        prod for prod in all_extracted_products
+                        if _clean_brand_name(prod.get("brand_name", "")) == clean_brand
+                    ]
+                    if existing_products:
+                        for prod in existing_products:
+                            have = {i.get("indication_short", "") for i in prod.get("indications", [])}
+                            for ind in new_inds:
+                                if ind["indication_short"] not in have:
+                                    prod.setdefault("indications", []).append(dict(ind))
+                            if not prod.get("manufacturer"):
+                                prod["manufacturer"] = final_mfr
+                            if web_listing_date and not prod.get("china_approval_date"):
+                                prod["china_approval_date"] = web_listing_date
+                    else:
+                        all_extracted_products.append({
+                            "generic_name": primary_generic_name, "brand_name": clean_brand, "manufacturer": final_mfr,
+                            "origin_type": "原研" if is_origin_match else "",
+                            "china_approval_date": web_listing_date,
+                            "dosage_form": "注射剂", "specification": "", "indications": new_inds, "nhsa_pdf_url": "", "nhsa_ppt_url": ""
+                        })
                     existing_brands.add(clean_brand)
 
     # ================= 第三步：仅给原研搜 FDA，且补齐时间 =================
@@ -712,7 +663,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                     for ov in web_ov.overseas_indications:
                         ov_short = _normalize_disease_with_dict(ov.get("indication_short", ""))
                         ov_brand = _clean_brand_name(ov.get("brand_name") or (prod.get("brand_name") or ""))
-                        if not ov_brand:
+                        if not ov_brand or not _is_chinese_brand(ov_brand):
                             continue
                         if ov_short in existing_china_inds:
                             continue
@@ -747,9 +698,6 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     # ================= 第三步半：商品名缺失补全 =================
     emit(88, "网搜补全商品名")
     _enrich_missing_brands(all_extracted_products)
-
-    # ================= 第三步半之后：官方获批记录校正 =================
-    _apply_verified_approvals(all_extracted_products)
 
     # ================= 第四步：时间兜底 =================
     for prod in all_extracted_products:
