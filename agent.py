@@ -589,9 +589,10 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                         final_mfr = standard_name
                         break
                 
-                hits_all = ds_search(f"{primary_generic_name} {clean_brand} 获批上市 适应症 获批时间 (site:bydrug.pharmcube.com OR site:cnpharm.com)", 5)
+                hits_all = ds_search(f"{primary_generic_name} {clean_brand} 说明书 全部适应症 获批时间", 8)
                 prompt_all = f"""请从以下资料中，提取【{clean_brand}】的所有核心信息。严格输出JSON：
                 {{"china_listing_date": "首次上市时间(YYYY-MM)","indications": [{{"indication_short": "极简病名","indication_full": "完整描述","approval_date": "获批时间(YYYY-MM)","dosage_full": "用法用量"}}]}}
+                【死命令】说明书同一段里有多个适应症时，按分号/句号拆成多条，不能合并成一条；有几个就输出几条。
                 资料：{hits_all}"""
                 res_all = _call_llm(prompt_all, WebPatchResult)
                 

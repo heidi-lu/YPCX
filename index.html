@@ -505,9 +505,13 @@
                             });
                             if (!res.ok) throw new Error(await res.text());
                             const updated = await res.json();
-                            table.updateData([updated]);
-                            const idx = tableData.value.findIndex((d) => d.id === updated.id);
-                            if (idx >= 0) tableData.value[idx] = updated;
+                            const oldKey = rowKey(rowData);
+                            tableData.value = tableData.value.map((d) => rowKey(d) === oldKey ? updated : d);
+                            sortTableData();
+                            table.setData(tableData.value).then(() => {
+                                applyFilters();
+                                table.redraw();
+                            });
                             ElMessage.success(`药品 ${updated.generic_name} 已入库，入库时间已更新`);
                         } catch (e) {
                             ElMessage.error(`入库失败: ${e.message}`);
@@ -529,9 +533,13 @@
                         });
                         if (!res.ok) throw new Error(await res.text());
                         const updated = await res.json();
-                        table.updateData([updated]);
-                        const idx = tableData.value.findIndex((d) => d.id === updated.id);
-                        if (idx >= 0) tableData.value[idx] = updated;
+                        const oldKey = rowKey(editForm.value);
+                        tableData.value = tableData.value.map((d) => rowKey(d) === oldKey ? updated : d);
+                        sortTableData();
+                        table.setData(tableData.value).then(() => {
+                            applyFilters();
+                            table.redraw();
+                        });
                         drawerVisible.value = false;
                         ElMessage.success("保存成功，数据已入库！");
                     } catch (e) {
