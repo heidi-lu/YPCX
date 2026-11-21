@@ -85,9 +85,13 @@ def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
             else:
                 for i, line in enumerate(lines):
                     if "上市许可持有人" in line:
-                        val = re.sub(r'.*?上市许可持有人\s*[：:]\s*', '', line).strip()
-                        if not val and i+1 < len(lines): val = lines[i+1].strip()
-                        if val: res["manufacturer"] = re.sub(r'[_ \s]', '', val)
+                        matched = re.search(r'上市许可持有人(?:（授权企业）)?\s*[：:]\s*(.*)', line)
+                        val = matched.group(1).strip() if matched else ""
+                        if not val and i + 1 < len(lines):
+                            val = lines[i + 1].strip()
+                        val = re.sub(r'[_ \s]', '', val)
+                        if val and "持有人" not in val and "授权企业" not in val:
+                            res["manufacturer"] = val
                         break
             
             clean_text = re.sub(r'\s+', '', full_text)

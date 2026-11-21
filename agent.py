@@ -62,11 +62,19 @@ def _clean_brand_name(raw: str) -> str:
             b = b[:half]
     return BRAND_ALIASES.get(b.lower(), b)
 
+PLACEHOLDER_MANUFACTURERS = {
+    "上市许可持有人", "上市许可持有人（授权企业）", "企业名称", "授权企业",
+    "生产企业", "MAH", "未提及", "未知", "暂无",
+}
+
+
 def normalize_manufacturer(mfr: str) -> str:
     """修复截断的法人后缀，再统一简化为“泰州迈博太科”这种短名。"""
     if not mfr:
         return ""
     original = str(mfr).strip()
+    if original in PLACEHOLDER_MANUFACTURERS:
+        return ""
     res = re.sub(r'[（(].*?[）)]', '', original).strip()
     # PDF/LLM 常见截断：有限公 / 有限责任公 / 股份有限公
     repairs = [

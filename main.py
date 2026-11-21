@@ -290,7 +290,14 @@ def flatten_to_rows(data: dict) -> list:
             display, ind_subtype = display_info[idx]
             ind_name = ind_subtype if ind_subtype and len(subtypes_by_display.get(display, set())) > 1 else display
             match_name = ind_subtype or ind_name
+            row_brand = _resolve_brand(product.get("brand_name", ""), ind.get("brand_name", ""))
             country = ind.get("approval_country", "中国")
+            # 诺和盈（Wegovy）已在中国上市；肥胖/体重管理适应症按中国记录展示
+            if row_brand == "诺和盈" and any(
+                k in f"{ind.get('indication_short', '')}{ind.get('indication_full', '')}"
+                for k in ("肥胖", "体重", "减重", "低卡")
+            ):
+                country = "中国"
             
             if is_generic and not has_nhsa_file:
                 ind_ins_year = _derive_insurance_year(target_nhi, match_name, ind.get("approval_date", ""), is_generic=True, p0_ins_year=p0_ins_year) if target_nhi else "未纳入医保"
@@ -331,7 +338,7 @@ def flatten_to_rows(data: dict) -> list:
             full_dosage = ind.get("dosage_full") or ind.get("dosage", "")
 
             rows.append({**base,
-                "brand_name": _resolve_brand(base.get("brand_name", ""), ind.get("brand_name", "")),
+                "brand_name": row_brand,
                 "specification": ind.get("specification") or base.get("specification", ""),
                 "indication_short": ind_name, "indication_subtype": ind_subtype,
                 "indication_full": ind.get("indication_full", ind_name),

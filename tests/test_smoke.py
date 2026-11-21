@@ -208,9 +208,30 @@ def test_brand_alias_and_indication_override():
     assert main._resolve_brand("茁乐", "蜀阳舒乐") == "茁乐"
 
 
+def test_wegovy_china_country_correction():
+    data = {
+        "generic_name": "司美格鲁肽注射液",
+        "products": [{
+            "generic_name": "司美格鲁肽注射液",
+            "brand_name": "诺和盈",
+            "origin_type": "原研",
+            "dosage_form": "注射剂",
+            "indications": [{
+                "indication_short": "肥胖症或超重伴体重相关合并症",
+                "indication_full": "肥胖症或超重",
+                "approval_country": "美国",
+            }],
+        }],
+    }
+    rows = main.flatten_to_rows(data)
+    assert rows[0]["brand_name"] == "诺和盈"
+    assert rows[0]["approval_country"] == "中国"
+
+
 def test_manufacturer_truncated_suffix():
     assert main.normalize_manufacturer("泰州迈博太科有限公") == "泰州迈博太科"
     assert main.normalize_manufacturer("泰州迈博太科有限公司") == "泰州迈博太科"
+    assert main.normalize_manufacturer("上市许可持有人（授权企业）") == ""
 
 
 def test_drug_to_dict_strips_control_characters():
