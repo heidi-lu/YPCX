@@ -565,9 +565,9 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     origin_generic_names = [p["generic_name"] for p in all_extracted_products if p.get("origin_type") == "原研"]
     primary_generic_name = origin_generic_names[0] if origin_generic_names else drug_name
 
-    r1 = ds_search(f"{drug_name} 有哪些中文商品名 获批上市", 5)
+    r1 = ds_search(f"{drug_name} 中文商品名 有哪些品牌 获批上市", 10)
     if r1:
-        prompt_base = f"""提取中文商品名及厂家。只输出资料中明确出现的中文商品名，英文商品名不要。输出JSON：{{"products":[{{"brand_name":"", "manufacturer":""}}]}}资料：{r1}"""
+        prompt_base = f"""提取所有中文商品名及厂家。必须列出资料中出现的全部中文商品名，不能只返回一个；英文商品名不要。输出JSON：{{"products":[{{"brand_name":"", "manufacturer":""}}]}}资料：{r1}"""
         base_obj = _call_llm(prompt_base, BaseInfoResult)
         
         if base_obj and base_obj.products:

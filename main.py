@@ -306,7 +306,10 @@ def flatten_to_rows(data: dict) -> list:
                 row_brand = _resolve_brand(product.get("brand_name", ""), ind.get("brand_name", ""))
             country = ind.get("approval_country", "中国")
             
-            if is_generic and not has_nhsa_file:
+            # 医保是中国医保；海外获批适应症不参与中国医保年份匹配
+            if country != "中国":
+                ind_ins_year = "不适用"
+            elif is_generic and not has_nhsa_file:
                 ind_ins_year = _derive_insurance_year(target_nhi, match_name, ind.get("approval_date", ""), is_generic=True, p0_ins_year=p0_ins_year) if target_nhi else "未纳入医保"
             else:
                 ind_ins_year = _derive_insurance_year(local_nhi, match_name, ind.get("approval_date", ""), is_generic=is_generic, p0_ins_year=p0_ins_year) if local_nhi else "未纳入医保"
