@@ -40,7 +40,7 @@ python -m http.server 5173
 
 - `.env`、`*.db`、`venv/`、原始 PDF/PPT、`nhi_excels/`、`nhsa_split/` 不入库。
 - `nhi_dictionary.json` 是生成物，由 `build_dict.py` 从原始数据重建；
-  不要手工修改。
+  不要手工修改。时间轴以 CSV 的 `执行时间` 为准，不是文件名/`年份`；历史药名放在 `aliases`。
 - 外部来源的数据必须保留来源 URL；没有来源的字段留空，不要编造。
 - 修改抽取字段时，同时检查 `agent.py`、`models.py` 和前端列定义。
 

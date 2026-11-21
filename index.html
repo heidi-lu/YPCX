@@ -237,7 +237,7 @@
                 <el-form-item label="适应症简"><el-input v-model="editForm.indication_short"></el-input></el-form-item>
                 <el-form-item label="药品上市时间"><el-input v-model="editForm.china_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
                 <el-form-item label="适应症获批时间"><el-input v-model="editForm.indication_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
-                <el-form-item label="进医保时间"><el-input v-model="editForm.indication_insurance_date" placeholder="YYYY"></el-input></el-form-item>
+                <el-form-item label="进医保时间"><el-input v-model="editForm.indication_insurance_date" placeholder="YYYY年M月D日"></el-input></el-form-item>
                 <el-form-item label="用法用量"><el-input type="textarea" v-model="editForm.dosage" :rows="3"></el-input></el-form-item>
                 <div style="text-align: right; margin-top: 30px;">
                     <el-button @click="drawerVisible = false" style="border-radius: 8px;">取消</el-button>

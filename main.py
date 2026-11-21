@@ -20,14 +20,24 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="药品信息 Agent")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-NHI_DICT, _NHI_INDEX = {}, {}
+NHI_DICT, _NHI_INDEX, _NHI_ALIAS, _NHI_ALIAS_NAME = {}, {}, {}, {}
 def _load_dict():
-    global NHI_DICT, _NHI_INDEX
+    global NHI_DICT, _NHI_INDEX, _NHI_ALIAS, _NHI_ALIAS_NAME
     if os.path.exists("nhi_dictionary.json"):
         with open("nhi_dictionary.json", "r", encoding="utf-8") as f: NHI_DICT = json.load(f)
-        for k in NHI_DICT.keys():
+        for k, value in NHI_DICT.items():
             name = k.split("|")[0] if "|" in k else k
             _NHI_INDEX.setdefault(name, []).append(k)
+            form = value.get("dosage_form", "") if isinstance(value, dict) else ""
+            for alias in (value.get("aliases", []) if isinstance(value, dict) else []):
+                alias_name = str(alias).strip()
+                if alias_name:
+                    _NHI_ALIAS.setdefault(f"{alias_name}|{form}", k)
+                    _NHI_ALIAS_NAME.setdefault(alias_name, []).append(k)
+            for alias_key in (value.get("alias_keys", []) if isinstance(value, dict) else []):
+                alias_key = str(alias_key).strip()
+                if alias_key:
+                    _NHI_ALIAS.setdefault(alias_key, k)
 _load_dict()
 _save_lock = asyncio.Lock()
 
@@ -50,6 +60,13 @@ def _match_nhi(generic_name: str, dosage_form: str = ""):
     if clean_form:
         exact_key = f"{generic_name}|{clean_form}"
         if exact_key in NHI_DICT: return NHI_DICT[exact_key]
+        alias_key = f"{generic_name}|{_normalize_dosage_form(dosage_form)}"
+        if alias_key in _NHI_ALIAS: return NHI_DICT[_NHI_ALIAS[alias_key]]
+
+    # 旧名/别名查询：只在唯一命中时返回，避免一个旧名跨多个剂型被乱配
+    alias_keys = _NHI_ALIAS_NAME.get(generic_name, [])
+    if len(set(alias_keys)) == 1:
+        return NHI_DICT[alias_keys[0]]
 
     for k, v in NHI_DICT.items():
         if generic_name == k.split("|")[0]: return v
@@ -63,6 +80,9 @@ def _match_nhi(generic_name: str, dosage_form: str = ""):
 def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, is_generic: bool = False, p0_ins_year: str = "") -> str:
     if not nhi_data: return "未纳入医保"
     timeline = nhi_data.get("restriction_timeline", {})
+    execution_dates = nhi_data.get("execution_dates", {})
+    if not isinstance(execution_dates, dict):
+        execution_dates = {}
     if not timeline: return "未纳入医保"
     
     valid_years = sorted([y for y in timeline.keys() if y.isdigit()], key=int)
@@ -92,8 +112,9 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
             if m: p0_year = int(m.group(1))
         matched_y = int(matched_year)
         final_y = max(matched_y, app_year, p0_year)
-        return str(final_y) if final_y > 0 else "未纳入医保"
-    return matched_year
+        final_key = str(final_y)
+        return execution_dates.get(final_key, final_key) if final_y > 0 else "未纳入医保"
+    return execution_dates.get(matched_year, matched_year)
 
 def _save_rows(name: str, rows: list) -> list:
     with SessionLocal() as s:
@@ -137,9 +158,10 @@ def flatten_to_rows(data: dict) -> list:
         if is_generic and not has_nhsa_file:
             target_nhi = _match_nhi(product.get("generic_name", generic_name))
             
+        nhi_for_base = target_nhi or local_nhi
         p0_ins_year = ""
-        if is_generic and local_nhi:
-            p0_ins_year = _derive_insurance_year(local_nhi, "", "", False, "")
+        if is_generic and nhi_for_base:
+            p0_ins_year = nhi_for_base.get("first_execution_date") or nhi_for_base.get("first_year", "")
 
         inds = product.get("indications", [])
         
@@ -183,8 +205,9 @@ def flatten_to_rows(data: dict) -> list:
             "dosage_form": product.get("dosage_form", ""),
             "price_market": product.get("price_market", ""), "nhsa_pdf_url": product.get("nhsa_pdf_url", ""),
             "nhsa_ppt_url": product.get("nhsa_ppt_url", ""),
-            "insurance_category": local_nhi.get("insurance_category", "") if local_nhi else "",
-            "insurance_restriction": local_nhi.get("latest_restriction", "") if local_nhi else "",
+            "insurance_category": nhi_for_base.get("insurance_category", "") if nhi_for_base else "",
+            "insurance_restriction": nhi_for_base.get("latest_restriction", "") if nhi_for_base else "",
+            "insurance_date": (nhi_for_base.get("first_execution_date") or nhi_for_base.get("first_year", "")) if nhi_for_base else "",
             "fetch_time": data.get("fetch_time", "")
         }
 

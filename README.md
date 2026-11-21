@@ -49,7 +49,8 @@ python -m http.server 5173
 ## 数据
 
 - `nhi_dictionary.json`：医保字典，由 `build_dict.py` 从原始 CSV 生成；
-  当前已提交，保证 clone 后可直接运行。
+  当前已提交，保证 clone 后可直接运行。时间轴和 `first_execution_date` 使用
+  CSV 的 **执行时间**，不是文件名/目录年份；名称归一会合并 `aliases`。
 - `medical_aliases.json` / `origin_manufacturers.json`：同义词与原研厂家字典，提交。
 - `nhi_excels/`、`nhsa_split/`、PDF/PPT、`*.db*`：本地数据，不提交。
 - 原始数据更新后：
