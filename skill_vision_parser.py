@@ -127,6 +127,13 @@ def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
             m_reg = re.search(r'(?:药品)?注册分类[：:]?([\u4e00-\u9fa5a-zA-Z0-9\.]+)', clean_text)
             if m_reg: res["registration_category"] = m_reg.group(1).strip()
             res["full_indications"] = _extract_full_indications_from_text(full_text)
+            m_spec = re.search(
+                r"说明书全部注册规格\s*(.*?)(?:上市许可持有人|说明书全部适应症)",
+                full_text,
+                re.S,
+            )
+            if m_spec:
+                res["specification"] = re.sub(r"\s+", "", m_spec.group(1))
     except Exception as e:
         logger.warning(f"PDF 本地解析失败: {e}")
     return res

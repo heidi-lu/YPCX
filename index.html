@@ -217,6 +217,13 @@
                 <span class="toggle-chip" :class="{ active: onlyPending }" @click="onlyPending = !onlyPending; applyFilters()">只看待反馈</span>
                 <span class="toggle-chip" :class="{ active: onlyApproved }" @click="onlyApproved = !onlyApproved; applyFilters()">只看已入库</span>
                 <span class="toggle-chip" :class="{ active: onlyRejected }" @click="onlyRejected = !onlyRejected; applyFilters()">只看已拒绝</span>
+                <span style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+                    <span style="font-size:12px;color:#64748b;">适应症排序</span>
+                    <el-select v-model="indicationSortMode" size="small" style="width:110px;" @change="resortTable">
+                        <el-option label="按编号" value="number"></el-option>
+                        <el-option label="按获批时间" value="date"></el-option>
+                    </el-select>
+                </span>
             </div>
             <div v-show="tableData.length > 0" id="tabulator-table"></div>
             <div v-if="tableData.length === 0" class="empty-hint"><div class="icon">🔍</div><h3>还没有数据</h3><p>在上方输入药品名称点击查询</p></div>
@@ -313,6 +320,7 @@
                 const onlyPending = ref(false);
                 const onlyApproved = ref(false);
                 const onlyRejected = ref(false);
+                const indicationSortMode = ref("number");
                 
                 const drawerVisible = ref(false);
                 const editForm = ref({});
@@ -377,6 +385,11 @@
                     if (q && name.includes(q)) return normalizeGroupName(q);
                     return normalizeGroupName(name);
                 };
+                const indicationOrder = (row) => {
+                    const m = String(row.indication_full || "").match(/【(\d+)】/);
+                    return m ? parseInt(m[1], 10) : 9999;
+                };
+                const indicationDate = (row) => String(row.indication_approval_date || "");
                 const originRank = (value) => {
                     const v = String(value || "");
                     if (v === "原研") return 0;
@@ -408,10 +421,22 @@
                         if (an !== bn) return an.localeCompare(bn, "zh-Hans-CN");
                         const af = String(a.dosage_form || ""), bf = String(b.dosage_form || "");
                         if (af !== bf) return af.localeCompare(bf, "zh-Hans-CN");
+                        if (indicationSortMode.value === "number") {
+                            const ao2 = indicationOrder(a), bo2 = indicationOrder(b);
+                            if (ao2 !== bo2) return ao2 - bo2;
+                        } else {
+                            const ad = indicationDate(a), bd = indicationDate(b);
+                            if (ad !== bd) return ad.localeCompare(bd);
+                        }
                         return String(a.indication_subtype || a.indication_short || "")
                             .localeCompare(String(b.indication_subtype || b.indication_short || ""), "zh-Hans-CN");
                     });
                     tableData.value = rows;
+                };
+
+                const resortTable = () => {
+                    sortTableData();
+                    if (table) table.setData(tableData.value).then(() => table.redraw());
                 };
 
                 const fetchHistory = async () => {
@@ -621,7 +646,7 @@
                     globalSearch, onlyPending, onlyApproved, onlyRejected,
                     handleSuggestSelect, handleAddFromInput, removeDrug, handleSearch, cancelQuery, exportData, statusLabel, progressStatusOf,
                     drawerVisible, editForm, saveEdit, saveDraft,
-                    querySearch, applyFilters  
+                    querySearch, applyFilters, indicationSortMode, resortTable  
                 };
             },
         });

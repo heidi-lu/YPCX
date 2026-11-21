@@ -539,7 +539,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                     **full,
                     "approval_date": old.get("approval_date", ""),
                     "dosage_full": old.get("dosage_full", ""),
-                    "specification": old.get("specification", ""),
+                    "specification": old.get("specification") or res.get("specification", ""),
                     "guidelines": old.get("guidelines", []),
                 })
             res["indications"] = merged
