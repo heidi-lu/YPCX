@@ -500,7 +500,10 @@ async def query_stream(request: Request, drug_names: str):
             await queue.put({"type":"done","drug":name,"data":saved})
         except Exception as e:
             logger.error(f"查询 {name} 严重报错: {e}", exc_info=True)
-            await queue.put({"type":"biz_error","drug":name,"error":f"系统异常: {e}"})
+            message = str(e)
+            if "视觉模型账户欠费" in message:
+                message = "视觉模型账户欠费，已停止查询；请充值后再试，未使用网搜兜底"
+            await queue.put({"type":"biz_error","drug":name,"error":message})
 
     async def event_stream():
         tasks = [asyncio.create_task(process_drug(n)) for n in names]

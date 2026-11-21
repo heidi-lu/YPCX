@@ -7,6 +7,10 @@ from pptx import Presentation
 from config import VISION_API_KEY, VISION_BASE_URL, VISION_MODEL, MAIN_LLM_API_KEY, MAIN_LLM_BASE_URL, MAIN_LLM_MODEL
 
 logger = logging.getLogger(__name__)
+
+
+class VisionAccountError(RuntimeError):
+    """视觉模型账户欠费/不可用；必须停止查询，不能走网搜兜底。"""
 MAX_PAGES = 15
 DPI = 150
 MAX_B64_PER_IMAGE = 2_000_000
@@ -44,11 +48,20 @@ def _clean_parse_json(raw: str) -> dict:
 def _call_vlm(image_urls: list[str], prompt: str) -> str:
     content = [{"type": "image_url", "image_url": {"url": u}} for u in image_urls if u.startswith("data:image")]
     content.append({"type": "text", "text": prompt})
-    resp = _get_client().chat.completions.create(
-        model=VISION_MODEL, messages=[{"role": "user", "content": content}],
-        temperature=0.0, max_tokens=4096,
-    )
-    return resp.choices[0].message.content
+    try:
+        resp = _get_client().chat.completions.create(
+            model=VISION_MODEL, messages=[{"role": "user", "content": content}],
+            temperature=0.0, max_tokens=4096,
+        )
+        return resp.choices[0].message.content
+    except Exception as e:
+        detail = str(e)
+        response = getattr(e, "response", None)
+        if response is not None:
+            detail += " " + getattr(response, "text", "")
+        if "Arrearage" in detail or "overdue-payment" in detail:
+            raise VisionAccountError("视觉模型账户欠费，请充值后再查询") from e
+        raise
 
 def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
     res = {}
@@ -162,6 +175,8 @@ def _extract_body_info(pdf_bytes: bytes) -> dict:
         【死命令】：1. 遇到分号必须拆分。2. 找不到的字段填 ""。"""
         resp = _call_vlm(urls, prompt)
         return _clean_parse_json(resp)
+    except VisionAccountError:
+        raise
     except: return {}
 
 def extract_medical_pdf_vision(pdf_bytes: bytes | None, ppt_bytes: bytes | None = None) -> dict:
