@@ -98,6 +98,18 @@ def test_alias_key_matches_form_variant():
     assert entry["dosage_form"] == "胶囊剂"
 
 
+def test_split_metadata_and_parenthesis_merge():
+    composite = main._match_nhi("脑血康丸（片胶囊颗粒口服液滴丸）", "口服液")
+    assert composite is not None
+    assert "脑血康丸" in composite["split_to"]
+
+    merged = main._match_nhi("脑血康片（滴丸）", "滴丸")
+    assert merged is not None
+    assert merged["dosage_form"] == "滴丸"
+    assert "2021" in merged["restriction_timeline"]
+    assert "2026" in merged["restriction_timeline"]
+
+
 def test_flatten_returns_execution_date():
     data = {
         "generic_name": "甲磺酸多拉司琼注射液",

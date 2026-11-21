@@ -140,3 +140,16 @@
 2. `_match_nhi` 先按原 key 精确匹配；失败再按名称查 map 的旧 key/aliases；最后才用规范化名称。`nhi_name_candidates.csv` / `nhi_name_splits.csv` / `nhi_name_unmatched.csv` **不要**参与自动匹配。
 3. 剂型词表单独做一层 `form_alias`（`胶囊→胶囊剂`、`口服常释剂型→片剂/胶囊剂`），与名称映射解耦；本任务出于“不跨剂型”约束未自动合并的那部分应在这里处理。
 4. 重建词典后用本 README 对账：map 条数、规范 key 数、`6259 → 5843`。
+
+---
+
+## 主代码接入结果（2026-11-21）
+
+- `build_dict.py` 已接入本目录的 `nhi_name_map.json`、`nhi_name_splits.csv`。
+- 时间轴改为 CSV 的 `执行时间`，并输出 `first_execution_date` / `execution_dates` / `catalog_years`。
+- key 增加 Unicode NFKC、全角/半角括号、空白、罗马数字归一化：
+  - 5846 → **5272** 条；
+  - 减少的 **574** 条全部是同一 key 的排版/罗马数字重复（已逐组核对，不是跨药合并）。
+- **636** 条复合剂型/拆分条目写入 `split_to` 元数据，不自动合并。
+- 例：`脑血康片（滴丸）|滴丸` 与 `脑血康片(滴丸)|滴丸` 已合并为 2021–2026 一条；
+  `脑血康丸（片胶囊颗粒口服液滴丸）|口服液` 保留 2017，`split_to` 列出 6 个剂型名。

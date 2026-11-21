@@ -5,6 +5,7 @@ import glob
 import re
 import logging
 import argparse
+import unicodedata
 from collections import Counter
 from pathlib import Path
 
@@ -30,6 +31,7 @@ COL_ALIASES = {
 
 EXCLUDED_DIR_PARTS = {"data", "docs", "tests", "venv", ".venv", "__pycache__", ".git"}
 NAME_MAP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "nhi_normalization", "nhi_name_map.json")
+SPLITS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "nhi_normalization", "nhi_name_splits.csv")
 
 
 def _clean_html(text: str) -> str:
@@ -157,6 +159,22 @@ def discover_files(base_dir):
     return valid, skipped
 
 
+def normalize_text_key(text: str) -> str:
+    """NFKC + 去空白 + 统一括号；只用于 key，不改展示名。"""
+    value = unicodedata.normalize("NFKC", str(text or ""))
+    value = value.replace("（", "(").replace("）", ")")
+    return re.sub(r"\s+", "", value)
+
+
+def normalize_compound_key(name: str, form: str) -> str:
+    return f"{normalize_text_key(name)}|{normalize_text_key(form)}"
+
+
+def normalize_key_string(key: str) -> str:
+    name, _sep, form = str(key or "").partition("|")
+    return normalize_compound_key(name, form)
+
+
 def load_name_map(path: str) -> dict:
     if not os.path.exists(path):
         logger.warning(f"未找到名称映射表，将按原始名称建库: {path}")
@@ -169,12 +187,28 @@ def load_name_map(path: str) -> dict:
         valid = {}
         for old_key, item in data.items():
             if isinstance(item, dict) and item.get("canonical_key"):
-                valid[old_key] = item
+                valid[normalize_key_string(old_key)] = item
         logger.info(f"名称映射表加载成功: {len(valid)} 条")
         return valid
     except Exception as e:
         logger.error(f"名称映射表加载失败，按原始名称建库: {e}")
         return {}
+
+
+def load_split_map(path: str) -> dict:
+    if not os.path.exists(path):
+        return {}
+    result = {}
+    try:
+        with open(path, "r", encoding="utf-8-sig", newline="") as f:
+            for row in csv.DictReader(f):
+                old_key = normalize_key_string(row.get("old_key", ""))
+                names = [part.strip() for part in re.split(r"[;；]", row.get("split_names", "")) if part.strip()]
+                if old_key and names:
+                    result[old_key] = names
+    except Exception as e:
+        logger.warning(f"拆分报告加载失败: {e}")
+    return result
 
 
 def main():
@@ -193,10 +227,11 @@ def main():
         return
 
     name_map = load_name_map(NAME_MAP_PATH)
+    split_map = load_split_map(SPLITS_PATH)
     map_aliases = {}
     map_alias_keys = {}
     for old_key, item in name_map.items():
-        canonical_key = str(item.get("canonical_key") or "")
+        canonical_key = normalize_key_string(str(item.get("canonical_key") or ""))
         if not canonical_key:
             continue
         canonical_name = canonical_key.split("|", 1)[0]
@@ -206,18 +241,18 @@ def main():
             aliases.add(old_name)
         aliases.discard(canonical_name)
         map_aliases.setdefault(canonical_key, set()).update(aliases)
-        map_alias_keys.setdefault(canonical_key, set()).add(old_key)
+        map_alias_keys.setdefault(canonical_key, set()).add(normalize_key_string(old_key))
 
     dict_db = {}
     stats = Counter()
     per_file_stats = {}
 
     def resolve_key(raw_name: str, raw_form: str):
-        raw_key = f"{raw_name}|{raw_form}"
+        raw_key = normalize_compound_key(raw_name, raw_form)
         item = name_map.get(raw_key)
         if not item:
             return raw_key, raw_name, raw_form, [], "未映射"
-        canonical_key = str(item.get("canonical_key") or raw_key)
+        canonical_key = normalize_key_string(str(item.get("canonical_key") or raw_key))
         canonical_name, _, canonical_form = canonical_key.partition("|")
         aliases = [str(a) for a in (item.get("aliases") or []) if a]
         if raw_name != canonical_name:
@@ -292,7 +327,7 @@ def main():
             entry = dict_db[compound_key]
             entry["aliases"].update(aliases)
             entry["aliases"].update(map_aliases.get(compound_key, set()))
-            entry["alias_keys"].add(f"{drug_name}|{dosage_form}")
+            entry["alias_keys"].add(normalize_compound_key(drug_name, dosage_form))
             entry["alias_keys"].update(map_alias_keys.get(compound_key, set()))
             entry["execution_dates"][year_str] = execution_date
             if catalog_year:
@@ -316,6 +351,11 @@ def main():
         logger.info(f"  {os.path.basename(file)} [{enc}]: 总 {file_stat['总行数']}，有效 {file_stat['有效行数']}，"
                     f"空行 {file_stat['空行']}，药名为空 {file_stat['药品名为空']}，执行时间失败 {file_stat['执行时间解析失败']}，"
                     f"列数异常 {file_stat['列数异常行']}")
+
+    # 复合剂型拆分只做元数据，不自动合并
+    for old_key, names in split_map.items():
+        if old_key in dict_db:
+            dict_db[old_key]["split_to"] = names
 
     # 推导 latest / first
     for k, info in dict_db.items():

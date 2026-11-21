@@ -2,6 +2,7 @@ import json
 import asyncio
 import os
 import re
+import unicodedata
 import logging
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,24 +21,37 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="药品信息 Agent")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-NHI_DICT, _NHI_INDEX, _NHI_ALIAS, _NHI_ALIAS_NAME = {}, {}, {}, {}
+NHI_DICT, _NHI_INDEX, _NHI_ALIAS, _NHI_ALIAS_NAME, _NHI_NORM, _NHI_NORM_NAME = {}, {}, {}, {}, {}, {}
+
+
+def _norm_key(value: str) -> str:
+    text = unicodedata.normalize("NFKC", str(value or ""))
+    text = text.replace("（", "(").replace("）", ")")
+    return re.sub(r"\s+", "", text)
+
+
 def _load_dict():
-    global NHI_DICT, _NHI_INDEX, _NHI_ALIAS, _NHI_ALIAS_NAME
+    global NHI_DICT, _NHI_INDEX, _NHI_ALIAS, _NHI_ALIAS_NAME, _NHI_NORM, _NHI_NORM_NAME
     if os.path.exists("nhi_dictionary.json"):
         with open("nhi_dictionary.json", "r", encoding="utf-8") as f: NHI_DICT = json.load(f)
         for k, value in NHI_DICT.items():
             name = k.split("|")[0] if "|" in k else k
             _NHI_INDEX.setdefault(name, []).append(k)
+            _NHI_NORM[_norm_key(k)] = k
+            _NHI_NORM_NAME.setdefault(_norm_key(name), []).append(k)
             form = value.get("dosage_form", "") if isinstance(value, dict) else ""
             for alias in (value.get("aliases", []) if isinstance(value, dict) else []):
                 alias_name = str(alias).strip()
                 if alias_name:
-                    _NHI_ALIAS.setdefault(f"{alias_name}|{form}", k)
-                    _NHI_ALIAS_NAME.setdefault(alias_name, []).append(k)
+                    _NHI_ALIAS.setdefault(_norm_key(f"{alias_name}|{form}"), k)
+                    _NHI_ALIAS_NAME.setdefault(_norm_key(alias_name), []).append(k)
             for alias_key in (value.get("alias_keys", []) if isinstance(value, dict) else []):
                 alias_key = str(alias_key).strip()
                 if alias_key:
-                    _NHI_ALIAS.setdefault(alias_key, k)
+                    _NHI_ALIAS.setdefault(_norm_key(alias_key), k)
+
+
+
 _load_dict()
 _save_lock = asyncio.Lock()
 
@@ -56,26 +70,31 @@ def _normalize_dosage_form(raw_form: str) -> str:
 
 def _match_nhi(generic_name: str, dosage_form: str = ""):
     if not generic_name or not NHI_DICT: return None
+    raw_name = str(generic_name).strip()
+    norm_name = _norm_key(raw_name)
     clean_form = _normalize_dosage_form(dosage_form)
+
     if clean_form:
-        exact_key = f"{generic_name}|{clean_form}"
+        exact_key = f"{raw_name}|{clean_form}"
         if exact_key in NHI_DICT: return NHI_DICT[exact_key]
-        alias_key = f"{generic_name}|{_normalize_dosage_form(dosage_form)}"
-        if alias_key in _NHI_ALIAS: return NHI_DICT[_NHI_ALIAS[alias_key]]
+        norm_key = f"{norm_name}|{_norm_key(clean_form)}"
+        if norm_key in _NHI_NORM: return NHI_DICT[_NHI_NORM[norm_key]]
+        if norm_key in _NHI_ALIAS: return NHI_DICT[_NHI_ALIAS[norm_key]]
 
     # 旧名/别名查询：只在唯一命中时返回，避免一个旧名跨多个剂型被乱配
-    alias_keys = _NHI_ALIAS_NAME.get(generic_name, [])
+    alias_keys = _NHI_ALIAS_NAME.get(norm_name, [])
     if len(set(alias_keys)) == 1:
         return NHI_DICT[alias_keys[0]]
 
     for k, v in NHI_DICT.items():
-        if generic_name == k.split("|")[0]: return v
+        if _norm_key(k.split("|")[0]) == norm_name: return v
 
-    clean_name = re.sub(r'[（(].*?[）)]', '', generic_name).strip()
+    clean_name = re.sub(r'[（(].*?[）)]', '', raw_name).strip()
     for k, v in NHI_DICT.items():
         dict_name = re.sub(r'[（(].*?[）)]', '', k.split("|")[0]).strip()
         if clean_name in dict_name or dict_name in clean_name: return v
     return None
+
 
 def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, is_generic: bool = False, p0_ins_year: str = "") -> str:
     if not nhi_data: return "未纳入医保"
