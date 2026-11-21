@@ -69,15 +69,8 @@ _save_lock = asyncio.Lock()
 @app.on_event("startup")
 def startup():
     init_db()
-    # 清理：DRAFT 保留 24 小时；旧的 MACHINE/空状态清掉；APPROVED 永久保留
-    try:
-        with SessionLocal() as s:
-            cutoff = datetime.now() - timedelta(hours=24)
-            s.query(Drug).filter(Drug.status == "DRAFT", Drug.updated_at < cutoff).delete(synchronize_session=False)
-            s.query(Drug).filter(or_(Drug.status.is_(None), Drug.status.notin_(["DRAFT", "APPROVED"]))).delete(synchronize_session=False)
-            s.commit()
-    except Exception as e:
-        logger.warning(f"清理草稿失败: {e}")
+    _cleanup_drafts()
+
 
 def _normalize_dosage_form(raw_form: str) -> str:
     if not raw_form: return ""
@@ -364,8 +357,20 @@ def flatten_to_rows(data: dict) -> list:
             })
     return rows
 
+def _cleanup_drafts() -> None:
+    try:
+        with SessionLocal() as s:
+            cutoff = datetime.now() - timedelta(hours=24)
+            s.query(Drug).filter(Drug.status == "DRAFT", Drug.updated_at < cutoff).delete(synchronize_session=False)
+            s.query(Drug).filter(or_(Drug.status.is_(None), Drug.status.notin_(["DRAFT", "APPROVED"]))).delete(synchronize_session=False)
+            s.commit()
+    except Exception as e:
+        logger.warning(f"清理草稿失败: {e}")
+
+
 @app.get("/query/stream")
 async def query_stream(request: Request, drug_names: str):
+    _cleanup_drafts()
     names = list(dict.fromkeys([n.strip() for n in drug_names.split(",") if n.strip()]))[:20]
     loop, queue = asyncio.get_running_loop(), asyncio.Queue()
     
