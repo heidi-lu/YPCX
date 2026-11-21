@@ -629,7 +629,7 @@
                     if (!table) return;
                     const filters = [];
                     if (globalSearch.value) { const q = globalSearch.value.toLowerCase(); filters.push((d) => Object.values(d).some((v) => v && String(v).toLowerCase().includes(q))); }
-                    if (onlyPending.value) filters.push((d) => (d.status || "FEEDBACK") === "FEEDBACK");
+                    if (onlyPending.value) filters.push((d) => ["DRAFT", "MACHINE", "FEEDBACK"].includes(d.status || "FEEDBACK"));
                     if (onlyApproved.value) filters.push((d) => d.status === "APPROVED");
                     if (onlyRejected.value) filters.push((d) => d.status === "REJECTED");
                     if (filters.length === 0) table.clearFilter(); else table.setFilter(filters);
