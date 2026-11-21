@@ -26,6 +26,11 @@ uvicorn main:app --reload --port 8000
 python -m http.server 5173
 ```
 
+## 一键启动
+
+- 双击 `启动YPCX.command`，或 VS Code `Run Task → dev: start`。
+- 脚本启动后端并打开 `index.html`；日志在 `.run/backend.log`。
+
 ## 目录
 
 - `main.py`：FastAPI 路由、SSE、数据库读写

@@ -31,6 +31,33 @@ python -m http.server 5173
 
 浏览器打开 `http://127.0.0.1:5173/index.html`；也可以直接打开 `index.html`（前端会回退到 `127.0.0.1:8000`）。
 
+## 一键启动
+
+项目根目录有一个可双击的启动脚本：
+
+```text
+启动YPCX.command
+```
+
+它会：
+
+1. 检查 `venv` 里的 `uvicorn`
+2. 后台启动 `uvicorn main:app --reload --port 8000`
+3. 等后端就绪后打开 `index.html`
+4. 关闭终端窗口 / `Ctrl+C` 时停止后端
+
+前端不需要单独起静态服务，`index.html` 里已经写死 `http://127.0.0.1:8000`。
+
+在 VS Code 里也可以：
+
+```text
+Terminal → Run Task → dev: start
+```
+
+后端日志在 `.run/backend.log`。
+
+如果要开机自启，用 macOS `launchd`，见 `docs/launchd.md`（待补）。
+
 ## 环境变量
 
 见 [`.env.example`](.env.example)。主要配置：

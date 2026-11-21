@@ -33,3 +33,4 @@ CLAUDE.local.md
 # directories with a leading space in their name
 *nhi_excels/
 *nhsa_split/
+.run/

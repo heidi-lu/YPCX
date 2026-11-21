@@ -15,6 +15,17 @@
       "command": "${workspaceFolder}/venv/bin/ruff",
       "args": ["check", "."],
       "problemMatcher": []
+    },
+    {
+      "label": "dev: start",
+      "type": "shell",
+      "command": "${workspaceFolder}/启动YPCX.command",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
     }
   ]
 }
