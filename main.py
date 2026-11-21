@@ -343,6 +343,28 @@ def _optional_text(value) -> str:
     return "" if text in {"未提供", "未提及", "未知", "暂无", "无"} else text
 
 
+def _country_dedupe_rows(rows: list[dict]) -> list[dict]:
+    """同一药品同一适应症，中国获批优先，去掉美国/海外重复行。"""
+    groups: dict[tuple, list[dict]] = {}
+    for row in rows:
+        key = (
+            str(row.get("generic_name", "")).strip(),
+            str(row.get("manufacturer", "")).strip(),
+            _normalize_disease_with_dict(row.get("indication_short", "")),
+        )
+        groups.setdefault(key, []).append(row)
+
+    result = []
+    for group in groups.values():
+        china_rows = [r for r in group if r.get("approval_country") == "中国"]
+        if china_rows:
+            result.extend(china_rows)
+            continue
+        # 没有中国行时，海外只保留一条，避免美国/全球重复
+        result.append(group[0])
+    return result
+
+
 def flatten_to_rows(data: dict) -> list:
     rows = []
     generic_name = data.get("generic_name", "")
