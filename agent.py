@@ -671,6 +671,8 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                     candidates[-1],
                 )
                 target["approval_date"] = v
+                if res.get("ppt_guidelines"):
+                    target["guidelines"] = res["ppt_guidelines"]
 
         cleaned_inds = []
         raw_inds = res.get("indications", [])

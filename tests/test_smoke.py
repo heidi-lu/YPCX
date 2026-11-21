@@ -10,7 +10,7 @@ from agent import (
     _split_numbered_indications,
     _strength_from_text,
 )
-from skill_vision_parser import _extract_full_indications_from_text
+from skill_vision_parser import _extract_full_indications_from_text, _extract_ppt_guidelines
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -226,6 +226,16 @@ def test_full_indications_from_pdf_text():
     assert [r["indication_short"] for r in rows] == ["经典型霍奇金淋巴瘤", "非鳞状非小细胞肺癌"]
     assert rows[0]["indication_full"].startswith("【1】")
     assert rows[1]["indication_full"].startswith("【2】")
+
+
+def test_ppt_guidelines_extraction():
+    text = """《非小细胞肺癌诊疗指南（2025版）》 I级推荐（1A类证据）
+《中国肺癌免疫治疗规范化应用指南（2024版）》 强推荐（1类证据）
+《免疫检查点抑制剂临床应用指南（2024版）》 II级推荐（1A类证据）"""
+    rows = _extract_ppt_guidelines(text)
+    assert len(rows) == 3
+    assert rows[0]["name"] == "非小细胞肺癌诊疗指南（2025版）"
+    assert "I级推荐" in rows[0]["recommendation"]
 
 
 def test_inline_sequential_indications_from_pdf_text():

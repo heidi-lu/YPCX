@@ -167,6 +167,32 @@ def _extract_pdf_key_info(pdf_bytes: bytes) -> dict:
         logger.warning(f"PDF 本地解析失败: {e}")
     return res
 
+def _extract_ppt_guidelines(text: str) -> list[dict]:
+    """从 PPT 文本提取《...指南...》和推荐等级。"""
+    lines = [ln.strip() for ln in str(text or "").splitlines() if ln.strip()]
+    result = []
+    seen = set()
+    for i, line in enumerate(lines):
+        for name in re.findall(r"《([^》]*指南[^》]*)》", line):
+            context = line
+            if i + 1 < len(lines):
+                context += " " + lines[i + 1]
+            level_match = re.search(
+                r"((?:I{1,3}|IV|强|弱)?\s*级?推荐\s*[（(][^）)]*[）)])",
+                context,
+            )
+            level = level_match.group(1).strip() if level_match else ""
+            if not level:
+                level_match = re.search(r"((?:I{1,3}|IV|强|弱)\s*级推荐)", context)
+                level = level_match.group(1).strip() if level_match else ""
+            key = (name, level)
+            if key in seen:
+                continue
+            seen.add(key)
+            result.append({"name": name, "recommendation": level, "level": level})
+    return result
+
+
 def _extract_ppt_info(ppt_bytes: bytes) -> dict:
     res = {}
     text = ""
@@ -195,6 +221,7 @@ def _extract_ppt_info(ppt_bytes: bytes) -> dict:
             except: pass
             
     if not text.strip(): return {}
+    res["ppt_guidelines"] = _extract_ppt_guidelines(text)
 
     clean_text = re.sub(r'\s+', '', text)
     m_reg = re.search(r'(?:药品)?注册分类[：:]?([\u4e00-\u9fa5a-zA-Z0-9\.]+)', clean_text)
@@ -247,7 +274,8 @@ def _extract_body_info(pdf_bytes: bytes) -> dict:
 def extract_medical_pdf_vision(pdf_bytes: bytes | None, ppt_bytes: bytes | None = None) -> dict:
     res = {"cover_drug_name": "", "manufacturer": "", "registration_category": "", 
            "china_approval_date": "", "dosage_form": "", "specification": "", 
-           "indications": [], "full_indications": [], "brand_name": "", "indication_approval_times": []}
+           "indications": [], "full_indications": [], "brand_name": "", "indication_approval_times": [],
+           "ppt_guidelines": []}
 
     if pdf_bytes:
         res.update(_extract_pdf_key_info(pdf_bytes))
