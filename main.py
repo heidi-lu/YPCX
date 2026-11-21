@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 
 from db import init_db, get_db, SessionLocal
 from models import Drug, Feedback
-from agent import fetch_new_drug, update_existing_drug, normalize_manufacturer, _normalize_disease_with_dict
+from agent import fetch_new_drug, update_existing_drug, normalize_manufacturer, normalize_specification, _normalize_disease_with_dict
 
 os.environ["ANYIO_BACKEND"] = "asyncio"
 
@@ -204,6 +204,10 @@ def _derive_insurance_year(nhi_data: dict, ind_short: str, approval_date: str, i
     return execution_dates.get(matched_year, matched_year)
 
 
+def _indication_text_key(value) -> str:
+    return re.sub(r"[\s（）()]+", "", str(value or ""))
+
+
 def _save_rows(name: str, rows: list) -> list:
     with SessionLocal() as s:
         seen = set()
@@ -214,6 +218,8 @@ def _save_rows(name: str, rows: list) -> list:
                     if k == "brand_name" and re.search(r'[^\w\u4e00-\u9fa5®™\-\s]', v): v = ""
                     if k == "manufacturer":
                         v = normalize_manufacturer(v)
+                    if k == "specification":
+                        v = normalize_specification(v)
                     row[k] = v
 
             k = (row.get("generic_name",""), row.get("brand_name",""), row.get("manufacturer",""),
@@ -228,6 +234,20 @@ def _save_rows(name: str, rows: list) -> list:
                 Drug.indication_short==k[5], Drug.indication_subtype==k[6]
             ).first()
             
+            if not ex and row.get("status") == "DRAFT":
+                # 同一核心身份下，已有 APPROVED 的完整适应症段落就不要新建草稿
+                approved = s.query(Drug).filter(
+                    Drug.generic_name == k[0], Drug.brand_name == k[1], Drug.manufacturer == k[2],
+                    Drug.dosage_form == k[3], Drug.specification == k[4],
+                    Drug.status == "APPROVED",
+                ).all()
+                target_text = _indication_text_key(row.get("indication_full"))
+                if target_text:
+                    for candidate in approved:
+                        if _indication_text_key(candidate.indication_full) == target_text:
+                            ex = candidate
+                            break
+
             if ex:
                 # 已有行只补空字段，绝不用新值覆盖已有值
                 for ck, v in row.items():
@@ -354,7 +374,7 @@ def flatten_to_rows(data: dict) -> list:
 
             rows.append({**base,
                 "brand_name": row_brand,
-                "specification": ind.get("specification") or base.get("specification", ""),
+                "specification": normalize_specification(ind.get("specification") or base.get("specification", "")),
                 "indication_short": ind_name, "indication_subtype": ind_subtype,
                 "indication_full": ind.get("indication_full", ind_name),
                 "approval_country": country, "indication_approval_date": ind.get("approval_date", ""),

@@ -90,6 +90,14 @@ def _is_chinese_brand(brand: str) -> bool:
     return bool(re.search(r"[\u4e00-\u9fa5]", str(brand or "")))
 
 
+def normalize_specification(value: str) -> str:
+    text = re.sub(r"\s+", "", str(value or ""))
+    text = text.replace("（", "(").replace("）", ")")
+    text = re.sub(r"\)+", ")", text)
+    text = re.sub(r"\(+", "(", text)
+    return text
+
+
 def _local_simplify_manufacturer(mfr: str) -> str:
     return normalize_manufacturer(mfr)
 
@@ -539,7 +547,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                     **full,
                     "approval_date": old.get("approval_date", ""),
                     "dosage_full": old.get("dosage_full", ""),
-                    "specification": old.get("specification") or res.get("specification", ""),
+                    "specification": normalize_specification(old.get("specification") or res.get("specification", "")),
                     "guidelines": old.get("guidelines", []),
                 })
             res["indications"] = merged
@@ -744,15 +752,17 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                         if _clean_brand_name(prod.get("brand_name", "")) == clean_brand
                     ]
                     if existing_products:
-                        for prod in existing_products:
-                            have = {i.get("indication_short", "") for i in prod.get("indications", [])}
-                            for ind in new_inds:
-                                if ind["indication_short"] not in have:
-                                    prod.setdefault("indications", []).append(dict(ind))
-                            if not prod.get("manufacturer"):
-                                prod["manufacturer"] = final_mfr
-                            if web_listing_date and not prod.get("china_approval_date"):
-                                prod["china_approval_date"] = web_listing_date
+                        # 已有 PDF 来源的产品：PDF 全文优先，不用网搜短适应症补行
+                        if not any(prod.get("nhsa_pdf_url") for prod in existing_products):
+                            for prod in existing_products:
+                                have = {i.get("indication_short", "") for i in prod.get("indications", [])}
+                                for ind in new_inds:
+                                    if ind["indication_short"] not in have:
+                                        prod.setdefault("indications", []).append(dict(ind))
+                                if not prod.get("manufacturer"):
+                                    prod["manufacturer"] = final_mfr
+                                if web_listing_date and not prod.get("china_approval_date"):
+                                    prod["china_approval_date"] = web_listing_date
                     else:
                         all_extracted_products.append({
                             "generic_name": primary_generic_name, "brand_name": clean_brand, "manufacturer": final_mfr,
