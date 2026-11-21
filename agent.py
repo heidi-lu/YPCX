@@ -269,6 +269,10 @@ class BrandFromMetaResult(BaseModel):
 class DosageTextResult(BaseModel):
     dosage_full: str | None = ""
 
+class BrandMatchResult(BaseModel):
+    match: bool = False
+    evidence: str | None = ""
+
 # ================= LLM 调用封装 =================
 def _parse_dosage_fields(dosage_text: str) -> dict:
     if not dosage_text: return {}
@@ -293,6 +297,24 @@ def _call_llm(prompt, schema_cls, timeout=40):
             logger.warning(f"❌ [LLM API fail] 第{att+1}次重试 | 错误: {e}")
             time.sleep(2)
     return None
+
+def _brand_matches_generic(generic: str, brand: str) -> bool:
+    """二次确认品牌是否真的是这个通用名的商品名。"""
+    if not generic or not brand:
+        return False
+    hits = ds_search(f"{generic} {brand} 商品名 通用名 获批", 3)
+    if not hits:
+        return False
+    prompt = f"""判断资料中的商品名【{brand}】是否明确属于通用名【{generic}】。
+只输出 JSON：{{"match": true/false, "evidence": "原文依据"}}
+资料没有明确对应关系就输出 false。
+资料：{hits}"""
+    result = _call_llm(prompt, BrandMatchResult)
+    if not result or not result.match:
+        logger.info(f"🌐 品牌校验未通过: {generic} / {brand}")
+        return False
+    return True
+
 
 def _fill_brand_from_metadata(products: list[dict]) -> None:
     """解析后第一步：用通用名+厂家+上市时间找本品商品名；只填空，且只接受唯一品牌。"""
@@ -332,6 +354,8 @@ def _fill_brand_from_metadata(products: list[dict]) -> None:
         search_mfr = normalize_manufacturer(result.manufacturer or "")
         if search_mfr and mfr not in search_mfr and search_mfr not in mfr:
             logger.info(f"🌐 本品商品名厂家不匹配，跳过: {generic} {brands[0]} {search_mfr} != {mfr}")
+            continue
+        if not _brand_matches_generic(generic, brands[0]):
             continue
         prod["brand_name"] = brands[0]
         filled += 1
@@ -426,6 +450,8 @@ def _enrich_missing_brands(products: list[dict]) -> None:
         for item in result.indications:
             brand = _clean_brand_name(item.brand_name or "")
             if not brand or not _is_chinese_brand(brand):
+                continue
+            if not _brand_matches_generic(generic, brand):
                 continue
             search_mfr = normalize_manufacturer(item.manufacturer or "")
             target = _normalize_disease_with_dict(item.indication_short or "")
@@ -694,6 +720,8 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
             for p in base_obj.products:
                 clean_brand = _clean_brand_name(p.get("brand_name", ""))
                 if not clean_brand or not _is_chinese_brand(clean_brand):
+                    continue
+                if not _brand_matches_generic(drug_name, clean_brand):
                     continue
                 
                 raw_mfr = _local_simplify_manufacturer(p.get("manufacturer", "").strip())
