@@ -282,11 +282,56 @@ class ShortIndicationResult(BaseModel):
     items: List[ShortIndicationItem] = Field(default_factory=list)
 
 # ================= LLM 调用封装 =================
+def _regex_dosage_fields(text: str) -> dict:
+    text = str(text or "")
+    route = ""
+    m_route = re.search(r"(静脉输注|静脉滴注|静脉给药|皮下注射|肌内注射|口服)", text)
+    if m_route:
+        route = m_route.group(1)
+
+    dose = ""
+    for pattern in (
+        r"(?:推荐剂量为|推荐剂量|单次剂量为|每次)\s*([0-9.]+\s*(?:mg|g|μg|ug|ml|mL)(?:\s*/\s*(?:kg|m2|次))?)",
+        r"([0-9.]+\s*(?:mg|g|μg|ug|ml|mL)(?:\s*/\s*(?:kg|m2))?)\s*/\s*次",
+    ):
+        m = re.search(pattern, text)
+        if m:
+            dose = re.sub(r"\s+", " ", m.group(1)).strip()
+            break
+
+    frequency = ""
+    m_freq = re.search(
+        r"(每\s*\d+\s*周\s*(?:给药)?\s*\d+\s*次|每\s*\d+\s*日\s*\d+\s*次|每日\s*\d+\s*次|每周\s*\d+\s*次|每\s*\d+\s*周一次)",
+        text,
+    )
+    if m_freq:
+        frequency = re.sub(r"\s+", "", m_freq.group(1))
+        frequency = re.sub(r"每(\d+)周给药(\d+)次", r"每\1周给药\2次", frequency)
+
+    duration = ""
+    m_dur = re.search(r"(直至疾病进展[^。；;]*|共给药[^。；;]*|持续用药[^。；;]*)", text)
+    if m_dur:
+        duration = m_dur.group(1).strip()
+
+    return {"dosage_single": dose, "frequency": frequency, "route": route, "duration": duration}
+
+
 def _parse_dosage_fields(dosage_text: str) -> dict:
-    if not dosage_text: return {}
-    prompt = f"""提取用药信息。输出JSON：{{"dosage_single": "", "frequency": "", "route": "", "duration": ""}} 原文没写填""，严禁输出 null。原文：{dosage_text}"""
+    if not dosage_text:
+        return {}
+    parsed = _regex_dosage_fields(dosage_text)
+    if all(parsed.get(k) for k in ("dosage_single", "frequency", "route")):
+        return parsed
+    prompt = f"""提取用药信息。输出JSON：{{"dosage_single": "", "frequency": "", "route": "", "duration": ""}}
+原文没写就填空字符串，严禁输出 null。
+原文：{dosage_text}"""
     res = _call_llm(prompt, DosageParseResult)
-    return res.model_dump() if res else {}
+    if res:
+        for key, value in res.model_dump().items():
+            if not parsed.get(key) and value:
+                parsed[key] = value
+    return parsed
+
 
 def _call_llm(prompt, schema_cls, timeout=40):
     for att in range(3):

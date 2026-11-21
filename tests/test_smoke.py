@@ -7,6 +7,7 @@ import main
 from agent import (
     _clean_brand_name,
     _is_chinese_brand,
+    _regex_dosage_fields,
     _split_numbered_indications,
     _strength_from_text,
 )
@@ -199,6 +200,13 @@ def test_row_level_specification_and_brand_precedence():
     rows = main.flatten_to_rows(data)
     assert [r["specification"] for r in rows] == ["10.8mg", "3.6mg"]
     assert all(r["brand_name"] == "原商品名" for r in rows)
+
+
+def test_regex_dosage_fields():
+    parsed = _regex_dosage_fields("本品采用静脉输注的方式给药，推荐剂量为200mg，每3周给药1次。")
+    assert parsed["dosage_single"] == "200mg"
+    assert parsed["frequency"] == "每3周给药1次"
+    assert parsed["route"] == "静脉输注"
 
 
 def test_insurance_status_entry_and_exit():
