@@ -24,8 +24,21 @@
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "shared",
+        "focus": true,
         "clear": true
+      }
+    },
+    {
+      "label": "dev: logs",
+      "type": "shell",
+      "command": "tail",
+      "args": ["-f", ".run/backend.log"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
       }
     }
   ]
