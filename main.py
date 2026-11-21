@@ -242,6 +242,11 @@ def _save_rows(name: str, rows: list) -> list:
         results = s.query(Drug).filter((Drug.generic_name.contains(name)) | (Drug.brand_name.contains(name))).all()
         return [_drug_to_dict(d) for d in results]
 
+def _optional_text(value) -> str:
+    text = str(value or "").strip()
+    return "" if text in {"未提供", "未提及", "未知", "暂无", "无"} else text
+
+
 def flatten_to_rows(data: dict) -> list:
     rows = []
     generic_name = data.get("generic_name", "")
@@ -261,7 +266,10 @@ def flatten_to_rows(data: dict) -> list:
         if is_generic and nhi_for_base:
             p0_ins_year = nhi_for_base.get("first_execution_date") or nhi_for_base.get("first_year", "")
 
-        inds = product.get("indications", [])
+        inds = [
+            ind for ind in product.get("indications", [])
+            if _optional_text(ind.get("indication_short")) or _optional_text(ind.get("indication_full"))
+        ]
         
         # 死律执行：查字典，找最早进医保的适应症，用药品上市时间给它补齐获批时间
         if target_nhi and product.get("china_approval_date"):
@@ -342,7 +350,7 @@ def flatten_to_rows(data: dict) -> list:
             guidelines = ind.get("guidelines", [])
             g_names = " / ".join([g.get("name", "") for g in guidelines if g.get("name")])
             g_recs = " / ".join([g.get("recommendation", "") for g in guidelines if g.get("recommendation")])
-            full_dosage = ind.get("dosage_full") or ind.get("dosage", "")
+            full_dosage = _optional_text(ind.get("dosage_full") or ind.get("dosage", ""))
 
             rows.append({**base,
                 "brand_name": row_brand,
