@@ -20,6 +20,7 @@
       "label": "dev: start",
       "type": "shell",
       "command": "${workspaceFolder}/启动YPCX.command",
+      "group": { "kind": "build", "isDefault": true },
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
