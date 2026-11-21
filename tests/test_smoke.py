@@ -224,6 +224,18 @@ def test_inline_sequential_indications_from_pdf_text():
     assert rows[0]["indication_full"].startswith("1.")
 
 
+def test_interleaved_numbering_uses_main_sequence():
+    text = """说明书全部适应症/功能主治
+1.疾病A 本品适用于A。2.疾病B 本品适用于B。3.疾病C 本品适用于C。
+1.支付范围一 2.支付范围二 3.支付范围三
+4.疾病D 本品适用于D。
+现行医保目录的医保支付范围"""
+    rows = _extract_full_indications_from_text(text)
+    assert len(rows) == 4
+    assert rows[0]["indication_full"].startswith("1.")
+    assert rows[-1]["indication_full"].startswith("4.")
+
+
 def test_numbered_indications_split_rules():
     combined = "【1】经典型霍奇金淋巴瘤 本品适用于... 【2】非鳞状非小细胞肺癌（1）本品联合...（2）本品联合..."
     rows = _split_numbered_indications([{

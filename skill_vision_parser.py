@@ -69,11 +69,18 @@ def _extract_full_indications_from_text(full_text: str) -> list[dict]:
     else:
         # 兼容 1. 2. 3. ... 这种连续编号，必须从 1 开始且连续
         matches = list(re.finditer(r"(?<!\d)(\d{1,2})\s*[.、]\s*", block))
-        nums = [int(m.group(1)) for m in matches]
-        if len(matches) >= 2 and nums[0] == 1 and all(b == a + 1 for a, b in zip(nums, nums[1:])):
-            for i, m in enumerate(matches):
-                end = matches[i + 1].start() if i + 1 < len(matches) else len(block)
-                parts.append(block[m.start():end].strip())
+        # 正文里可能插入“1. 2. 3.”的医保支付范围子列表，只取从 1 开始连续递增的主编号
+        selected = []
+        expected = 1
+        for match in matches:
+            if int(match.group(1)) == expected:
+                selected.append(match)
+                expected += 1
+        if len(selected) >= 2:
+            for match in selected:
+                raw_index = matches.index(match)
+                end = matches[raw_index + 1].start() if raw_index + 1 < len(matches) else len(block)
+                parts.append(block[match.start():end].strip())
         marker = re.compile(r"^\d{1,2}\s*[.、]\s*")
 
     for part in parts:
