@@ -109,6 +109,60 @@ def _clean_disease_name(raw: str) -> str:
     cleaned = cleaned.split('。')[0].split('；')[0].split(';')[0].strip()
     return cleaned.strip()
 
+BRACKET_NO = re.compile(r"(?:【|\[)\s*(\d+)\s*(?:】|\])")
+LINE_NO = re.compile(r"(?m)^\s*(\d+)\s*[、.．]\s*")
+
+
+def _split_numbered_sections(text: str) -> list[str]:
+    """只按编号拆分；【1】/[1] 优先，行首 1、2、 次之；其它情况原样返回。"""
+    raw = str(text or "").strip()
+    if not raw:
+        return []
+    bracket_count = len(BRACKET_NO.findall(raw))
+    if bracket_count >= 2:
+        parts = re.split(r"(?=(?:【|\[)\s*\d+\s*(?:】|\]))", raw)
+        return [p.strip() for p in parts if p.strip()]
+    line_count = len(LINE_NO.findall(raw))
+    if line_count >= 2:
+        parts = re.split(r"(?m)(?=^\s*\d+\s*[、.．]\s*)", raw)
+        return [p.strip() for p in parts if p.strip()]
+    return [raw]
+
+
+def _short_from_numbered_section(part: str) -> str:
+    text = re.sub(r"^(?:【|\[)\s*\d+\s*(?:】|\])", "", part).strip()
+    text = re.sub(r"^\s*\d+\s*[、.．]\s*", "", text).strip()
+    # 取“本品/用于/适用/联合/（”之前的病名
+    text = re.split(r"(?:本品|用于|适用|联合|（|\()", text, maxsplit=1)[0].strip()
+    text = re.sub(r"\s+", "", text)
+    return _clean_disease_name(text)
+
+
+def _split_numbered_indications(indications: list[dict]) -> list[dict]:
+    """保留原有拆分结果；只有当全文里出现多个编号段时才再拆。"""
+    result = []
+    seen = set()
+    for ind in indications:
+        full = ind.get("indication_full") or ind.get("indication_short") or ""
+        parts = _split_numbered_sections(full)
+        if len(parts) <= 1:
+            result.append(ind)
+            continue
+        for part in parts:
+            short = _short_from_numbered_section(part)
+            if not short:
+                continue
+            key = (short, str(ind.get("specification", "")))
+            if key in seen:
+                continue
+            seen.add(key)
+            row = dict(ind)
+            row["indication_short"] = short
+            row["indication_full"] = re.sub(r"\s+", " ", part).strip()
+            result.append(row)
+    return result
+
+
 def _strength_from_text(text: str) -> str:
     """Only accept a strength when the indication text mentions exactly one."""
     values = re.findall(r"\d+(?:\.\d+)?\s*(?:mg|g|μg|ug|ml|mL|IU|万IU)", str(text or ""))
@@ -574,6 +628,8 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                         "approval_country": "中国", "approval_date": ppt_date, "guidelines": []
                     })
                     existing_china_inds.add(ppt_short)
+
+        cleaned_inds = _split_numbered_indications(cleaned_inds)
 
         prod = {
             "generic_name": final_name, 

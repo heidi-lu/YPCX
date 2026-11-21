@@ -4,7 +4,12 @@ import pytest
 from fastapi.testclient import TestClient
 
 import main
-from agent import _clean_brand_name, _is_chinese_brand, _strength_from_text
+from agent import (
+    _clean_brand_name,
+    _is_chinese_brand,
+    _split_numbered_indications,
+    _strength_from_text,
+)
 from build_dict import normalize_execution_date, parse_execution
 from models import Drug
 
@@ -193,6 +198,26 @@ def test_row_level_specification_and_brand_precedence():
     rows = main.flatten_to_rows(data)
     assert [r["specification"] for r in rows] == ["10.8mg", "3.6mg"]
     assert all(r["brand_name"] == "原商品名" for r in rows)
+
+
+def test_numbered_indications_split_rules():
+    combined = "【1】经典型霍奇金淋巴瘤 本品适用于... 【2】非鳞状非小细胞肺癌（1）本品联合...（2）本品联合..."
+    rows = _split_numbered_indications([{
+        "indication_short": "经典型霍奇金淋巴瘤",
+        "indication_full": combined,
+        "approval_date": "2026-05",
+        "approval_country": "中国",
+    }])
+    assert [r["indication_short"] for r in rows] == ["经典型霍奇金淋巴瘤", "非鳞状非小细胞肺癌"]
+
+    paren_only = "非鳞状非小细胞肺癌（1）本品联合...（2）本品联合..."
+    rows = _split_numbered_indications([{"indication_short": "非鳞状非小细胞肺癌", "indication_full": paren_only}])
+    assert len(rows) == 1
+
+    line_numbered = """1、经典型霍奇金淋巴瘤 本品...
+2、非鳞状非小细胞肺癌 本品..."""
+    rows = _split_numbered_indications([{"indication_short": "x", "indication_full": line_numbered}])
+    assert [r["indication_short"] for r in rows] == ["经典型霍奇金淋巴瘤", "非鳞状非小细胞肺癌"]
 
 
 def test_strength_from_text():
