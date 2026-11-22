@@ -14,7 +14,7 @@
 - 数据库：`drug_agent.db`，市场库 `market.db`
 - 测试：`tests/test_smoke.py`
 - 当前测试：`21 passed`
-- 当前最新提交：`9305382 feat: label basic and commercial insurance coverage`
+- 当前最新提交：`1b19b38 docs: add project handoff`（代码功能提交为 `9305382`）
 
 启动方式：
 
