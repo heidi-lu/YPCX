@@ -40,10 +40,17 @@ def init_db():
             print("❌ [DB] 严重警告：'drugs' 表未能成功创建！请检查 models.py 的 Base 导入是否正确。")
         else:
             cols = [c['name'] for c in inspector.get_columns('drugs')]
-            if "insurance_status_text" not in cols:
-                with engine.begin() as conn:
-                    conn.execute(text("ALTER TABLE drugs ADD COLUMN insurance_status_text VARCHAR(200) DEFAULT ''"))
-                print("✅ [DB] 已补充字段 insurance_status_text")
+            for _col, _ddl in (
+                ("insurance_status_text", "ALTER TABLE drugs ADD COLUMN insurance_status_text VARCHAR(200) DEFAULT ''"),
+                ("price_insurance", "ALTER TABLE drugs ADD COLUMN price_insurance VARCHAR(200) DEFAULT ''"),
+                ("origin_region", "ALTER TABLE drugs ADD COLUMN origin_region VARCHAR(10) DEFAULT ''"),
+                ("indication_approval_source", "ALTER TABLE drugs ADD COLUMN indication_approval_source VARCHAR(500) DEFAULT ''"),
+                ("drug_insurance_date", "ALTER TABLE drugs ADD COLUMN drug_insurance_date VARCHAR(100) DEFAULT ''"),
+            ):
+                if _col not in cols:
+                    with engine.begin() as conn:
+                        conn.execute(text(_ddl))
+                    print(f"✅ [DB] 已补充字段 {_col}")
             print(f"✅ [DB] 'drugs' 表字段数: {len(cols)}")
             if "manual_locked_fields" not in cols:
                 print("⚠️ [DB] 警告：缺少新字段 manual_locked_fields，可能使用了旧代码！")

@@ -61,10 +61,25 @@ def extract_file_links(html: str, drug_name: str, year: int) -> list:
             })
     return results
 
-def find_drug_files(drug_name: str, years: list = None) -> list:
-    if years is None: years = [2026, 2025, 2024, 2023, 2022]
-    final_files, seen_urls = [], set()
+def _name_variants(drug_name: str) -> list:
+    """药名容错：组合名多余的“单抗”、剂型后缀，都可能让官方检索落空。"""
+    base = str(drug_name or "").strip()
+    variants = [base]
+    # 艾帕洛利单抗托沃瑞利单抗 → 艾帕洛利托沃瑞利单抗
+    if base.count("单抗") >= 2:
+        i = base.find("单抗")
+        variants.append(base[:i] + base[i + 2:])
+    # 有/无剂型后缀各试一次
+    for suffix in ("注射液", "注射剂", "片", "胶囊"):
+        if base.endswith(suffix):
+            variants.append(base[: -len(suffix)])
+    if not base.endswith(("注射液", "注射剂", "片", "胶囊")):
+        variants.append(base + "注射液")
+    return [v for v in dict.fromkeys(variants) if len(v) >= 2]
 
+
+def _find_exact(drug_name: str, years: list) -> list:
+    final_files, seen_urls = [], set()
     for year in years:
         html = fetch_public_page(year)
         if not html: continue
@@ -73,3 +88,12 @@ def find_drug_files(drug_name: str, years: list = None) -> list:
                 seen_urls.add(item["url"])
                 final_files.append(item)
     return final_files
+
+
+def find_drug_files(drug_name: str, years: list = None) -> list:
+    if years is None: years = [2026, 2025, 2024, 2023, 2022]
+    for variant in _name_variants(drug_name):
+        files = _find_exact(variant, years)
+        if files:
+            return files
+    return []

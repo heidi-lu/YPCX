@@ -1,36 +1,30 @@
 import json, re, time, logging, os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 from pydantic import BaseModel, Field
 import requests
-from openai import OpenAI
 
-from config import MAIN_LLM_API_KEY, MAIN_LLM_BASE_URL, MAIN_LLM_MODEL, redis_client
+from config import redis_client
 from scheduler import DrugDataScheduler
 from nhsa_crawler import find_drug_files
 from deepseek_search import search as ds_search
 from skill_vision_parser import extract_medical_pdf_vision
-from indication_regex import extract_indications_from_pdf
+from approval_dates import resolve_indication_approval_date
+from disease_terms import ABBREVIATIONS, ALIASES_DICT, DISEASE_VARIANTS
+from indication_regex import (
+    extract_indications_from_pdf,
+    disease_short_from_full,
+    looks_like_short_fragment,
+    strip_short_patient_tail,
+)
+import llm_client
+import source_snapshot
+import usage_store
 
 logger = logging.getLogger(__name__)
-_client = OpenAI(api_key=MAIN_LLM_API_KEY, base_url=MAIN_LLM_BASE_URL)
 scheduler = DrugDataScheduler(redis_client)
 FILE_HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36"}
 MAX_PRODUCTS = 20
-
-# ================= 加载本地权威同义词字典 =================
-ALIASES_DICT = {}
-if os.path.exists("medical_aliases.json"):
-    try:
-        with open("medical_aliases.json", "r", encoding="utf-8") as f:
-            raw_dict = json.load(f)
-            for standard_name, data in raw_dict.items():
-                ALIASES_DICT[standard_name.lower()] = standard_name
-                for alias in data.get("aliases", []):
-                    ALIASES_DICT[alias.lower()] = standard_name
-        logger.info(f"✅ 医学字典加载成功，共 {len(ALIASES_DICT)} 个同义词映射。")
-    except Exception as e:
-        logger.error(f"❌ 医学字典加载失败: {e}")
 
 # ================= 加载原研厂家字典 =================
 ORIGIN_MFR_MAPPING = {} 
@@ -103,12 +97,26 @@ def _local_simplify_manufacturer(mfr: str) -> str:
     return normalize_manufacturer(mfr)
 
 def _validate_date(date_str: str) -> str:
-    if not date_str: return ""
-    m = re.search(r'(\d{4})', str(date_str))
-    if not m: return ""
-    year = int(m.group(1))
-    if year > datetime.now().year or year < 1990: return ""
-    return str(date_str)
+    """统一成 YYYY-MM 或 YYYY-MM-DD；非法/未来日期返回空（方案 A：宁可不写）。"""
+    if not date_str:
+        return ""
+    m = re.search(r"(\d{4})\D{0,3}(\d{1,2})(?:\D{0,3}(\d{1,2}))?", str(date_str))
+    if not m:
+        return ""
+    year, month = int(m.group(1)), int(m.group(2))
+    day = int(m.group(3)) if m.group(3) else 0
+    now = datetime.now()
+    if not 1990 <= year <= now.year:
+        return ""
+    if not 1 <= month <= 12:
+        return ""
+    if day:
+        if not 1 <= day <= 31 or (year, month, day) > (now.year, now.month, now.day):
+            return ""
+        return f"{year:04d}-{month:02d}-{day:02d}"
+    if (year, month) > (now.year, now.month):
+        return ""
+    return f"{year:04d}-{month:02d}"
 
 def _clean_disease_name(raw: str) -> str:
     if not raw: return ""
@@ -140,7 +148,7 @@ def _split_numbered_sections(text: str) -> list[str]:
 
 def _short_from_numbered_section(part: str) -> str:
     text = re.sub(r"^(?:【|\[)\s*\d+\s*(?:】|\])", "", part).strip()
-    text = re.sub(r"^\s*\d+\s*[、.．]\s*", "", text).strip()
+    text = re.sub(r"^\s*(?:[（(]?\d+\s*[)）.、．:：]|[①②③④⑤⑥⑦⑧⑨⑩])", "", text).strip()
     # 取“本品/用于/适用/联合/（”之前的病名
     text = re.split(r"(?:本品|用于|适用|联合|（|\()", text, maxsplit=1)[0].strip()
     text = re.sub(r"\s+", "", text)
@@ -169,6 +177,8 @@ def _split_numbered_indications(indications: list[dict]) -> list[dict]:
             row = dict(ind)
             row["indication_short"] = short
             row["indication_full"] = re.sub(r"\s+", " ", part).strip()
+            # 合并全文只有一个获批时间，拆开后无法判断属于哪条：按方案 A 留空，避免逐个串日期
+            row["approval_date"] = ""
             result.append(row)
     return result
 
@@ -211,6 +221,11 @@ def _judge_origin_by_reg(reg_cat: str) -> str:
 def _normalize_disease_with_dict(raw_name: str) -> str:
     short = _clean_disease_name(raw_name)
     if not short: return ""
+    # 别名字典会把两者都归一成“肺癌”；亚型必须保留，否则 SCLC/NSCLC 无法区分
+    if "非小细胞肺癌" in short:
+        return "非小细胞肺癌"
+    if "小细胞肺癌" in short:
+        return "小细胞肺癌"
     s_low = short.lower()
 
     if s_low in ALIASES_DICT: return ALIASES_DICT[s_low]
@@ -271,6 +286,19 @@ class BrandFromMetaResult(BaseModel):
 class DosageTextResult(BaseModel):
     dosage_full: str | None = ""
 
+class GenericItem(BaseModel):
+    brand_name: str | None = ""
+    manufacturer: str | None = ""
+    approval_date: str | None = ""
+
+class GenericsResult(BaseModel):
+    generics: List[GenericItem] = Field(default_factory=list)
+
+class PriceResult(BaseModel):
+    price_market: str | None = ""
+    price_date: str | None = ""
+    source: str | None = ""
+
 class BrandMatchResult(BaseModel):
     match: bool = False
     evidence: str | None = ""
@@ -326,7 +354,7 @@ def _parse_dosage_fields(dosage_text: str) -> dict:
     prompt = f"""提取用药信息。输出JSON：{{"dosage_single": "", "frequency": "", "route": "", "duration": ""}}
 原文没写就填空字符串，严禁输出 null。
 原文：{dosage_text}"""
-    res = _call_llm(prompt, DosageParseResult)
+    res = _call_llm(prompt, DosageParseResult, stage="dosage")
     if res:
         for key, value in res.model_dump().items():
             if not parsed.get(key) and value:
@@ -334,22 +362,26 @@ def _parse_dosage_fields(dosage_text: str) -> dict:
     return parsed
 
 
-def _call_llm(prompt, schema_cls, timeout=40):
+def _call_llm(prompt, schema_cls, timeout=40, stage="extract"):
+    """统一走 llm_client：传输层重试在 client 内，这里只负责 JSON 解析重试。"""
     for att in range(3):
+        result = llm_client.chat(
+            [{"role": "user", "content": prompt}],
+            stage=stage,
+            json_mode=True,
+            timeout=timeout,
+            max_attempts=1,
+        )
+        if not result:
+            continue
+        text = re.sub(r"^```(?:json)?\s*|\s*```$", "", result.text.strip(), flags=re.MULTILINE)
+        # 强杀字符串形式的 "null" 和 "None"
+        text = text.replace('"null"', '""').replace('"None"', '""')
         try:
-            resp = _client.chat.completions.create(
-                model=MAIN_LLM_MODEL, messages=[{"role": "user", "content": prompt}], 
-                response_format={"type": "json_object"}, timeout=timeout
-            )
-            text = re.sub(r"^```(?:json)?\s*|\s*```$", "", resp.choices[0].message.content.strip(), flags=re.MULTILINE)
-            
-            # 强杀字符串形式的 "null" 和 "None"
-            text = text.replace('"null"', '""').replace('"None"', '""')
-            
             return schema_cls.model_validate(json.loads(text))
-        except Exception as e:
-            logger.warning(f"❌ [LLM API fail] 第{att+1}次重试 | 错误: {e}")
-            time.sleep(2)
+        except Exception as exc:
+            logger.warning(f"❌ [LLM JSON] 第{att + 1}次解析失败 | {exc}")
+            time.sleep(1)
     return None
 
 def _is_plausible_brand(brand: str) -> bool:
@@ -372,7 +404,7 @@ def _brand_matches_generic(generic: str, brand: str) -> bool:
 只输出 JSON：{{"match": true/false, "evidence": "原文依据"}}
 资料没有明确对应关系就输出 false。
 资料：{hits}"""
-    result = _call_llm(prompt, BrandMatchResult)
+    result = _call_llm(prompt, BrandMatchResult, stage="brand")
     if not result or not result.match:
         logger.info(f"🌐 品牌校验未通过: {generic} / {brand}")
         return False
@@ -385,16 +417,60 @@ def _regex_short_cleanup(products: list[dict]) -> None:
         for ind in prod.get("indications", []):
             full = str(ind.get("indication_full", "")).strip()
             short = str(ind.get("indication_short", "")).strip()
-            m = re.match(r"^(?:【\d+】|\d+\s*[.、])\s*([^本品用联（(]{2,20})", full)
-            if m:
+            m = re.match(r"^(?:【\d+】|\[\d+\]|[（(]?\d+\s*[)）.、:：]|[①②③④⑤⑥⑦⑧⑨⑩])\s*([^本品用联（(：:]{2,20})", full)
+            if m and re.search(r"(癌|瘤|病|综合征|肌无力)", m.group(1)):
                 short = m.group(1).strip()
-            short = short.replace("鳞状非小细胞肺癌", "非小细胞肺癌")
+            short = short.strip("：:，,、；;。 ")
+            for prefix in ("复发或转移性", "不可切除或晚期", "不可切除或转移性", "局部晚期或转移性", "晚期", "经典型"):
+                if short.startswith(prefix):
+                    short = short[len(prefix):]
+            # 先替换更长的“非鳞状…”，否则会得到“非非小细胞肺癌”
             short = short.replace("非鳞状非小细胞肺癌", "非小细胞肺癌")
+            short = short.replace("鳞状非小细胞肺癌", "非小细胞肺癌")
             short = re.sub(r"^(?:食管)?鳞状细胞癌$", "食管癌", short)
             short = re.sub(r"^胃(?:或|及)胃食管(?:交界处|结合部)腺癌$", "胃癌", short)
             short = re.sub(r"[（(].*?[）)]", "", short).strip()
+            short = strip_short_patient_tail(short)
+            # 简称只保留病名：逗号后面的“既往接受…/一线治疗”属于限定语
+            short = re.split(r"[，,]", short)[0].strip()
+            # 只在疑似碎片时重取，避免把本来正确的简称改坏
+            if looks_like_short_fragment(short, full):
+                repaired = disease_short_from_full(full)
+                if repaired:
+                    short = repaired
             if short:
                 ind["indication_short"] = short
+
+
+def _fill_missing_approval_dates(products: list[dict], limit: int = 2) -> None:
+    """通用补日期：只给“新增/新适应症”或纯网搜产品补，避免每个老适应症都搜一遍。"""
+    filled = 0
+    for prod in products:
+        if filled >= limit:
+            break
+        generic = str(prod.get("generic_name") or "")
+        brand = _clean_brand_name(prod.get("brand_name") or "")
+        query_name = f"{generic} {brand}".strip()
+        china_date = str(prod.get("china_approval_date") or "")
+        web_only = not (prod.get("nhsa_pdf_url") or prod.get("nhsa_ppt_url"))
+        for ind in prod.get("indications", []):
+            if filled >= limit:
+                break
+            if ind.get("approval_country", "中国") != "中国" or ind.get("approval_date"):
+                continue
+            full = str(ind.get("indication_full") or "")
+            short = str(ind.get("indication_short") or "")
+            if len(short) < 2 or not full:
+                continue
+            if not web_only and not re.search(r"新增|新适应症", full):
+                continue
+            got = resolve_indication_approval_date(ds_search, query_name, full, short, china_date)
+            if not got:
+                continue
+            ind["approval_date"] = got["date"]
+            ind["approval_source"] = got["source"]
+            filled += 1
+            logger.info(f"📅 补获批时间: {generic} / {short} -> {got['date']} ({got['source']})")
 
 
 def _fill_brand_from_metadata(products: list[dict]) -> None:
@@ -421,7 +497,7 @@ def _fill_brand_from_metadata(products: list[dict]) -> None:
 厂家：{mfr}
 上市时间：{date}
 资料：{hits}"""
-        result = _call_llm(prompt, BrandFromMetaResult)
+        result = _call_llm(prompt, BrandFromMetaResult, stage="brand")
         if not result:
             continue
         brands = []
@@ -468,7 +544,7 @@ def _enrich_missing_dosage(products: list[dict]) -> None:
 严格输出 JSON：{{"dosage_full":"完整用法用量"}}
 资料没有明确用法用量就返回空字符串，不要编。
 资料：{hits}"""
-            result = _call_llm(prompt, DosageTextResult)
+            result = _call_llm(prompt, DosageTextResult, stage="dosage")
             dosage = str(result.dosage_full or "").strip() if result else ""
             if dosage and dosage not in {"未提供", "未提及", "未知", "暂无"}:
                 ind["dosage_full"] = dosage
@@ -523,7 +599,7 @@ def _enrich_missing_brands(products: list[dict]) -> None:
 输出 JSON：
 {{"indications":[{{"indication_short":"适应症名","brand_name":"商品名","manufacturer":"厂家"}}]}}
 资料：{hits}"""
-        result = _call_llm(prompt, BrandByIndicationResult)
+        result = _call_llm(prompt, BrandByIndicationResult, stage="brand")
         if not result:
             continue
 
@@ -572,8 +648,9 @@ def _enrich_missing_brands(products: list[dict]) -> None:
                     "dosage_form": prod.get("dosage_form", ""),
                     "specification": prod.get("specification", ""),
                     "indications": [new_ind],
-                    "nhsa_pdf_url": prod.get("nhsa_pdf_url", ""),
-                    "nhsa_ppt_url": prod.get("nhsa_ppt_url", ""),
+                    # 网搜新增的品牌不继承官方文件 URL，避免冒充官方产品绕过去重
+                    "nhsa_pdf_url": "",
+                    "nhsa_ppt_url": "",
                 }
                 additions.append(new_prod)
                 addition_by_key[key] = new_prod
@@ -599,35 +676,306 @@ def _enrich_missing_brands(products: list[dict]) -> None:
 
 
 # ================= 主流程 =================
+_GUIDE_DISEASE_HINTS = (
+    "非小细胞肺癌", "小细胞肺癌", "霍奇金", "尿路上皮", "肝细胞癌", "食管", "鼻咽",
+    "胃", "微卫星", "宫颈", "乳腺", "结直肠", "黑色素瘤", "头颈", "卵巢", "胰腺",
+    "前列腺", "肾细胞", "甲状腺", "骨髓瘤", "白血病", "肉瘤", "间皮瘤", "胆道",
+    "特应性皮炎", "结节性痒疹", "慢性阻塞性肺疾病", "鼻窦炎", "荨麻疹",
+    "嗜酸性食管炎", "大疱性类天疱疮", "重症肌无力", "视神经脊髓炎", "IgG4",
+    "银屑病", "克罗恩", "溃疡性结肠炎", "哮喘",
+)
+_GUIDE_LINE_HINTS = ("围术期", "新辅助", "辅助治疗", "一线", "二线", "三线")
+
+
+def _disease_covered(name: str, rows: list[dict]) -> bool:
+    """这个病名是否已经被某条完整适应症覆盖（含常见同义写法）。"""
+    name = str(name or "").strip()
+    if not name:
+        return False
+    variants = {name}
+    variants.update(DISEASE_VARIANTS.get(name, ()))
+    for key in _GUIDE_DISEASE_HINTS:
+        if _disease_mentioned(name, key):
+            variants.add(key)
+    for row in rows:
+        text = str(row.get("indication_full") or "") + str(row.get("indication_short") or "")
+        if any(v and _disease_mentioned(text, v) for v in variants):
+            return True
+    return False
+
+
+def _expand_disease_abbr(text: str) -> str:
+    """缩写展开表来自 medical_aliases.json 的 abbreviations 字段，不在代码里另建字典。"""
+    for short, full in ABBREVIATIONS.items():
+        text = text.replace(short, full)
+    return text
+
+
+def _disease_mentioned(text: str, key: str) -> bool:
+    """判断病名是否出现；“小细胞肺癌”不能命中“非小细胞肺癌”里的子串。"""
+    text = _expand_disease_abbr(str(text or ""))
+    key = _expand_disease_abbr(str(key or ""))
+    if not text or not key:
+        return False
+    if key == "小细胞肺癌":
+        return "小细胞肺癌" in text.replace("非小细胞肺癌", "")
+    return key in text
+
+
+def _orig_matches_row(orig: dict, full: str) -> bool:
+    short = str(orig.get("indication_short") or "").strip()
+    if short and _disease_mentioned(full, short):
+        return True
+    gtext = " ".join(str(g.get("name", "")) for g in (orig.get("guidelines") or []))
+    for key in _GUIDE_DISEASE_HINTS:
+        if _disease_mentioned(gtext, key) and _disease_mentioned(full, key):
+            return True
+    return False
+
+
+def _pick_guidelines(guidelines, full: str, orig_short: str) -> list[dict]:
+    """把一条适应症 blob 里的指南逐条过滤到具体适应症行。
+
+    - 指南名里的病名对不上原文：丢掉
+    - 推荐里的病名对不上原文：只保留指南名（推荐清空）
+    - 推荐写了治疗线（围术期/新辅助/一线…）而原文没有：推荐清空
+    - 指南名和推荐都没有病名：只在这条原始适应症的简称能命中原文时继承
+    """
+    picked = []
+    for guide in guidelines or []:
+        name = str(guide.get("name") or "").strip()
+        rec = str(guide.get("recommendation") or "").strip()
+        if not name and not rec:
+            continue
+        name_hits = [k for k in _GUIDE_DISEASE_HINTS if _disease_mentioned(name, k)]
+        rec_hits = [k for k in _GUIDE_DISEASE_HINTS if _disease_mentioned(rec, k)]
+        if name_hits and not any(_disease_mentioned(full, k) for k in name_hits):
+            continue
+        if rec_hits and not any(_disease_mentioned(full, k) for k in rec_hits):
+            if not name_hits:
+                continue
+            rec = ""
+        line_hits = [w for w in _GUIDE_LINE_HINTS if w in rec]
+        if line_hits:
+            rec = _filter_recommendation(rec, full)
+        if not name_hits and not rec_hits and not (orig_short and _disease_mentioned(full, orig_short)):
+            continue
+        if not name_hits and not rec_hits and not rec:
+            rec = ""
+        picked.append({"name": name, "recommendation": rec})
+    return picked
+
+
+def _filter_recommendation(rec: str, full: str) -> str:
+    """按治疗线拆分推荐，只保留与当前适应症原文匹配的段落。"""
+    if not rec:
+        return rec
+    parts = [p.strip() for p in re.split(r"[；;]", rec) if p.strip()]
+    if not parts:
+        return rec
+    kept = []
+    for part in parts:
+        line_hits = [w for w in _GUIDE_LINE_HINTS if w in part]
+        if not line_hits:
+            kept.append(part)
+            continue
+        if any(w in full for w in line_hits):
+            kept.append(part)
+            continue
+        # 原文写“既往治疗失败”时，允许挂“二线”推荐
+        if "二线" in line_hits and "既往" in full:
+            kept.append(part)
+    return "；".join(kept)
+
+
+def _merge_guidelines(items: list[dict]) -> list[dict]:
+    """同名指南合并成一条，避免表格里出现“同一条指南 / 同一条指南”。"""
+    order, by_name = [], {}
+    for item in items:
+        name = item.get("name", "")
+        if name not in by_name:
+            by_name[name] = []
+            order.append(name)
+        rec = item.get("recommendation", "")
+        if rec and rec not in by_name[name]:
+            by_name[name].append(rec)
+    merged = []
+    for name in order:
+        recs = by_name[name]
+        merged.append({"name": name, "recommendation": " / ".join(recs)})
+    return merged
+
+
 def _inherit_pdf_indication_fields(regex_inds: list[dict], original: list[dict]) -> None:
-    for orig in original:
-        guidelines = orig.get("guidelines") or []
-        gtext = " ".join(str(g.get("name", "")) for g in guidelines)
-        orig_full = str(orig.get("indication_full", ""))
-        for row in regex_inds:
-            full = str(row.get("indication_full", ""))
-            if "小细胞肺癌" in full and "非小细胞肺癌" not in full:
-                continue
-            matched = any(
-                key in full and key in gtext
-                for key in ("非小细胞肺癌", "小细胞肺癌", "霍奇金", "尿路上皮", "肝细胞癌", "食管", "鼻咽", "胃", "微卫星")
-            )
-            if not matched and orig.get("indication_short") and orig["indication_short"] in full:
-                matched = True
-            if not matched:
-                continue
-            if guidelines and not row.get("guidelines"):
-                row["guidelines"] = guidelines
-            for key in ("approval_date", "dosage_full", "specification"):
-                if orig.get(key) and not row.get(key):
-                    row[key] = orig[key]
+    for row in regex_inds:
+        full = str(row.get("indication_full", ""))
+        collected = []
+        for orig in original or []:
+            orig_short = str(orig.get("indication_short") or "").strip()
+            collected.extend(_pick_guidelines(orig.get("guidelines"), full, orig_short))
+            if _orig_matches_row(orig, full):
+                for key in ("dosage_full", "specification"):
+                    if orig.get(key) and not row.get(key):
+                        row[key] = orig[key]
+        merged = _merge_guidelines(collected)
+        if merged and not row.get("guidelines"):
+            row["guidelines"] = merged
 
 
-def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
+def _attach_ppt_guidelines(ppt_guidelines: list[dict], indications: list[dict]) -> None:
+    """把 PPT 抽到的指南按“指南自带的病名”挂到对应适应症上。"""
+    for ind in indications:
+        if ind.get("guidelines"):
+            continue
+        full = str(ind.get("indication_full", ""))
+        collected = []
+        for guide in ppt_guidelines or []:
+            guide_short = str(guide.get("indication_short") or "").strip()
+            if guide_short and not _disease_mentioned(full, guide_short):
+                continue
+            collected.extend(_pick_guidelines([guide], full, guide_short))
+        merged = _merge_guidelines(collected)
+        if merged:
+            ind["guidelines"] = merged
+
+
+def _drop_covered_web_inds(inds: list[dict], existing: list[dict]) -> list[dict]:
+    return [ind for ind in inds if not _disease_covered(ind.get("indication_short", ""), existing)]
+
+
+def _keep_recent_web_inds(inds: list[dict], cutoff: str) -> list[dict]:
+    return [ind for ind in inds if _ym(ind.get("approval_date")) and _ym(ind.get("approval_date")) >= cutoff]
+
+
+def _recent_cutoff() -> str:
+    """网搜只补最近 12 个月新获批的适应症。"""
+    day = datetime.now() - timedelta(days=365)
+    return f"{day.year:04d}-{day.month:02d}"
+
+
+def _ym(value) -> str:
+    m = re.search(r"(\d{4})\D{0,3}(\d{1,2})", str(value or ""))
+    if not m:
+        return ""
+    month = int(m.group(2))
+    if not 1 <= month <= 12:
+        return ""
+    return f"{m.group(1)}-{month:02d}"
+
+
+def _judge_origin_region(first_launch_country: str, approval_number: str, manufacturer: str) -> str:
+    """国产/进口判定：优先 PDF 的“全球首个上市国家”，其次批准文号，最后厂家字典。"""
+    country = str(first_launch_country or "").strip()
+    if country:
+        return "国产" if "中国" in country else "进口"
+    number = str(approval_number or "").strip()
+    if number.startswith("国药准字"):
+        return "国产"
+    mfr = normalize_manufacturer(manufacturer).lower()
+    if mfr:
+        for alias in ORIGIN_MFR_MAPPING:
+            if alias in mfr:
+                return "进口"
+    return "国产"
+
+
+def _enrich_market_price(products: list[dict]) -> None:
+    """用兔灵网（药品价格315网）补市场最低销售价；找不到就留空。"""
+    for prod in products[:3]:
+        if str(prod.get("price_market") or "").strip():
+            continue
+        generic = str(prod.get("generic_name") or "").strip()
+        brand = str(prod.get("brand_name") or "").strip()
+        if not generic:
+            continue
+        query = f"{generic} {brand} 兔灵 315jiage 价格".replace("  ", " ").strip()
+        hits = ds_search(query, 5)
+        if not hits:
+            continue
+        prompt = f"""从资料中找【{generic} {brand}】在兔灵网（药品价格315网 315jiage.cn）的最低销售价格。
+只输出 JSON：{{"price_market":"如 ￥9477.00/盒（600mg）","price_date":"报价日期 YYYY-MM","source":"来源链接"}}
+不要使用医保支付价，不要编造；资料没有明确价格就全部留空字符串。
+资料：{hits}"""
+        result = _call_llm(prompt, PriceResult, stage="price")
+        if not result or not result.price_market:
+            continue
+        price = str(result.price_market).strip()
+        date = str(result.price_date or "").strip()
+        prod["price_market"] = f"{price}（兔灵{(' ' + date) if date else ''}）"
+        if result.source:
+            logger.info(f"🌐 兔灵价格: {generic} {price} {result.source}")
+
+
+def _add_latest_generics(products: list[dict], generic_name: str, cutoff: str, existing_brands: set) -> None:
+    """网搜最近一年新获批的仿制药/生物类似药，作为“仿制”产品补进来。"""
+    if not products or not generic_name:
+        return
+    hits = ds_search(f"{generic_name} 最新获批 仿制药 生物类似药 NMPA {cutoff}", 5)
+    if not hits:
+        return
+    prompt = f"""从资料中提取【{generic_name}】在 {cutoff} 之后新获批的仿制药/生物类似药。
+    只输出 JSON：{{"generics":[{{"brand_name":"商品名","manufacturer":"厂家","approval_date":"YYYY-MM"}}]}}
+    只输出资料中明确出现的；没有就返回空数组 []。
+    资料：{hits}"""
+    result = _call_llm(prompt, GenericsResult, stage="web")
+    if not result or not result.generics:
+        return
+    active = [p for p in products if p.get("origin_type") == "原研"] or products
+    template = active[0]
+    base_inds = [
+        {
+            "indication_short": i.get("indication_short", ""),
+            "indication_full": i.get("indication_full", ""),
+            "approval_country": "中国",
+            "approval_date": i.get("approval_date", ""),
+            "guidelines": i.get("guidelines", []),
+        }
+        for i in (template.get("indications") or [])
+        if i.get("indication_short") and i.get("approval_country", "中国") == "中国"
+    ]
+    if not base_inds:
+        return
+    added = 0
+    for item in result.generics:
+        if added >= 2:
+            break
+        brand = _clean_brand_name(item.brand_name or "")
+        mfr = normalize_manufacturer(item.manufacturer or "")
+        date = _validate_date(item.approval_date or "")
+        if not brand or not mfr or not date:
+            continue
+        if _ym(date) < cutoff:
+            continue
+        if brand in existing_brands or any(brand == p.get("brand_name") for p in products):
+            continue
+        if not _is_chinese_brand(brand) or not _is_plausible_brand(brand):
+            continue
+        if not _brand_matches_generic(generic_name, brand):
+            continue
+        products.append({
+            "generic_name": generic_name,
+            "brand_name": brand,
+            "manufacturer": mfr,
+            "origin_type": "仿制",
+            "origin_region": _judge_origin_region("", "", mfr),
+            "china_approval_date": date,
+            "dosage_form": template.get("dosage_form", "注射剂"),
+            "specification": "",
+            "indications": [dict(i) for i in base_inds],
+            "nhsa_pdf_url": "",
+            "nhsa_ppt_url": "",
+        })
+        existing_brands.add(brand)
+        added += 1
+        logger.info(f"🌐 新增仿制药: {generic_name} / {brand} / {mfr} / {date}")
+
+
+def _fetch_new_drug_impl(drug_name: str, progress_callback=None, known_indications: list[dict] | None = None) -> dict:
     emit = lambda p, s: progress_callback(p, s) if progress_callback else None
     
     emit(10, "获取医保局文件")
     files_list = scheduler.get_or_fetch("nhsa_pdf", drug_name, lambda dn, fg, ek: find_drug_files(dn)) or []
+    source_snapshot.save_files(drug_name, files_list)
     valid_files = [f for f in files_list if "_ts" not in f]
     
     grouped_files = {}
@@ -660,12 +1008,21 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
         except Exception as e:
             logger.error(f"❌ [网络] 下载官方文件失败 ({g_name}): {e}")
             continue
+        if pdf_b:
+            source_snapshot.save_doc(latest_pdf["url"], pdf_b)
+        if ppt_b:
+            source_snapshot.save_doc(latest_ppt["url"], ppt_b)
         
         res = extract_medical_pdf_vision(pdf_b, ppt_b) or {}
         if pdf_b:
             regex_inds = extract_indications_from_pdf(pdf_b)
             if regex_inds:
-                _inherit_pdf_indication_fields(regex_inds, res.get("indications", []))
+                # PPT 里的指南/共识也当作“原始适应症”来源，交给同一套继承逻辑
+                ppt_origins = [
+                    {"indication_short": str(g.get("indication_short") or "").strip(), "guidelines": [g]}
+                    for g in (res.get("guidelines") or [])
+                ]
+                _inherit_pdf_indication_fields(regex_inds, (res.get("indications") or []) + ppt_origins)
                 res["indications"] = regex_inds
 
         final_name = res.get("cover_drug_name") or g_name
@@ -691,9 +1048,16 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
         if not origin_type:
             reg_cat = res.get("registration_category", "")
             origin_type = _judge_origin_by_reg(reg_cat)
+            if not origin_type and "中国" in str(res.get("first_launch_country", "")):
+                # 全球首个上市国家是中国 → 该通用名是中国首发，按原研
+                origin_type = "原研"
             if not origin_type:
                 origin_type = ""
         
+        origin_region = _judge_origin_region(
+            res.get("first_launch_country", ""), res.get("approval_number", ""), final_mfr
+        )
+
         if brand: existing_brands.add(brand)
 
         if res.get("indication_approval_times"):
@@ -707,19 +1071,16 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 candidates = [
                     ind for ind in res.get("indications", [])
                     if _normalize_disease_with_dict(ind.get("indication_short", "")) == k
+                    and not ind.get("approval_date")
                 ]
                 if not candidates:
                     continue
-                # 同名多条时，优先给围术期/新辅助那条，否则给最后一条
-                target = next(
-                    (
-                        ind for ind in candidates
-                        if "新辅助" in str(ind.get("indication_full", ""))
-                        or "可切除" in str(ind.get("indication_full", ""))
-                    ),
-                    candidates[-1],
-                )
-                target["approval_date"] = v
+                # 同一病名可能对应多条适应症（不同联合方案/线数），PPT 只给病名和时间，
+                # 无法判断属于哪一条；按方案 A 宁可留空，也不把时间串到别的行
+                if len(candidates) > 1:
+                    logger.info(f"⚠️ 获批时间同名多行，跳过避免串行: {k} x{len(candidates)}")
+                    continue
+                candidates[0]["approval_date"] = v
 
         cleaned_inds = []
         raw_inds = res.get("indications", [])
@@ -780,6 +1141,11 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 
                 exists_in_final = any(ppt_short == i["indication_short"] for i in cleaned_inds)
                 if not exists_in_final:
+                    if ppt_short in {"恶性肿瘤", "肿瘤", "癌症", "实体瘤"} or len(ppt_short) > 12:
+                        continue
+                    # 已有完整全文覆盖同一病名时，不再补一条“全称=简称”的碎片行
+                    if _disease_covered(ppt_short, cleaned_inds):
+                        continue
                     cleaned_inds.append({
                         "indication_short": ppt_short, "indication_full": ppt_short,
                         "approval_country": "中国", "approval_date": ppt_date, "guidelines": []
@@ -787,12 +1153,16 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                     existing_china_inds.add(ppt_short)
 
         cleaned_inds = _split_numbered_indications(cleaned_inds)
+        if res.get("guidelines"):
+            _attach_ppt_guidelines(res["guidelines"], cleaned_inds)
 
         prod = {
             "generic_name": final_name, 
             "brand_name": brand, 
             "manufacturer": final_mfr,
             "origin_type": origin_type,
+            "origin_region": origin_region,
+            "price_market": "",
             "china_approval_date": _validate_date(res.get("china_approval_date", "")),
             "dosage_form": dosage_f, 
             "specification": res.get("specification", ""),
@@ -819,7 +1189,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     r1 = ds_search(f"{drug_name} 中文商品名 有哪些品牌 获批上市", 10)
     if r1:
         prompt_base = f"""提取所有中文商品名及厂家。必须列出资料中出现的全部中文商品名，不能只返回一个；英文商品名不要。输出JSON：{{"products":[{{"brand_name":"", "manufacturer":""}}]}}资料：{r1}"""
-        base_obj = _call_llm(prompt_base, BaseInfoResult)
+        base_obj = _call_llm(prompt_base, BaseInfoResult, stage="brand")
         
         if base_obj and base_obj.products:
             for p in base_obj.products:
@@ -842,26 +1212,58 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                         final_mfr = standard_name
                         break
                 
-                hits_all = ds_search(f"{primary_generic_name} {clean_brand} 说明书 全部适应症 获批时间", 8)
-                prompt_all = f"""请从以下资料中，提取【{clean_brand}】的所有核心信息。严格输出JSON：
+                has_official = any(
+                    p.get("nhsa_pdf_url") or p.get("nhsa_ppt_url") for p in all_extracted_products
+                )
+                cutoff = _recent_cutoff()
+                existing_inds = [
+                    ind for p in all_extracted_products for ind in (p.get("indications") or [])
+                    if str(ind.get("indication_short") or "").strip()
+                ]
+                existing_inds.extend(known_indications or [])
+                existing_hint = "；".join(
+                    str(ind.get("indication_short") or "") for ind in existing_inds[:20]
+                )
+                hits_all = ds_search(
+                    f"{primary_generic_name} {clean_brand} 全部适应症 获批时间", 8
+                )
+                prompt_all = f"""请从以下资料中，提取【{clean_brand}】最近一年（{cutoff} 之后）新获批或新增的适应症。严格输出JSON：
                 {{"china_listing_date": "首次上市时间(YYYY-MM)","indications": [{{"indication_short": "极简病名","indication_full": "完整描述","approval_date": "获批时间(YYYY-MM)","dosage_full": "用法用量"}}]}}
-                【死命令】说明书同一段里有多个适应症时，按分号/句号拆成多条，不能合并成一条；有几个就输出几条。
+                【死命令】
+                1. 只输出 {cutoff} 之后新获批/新增的适应症；更早的不要输出。
+                2. 下面这些已有适应症不要重复输出：{existing_hint or "无"}
+                3. 没有新适应症就返回 "indications": []。
                 资料：{hits_all}"""
-                res_all = _call_llm(prompt_all, WebPatchResult)
-                
+                res_all = _call_llm(prompt_all, WebPatchResult, stage="web")
+
+                # 第二路：只搜最近一年新获批/新增的适应症
+                hits_latest = ds_search(
+                    f"{primary_generic_name} {clean_brand} 最新获批适应症 新增适应症 NMPA {cutoff}", 6
+                )
+                res_latest = _call_llm(f"""只提取【{clean_brand}】在 {cutoff} 之后新获批/新增的适应症。严格输出JSON：
+                {{"indications": [{{"indication_short": "极简病名","indication_full": "完整描述","approval_date": "获批时间(YYYY-MM)"}}]}}
+                已有适应症不要重复：{existing_hint or "无"}；没有新适应症返回 []。
+                资料：{hits_latest}""", WebPatchResult, stage="web") if hits_latest else None
+
                 new_inds = []
                 web_listing_date = ""
                 if res_all:
                     web_listing_date = _validate_date(res_all.china_listing_date)
-                    if res_all.indications:
-                        for ind in res_all.indications:
-                            short = _normalize_disease_with_dict(_clean_disease_name(ind.get("indication_short", "")))
-                            if not short: continue
-                            new_inds.append({
-                                "indication_short": short, "indication_full": ind.get("indication_full", short),
-                                "approval_country": "中国", "approval_date": _validate_date(ind.get("approval_date", "")),
-                                "dosage_full": ind.get("dosage_full", ""), "guidelines": []
-                            })
+                for res_obj in (res_all, res_latest):
+                    if not res_obj or not res_obj.indications:
+                        continue
+                    for ind in res_obj.indications:
+                        short = _normalize_disease_with_dict(_clean_disease_name(ind.get("indication_short", "")))
+                        if not short: continue
+                        new_inds.append({
+                            "indication_short": short, "indication_full": ind.get("indication_full", short),
+                            "approval_country": "中国", "approval_date": _validate_date(ind.get("approval_date", "")),
+                            "dosage_full": ind.get("dosage_full", ""), "guidelines": []
+                        })
+
+                # 官方档案已有：只补“官方没覆盖”的新适应症
+                if has_official and new_inds:
+                    new_inds = _drop_covered_web_inds(new_inds, existing_inds)
 
                 if new_inds:
                     for ind in new_inds:
@@ -873,11 +1275,13 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                             if time_hits:
                                 prompt_time = f"""从资料提取【{clean_brand}】针对【{ind['indication_short']}】的获批时间。只输出JSON：{{"date": "YYYY-MM"}}。资料：{time_hits}"""
                                 class TimeResult(BaseModel): date: str | None = ""
-                                time_res = _call_llm(prompt_time, TimeResult)
+                                time_res = _call_llm(prompt_time, TimeResult, stage="web")
                                 if time_res and time_res.date:
                                     m = re.search(r'(\d{4})\D{0,3}(\d{1,2})', str(time_res.date))
                                     if m: 
                                         ind["approval_date"] = f"{m.group(1)}-{int(m.group(2)):02d}"
+                    if has_official:
+                        new_inds = _keep_recent_web_inds(new_inds, cutoff)
 
                 if new_inds:
                     existing_products = [
@@ -897,24 +1301,39 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                                 if web_listing_date and not prod.get("china_approval_date"):
                                     prod["china_approval_date"] = web_listing_date
                     else:
+                        web_region = (
+                            all_extracted_products[0].get("origin_region", "")
+                            if all_extracted_products
+                            else _judge_origin_region("", "", final_mfr)
+                        )
+                        web_origin_type = "原研" if is_origin_match else ""
+                        if not web_origin_type:
+                            web_origin_type = next(
+                                (p.get("origin_type", "") for p in all_extracted_products if p.get("origin_type")), ""
+                            )
                         all_extracted_products.append({
                             "generic_name": primary_generic_name, "brand_name": clean_brand, "manufacturer": final_mfr,
-                            "origin_type": "原研" if is_origin_match else "",
+                            "origin_type": web_origin_type,
+                            "origin_region": web_region,
+                            "price_market": "",
                             "china_approval_date": web_listing_date,
                             "dosage_form": "注射剂", "specification": "", "indications": new_inds, "nhsa_pdf_url": "", "nhsa_ppt_url": ""
                         })
                     existing_brands.add(clean_brand)
 
+    emit(85, "网搜最新仿制药")
+    _add_latest_generics(all_extracted_products, primary_generic_name, _recent_cutoff(), existing_brands)
+
     # ================= 第三步：仅给原研搜 FDA，且补齐时间 =================
     for prod in all_extracted_products:
-        if prod.get("origin_type") == "原研":
+        if prod.get("origin_type") == "原研" and prod.get("origin_region") != "国产":
             brand = prod["brand_name"] or prod["generic_name"]
             hits_ov = ds_search(f"{brand} FDA获批 适应症 商品名", 4)
             if hits_ov:
                 prompt_ov = f"""提取国外获批适应症，并带上该适应症对应的商品名。输出JSON：
 {{"overseas_indications": [{{"brand_name": "", "country": "美国", "indication_short": "", "approval_date": ""}}]}}
 资料：{hits_ov}"""
-                web_ov = _call_llm(prompt_ov, WebPatchResult)
+                web_ov = _call_llm(prompt_ov, WebPatchResult, stage="web")
                 if web_ov and web_ov.overseas_indications:
                     for ov in web_ov.overseas_indications:
                         ov_short = _normalize_disease_with_dict(ov.get("indication_short", ""))
@@ -940,7 +1359,7 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                                 if ov_time_hits:
                                     prompt_ov_time = f"""从资料提取【{brand}】针对【{ov_short}】的 FDA 获批时间。只输出JSON：{{"date": "YYYY-MM"}}。资料：{ov_time_hits}"""
                                     class OVTimeResult(BaseModel): date: str | None = ""
-                                    ov_time_res = _call_llm(prompt_ov_time, OVTimeResult)
+                                    ov_time_res = _call_llm(prompt_ov_time, OVTimeResult, stage="web")
                                     if ov_time_res and ov_time_res.date:
                                         m = re.search(r'(\d{4})\D{0,3}(\d{1,2})', str(ov_time_res.date))
                                         if m: ov_date = f"{m.group(1)}-{int(m.group(2)):02d}"
@@ -960,6 +1379,9 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
     emit(90, "补用法用量")
     _enrich_missing_dosage(all_extracted_products)
 
+    emit(93, "补价格")
+    _enrich_market_price(all_extracted_products)
+
     # ================= 第四步：时间兜底 =================
     for prod in all_extracted_products:
         if prod["china_approval_date"]: continue
@@ -970,11 +1392,22 @@ def fetch_new_drug(drug_name: str, progress_callback=None) -> dict:
                 
         prod["drug_type"] = "生物药/化学药"
 
+    _fill_missing_approval_dates(all_extracted_products)
+
     return {
         "generic_name": drug_name, "drug_type": "生物药/化学药",
         "products": all_extracted_products[:MAX_PRODUCTS],
         "fetch_time": datetime.now().strftime("%Y-%m-%d")
     }
+
+def fetch_new_drug(drug_name: str, progress_callback=None, known_indications: list[dict] | None = None) -> dict:
+    """对外入口：标记当前药品，保证搜索/LLM 用量能归到药名下。"""
+    token = usage_store.set_drug(drug_name)
+    try:
+        return _fetch_new_drug_impl(drug_name, progress_callback, known_indications)
+    finally:
+        usage_store.reset_drug(token)
+
 
 def update_existing_drug(drug_name: str, existing_data: dict, progress_callback=None) -> dict:
     return existing_data

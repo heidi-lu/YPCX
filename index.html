@@ -117,6 +117,7 @@
         .badge-success { background: rgba(209, 250, 229, 0.7); color: #047857; }
         .badge-error { background: rgba(254, 226, 226, 0.7); color: #b91c1c; }
         .badge-cached { background: rgba(254, 243, 199, 0.7); color: #b45309; }
+        .badge-empty { background: rgba(241, 245, 249, 0.9); color: #64748b; }
         
         .status-pill { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
         .status-FEEDBACK { background: rgba(254, 249, 195, 0.7); color: #a16207; }
@@ -205,7 +206,13 @@
             <div class="progress-panel" v-if="progressItems.length > 0">
                 <div class="progress-header"><span>{{ loading ? '查询进行中…' : '查询完成' }}</span><span>{{ stats.done }} / {{ stats.currentQuery }}</span></div>
                 <div v-for="item in progressItems" :key="item.drug" class="progress-item">
-                    <div class="progress-item-head"><span>{{ item.drug }}</span><span :class="['badge', 'badge-' + item.status]">{{ statusLabel(item.status) }}</span></div>
+                    <div class="progress-item-head">
+                        <span>{{ item.drug }}</span>
+                        <span style="display:flex; align-items:center; gap:8px;">
+                            <el-button v-if="item.status === 'success' || item.status === 'cached'" size="small" type="success" plain @click="approveDrug(item.drug)" style="height:24px; padding:0 8px;">入库</el-button>
+                            <span :class="['badge', 'badge-' + item.status]">{{ statusLabel(item.status) }}</span>
+                        </span>
+                    </div>
                     <el-progress :percentage="item.percent" :status="progressStatusOf(item.status)" :stroke-width="6" :show-text="false" />
                 </div>
             </div>
@@ -213,10 +220,11 @@
 
         <div class="card">
             <div class="table-toolbar">
-                <el-input v-model="globalSearch" placeholder="全局搜索..." clearable @input="applyFilters" style="border-radius: 10px; width: 300px;" />
+                <el-input v-model="globalSearch" placeholder="全局搜索..." clearable @input="onGlobalSearch" @clear="onGlobalSearch('')" style="border-radius: 10px; width: 300px;" />
                 <span class="toggle-chip" :class="{ active: onlyPending }" @click="onlyPending = !onlyPending; applyFilters()">只看待反馈</span>
                 <span class="toggle-chip" :class="{ active: onlyApproved }" @click="onlyApproved = !onlyApproved; applyFilters()">只看已入库</span>
                 <span class="toggle-chip" :class="{ active: onlyRejected }" @click="onlyRejected = !onlyRejected; applyFilters()">只看已拒绝</span>
+                <el-button size="small" type="success" @click="approveAll" style="border-radius: 8px;">一键入库</el-button>
                 <span style="margin-left:auto; display:flex; align-items:center; gap:6px;">
                     <span style="font-size:12px;color:#64748b;">适应症排序</span>
                     <el-select v-model="indicationSortMode" size="small" style="width:110px;" @change="resortTable">
@@ -242,14 +250,25 @@
                         <el-option label="仿制" value="仿制"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="适应症简"><el-input v-model="editForm.indication_short"></el-input></el-form-item>
-                <el-form-item label="药品上市时间"><el-input v-model="editForm.china_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
+                <el-form-item label="适应症简称"><el-input v-model="editForm.indication_short" placeholder="最简病名，如 肺癌"></el-input></el-form-item>
+                <el-form-item label="适应症分型"><el-input v-model="editForm.indication_subtype" placeholder="细分，如 非小细胞肺癌 / 术前"></el-input></el-form-item>
+                <el-form-item label="适应症全称"><el-input type="textarea" v-model="editForm.indication_full" :rows="3" disabled></el-input></el-form-item>
+                <el-form-item label="药品上市时间"><el-input v-model="editForm.china_approval_date" disabled></el-input></el-form-item>
                 <el-form-item label="适应症获批时间"><el-input v-model="editForm.indication_approval_date" placeholder="YYYY-MM"></el-input></el-form-item>
-                <el-form-item label="进医保时间"><el-input v-model="editForm.insurance_status_text" placeholder="例如：2021年进入，2026年退出"></el-input></el-form-item>
+                <el-form-item label="药品进医保时间"><el-input v-model="editForm.drug_insurance_date" disabled></el-input></el-form-item>
+                <el-form-item label="适应症进医保时间"><el-input v-model="editForm.insurance_status_text" disabled></el-input></el-form-item>
+                <el-form-item label="指南名称"><el-input v-model="editForm.guideline_name" disabled></el-input></el-form-item>
+                <el-form-item label="指南提及"><el-input type="textarea" v-model="editForm.guideline_recommendation" :rows="3" disabled></el-input></el-form-item>
+                <el-form-item label="医保局PDF"><el-input v-model="editForm.nhsa_pdf_url" disabled></el-input></el-form-item>
+                <el-form-item label="PPT摘要"><el-input v-model="editForm.nhsa_ppt_url" disabled></el-input></el-form-item>
+                <el-form-item label="医保类别"><el-input v-model="editForm.insurance_category" disabled></el-input></el-form-item>
+                <el-form-item label="医保限制"><el-input type="textarea" v-model="editForm.insurance_restriction" :rows="3" disabled></el-input></el-form-item>
+                <el-form-item label="剂型"><el-input v-model="editForm.dosage_form" disabled></el-input></el-form-item>
+                <el-form-item label="规格"><el-input v-model="editForm.specification" disabled></el-input></el-form-item>
                 <el-form-item label="用法用量"><el-input type="textarea" v-model="editForm.dosage" :rows="3"></el-input></el-form-item>
                 <div style="text-align: right; margin-top: 30px;">
                     <el-button @click="drawerVisible = false" style="border-radius: 8px;">取消</el-button>
-                    <el-button @click="saveDraft" style="border-radius: 8px;">保存草稿</el-button>
+                    <el-button @click="saveDraft" style="border-radius: 8px;">保存待审核</el-button>
                     <el-button type="primary" @click="saveEdit" style="background: #2563eb; border-color: #2563eb; border-radius: 8px;">保存并入库</el-button>
                 </div>
             </el-form>
@@ -260,6 +279,7 @@
     <script src="https://unpkg.com/element-plus@2.5.6/dist/index.full.js"></script>
     <script src="https://unpkg.com/element-plus@2.5.6/dist/locale/zh-cn.js"></script>
     <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+    <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
 
     <script>
@@ -299,9 +319,27 @@
             return `<div style="white-space:pre-line;line-height:1.5">${escapeHtml(val)}</div>`;
         }
 
+        function approvalDateFormatter(cell) {
+            const val = cell.getValue();
+            const src = cell.getRow().getData().indication_approval_source;
+            if (!val) {
+                return src ? `<span title="日期待核实，来源：${escapeHtml(src)}">—</span>` : "";
+            }
+            if (!src) return escapeHtml(val);
+            return `<span title="来源：${escapeHtml(src)}">${escapeHtml(val)}`
+                + ` <a href="${escapeHtml(src)}" target="_blank" rel="noopener noreferrer" class="link-btn" onclick="event.stopPropagation()">源</a></span>`;
+        }
+
+        function priceFormatter(cell) {
+            const row = cell.getRow().getData();
+            const market = row.price_market ? escapeHtml(row.price_market) : "—";
+            const insurance = row.price_insurance ? escapeHtml(row.price_insurance) : "未公开";
+            return `<div style="white-space:pre-line;line-height:1.5">市场：${market}<br>医保：${insurance}</div>`;
+        }
+
         function statusFormatter(cell) {
             const v = cell.getValue() || "FEEDBACK";
-            const label = { DRAFT: "草稿", MACHINE: "机器初判", FEEDBACK: "反馈待补全", APPROVED: "已入库", REJECTED: "不予入库" }[v] || v;
+            const label = { DRAFT: "待审核", MACHINE: "机器初判", FEEDBACK: "反馈待补全", APPROVED: "已入库", REJECTED: "不予入库" }[v] || v;
             return `<span class="status-pill status-${escapeHtml(v)}">${escapeHtml(label)}</span>`;
         }
 
@@ -319,6 +357,7 @@
                 const historyDrugs = ref([]);
                 const loading = ref(false);
                 const tableData = ref([]);
+                const libraryRows = ref([]);
                 const progressItems = ref([]);
                 const stats = ref({ totalDrugs: 0, currentQuery: 0, done: 0, failed: 0 });
                 const globalSearch = ref("");
@@ -340,18 +379,22 @@
                     { title: "通用名", field: "generic_name", width: 150, frozen: true },
                     { title: "商品名", field: "brand_name", width: 110, frozen: true },
                     { title: "厂家", field: "manufacturer", width: 180 },
+                    { title: "国产/进口", field: "origin_region", width: 90 },
                     { title: "原研/仿制", field: "origin_type", width: 100 },
-                    { title: "适应症简", field: "indication_short", width: 150 },
+                    { title: "适应症简称", field: "indication_short", width: 130 },
+                    { title: "适应症分型", field: "indication_subtype", width: 170 },
                     { title: "获批国家", field: "approval_country", width: 90 },
                     { title: "药品上市时间", field: "china_approval_date", width: 120 },
                     { title: "适应症全称", field: "indication_full", width: 250, formatter: longTextFormatter },
-                    { title: "适应症获批时间", field: "indication_approval_date", width: 130 },
+                    { title: "适应症获批时间", field: "indication_approval_date", width: 150, formatter: approvalDateFormatter },
+                    { title: "药品进医保时间", field: "drug_insurance_date", width: 130 },
                     { title: "适应症进医保时间", field: "insurance_status_text", width: 210, formatter: insuranceStatusFormatter },
                     { title: "指南提及", field: "guideline_recommendation", width: 200, formatter: longTextFormatter },
                     { title: "指南名称", field: "guideline_name", width: 180, formatter: longTextFormatter },
                     { title: "医保局PDF", field: "nhsa_pdf_url", width: 100, formatter: linkFormatter },
                     { title: "PPT摘要", field: "nhsa_ppt_url", width: 100, formatter: linkFormatter },
                     { title: "医保类别", field: "insurance_category", width: 100 },
+                    { title: "价格", field: "price_market", width: 220, formatter: priceFormatter },
                     { title: "医保限制", field: "insurance_restriction", width: 250, formatter: longTextFormatter },
                     { title: "剂型", field: "dosage_form", width: 100 },
                     { title: "规格", field: "specification", width: 120 },
@@ -365,8 +408,8 @@
                     { title: "操作", field: "id", width: 200, formatter: opFormatter },
                 ];
 
-                const statusLabel = (s) => ({ running: "进行中", success: "完成", error: "失败", cached: "缓存命中" }[s] || s);
-                const progressStatusOf = (s) => (s === "success" ? "success" : s === "error" ? "exception" : "");
+                const statusLabel = (s) => ({ running: "进行中", success: "完成", error: "失败", cached: "缓存命中", empty: "未查到" }[s] || s);
+                const progressStatusOf = (s) => (s === "success" ? "success" : s === "error" ? "exception" : s === "empty" ? "warning" : "");
                 const rowKey = (d) => `${d.generic_name || ""}|${d.brand_name || ""}|${d.manufacturer || ""}|${d.dosage_form || ""}|${d.specification || ""}|${d.indication_short || ""}|${d.indication_subtype || ""}|${d.indication_full || ""}`;
 
                 const normalizeGroupName = (name) => {
@@ -455,19 +498,66 @@
                     try {
                         const res = await fetch(`${API_BASE}/drugs`);
                         const data = await res.json();
+                        libraryRows.value = data;
                         historyDrugs.value = [...new Set(data.map((d) => d.generic_name).filter(Boolean))];
                         stats.value.totalDrugs = historyDrugs.value.length;
+                        // 已收录数据存在 libraryRows，仅用于“在库提示”，不再展示到表格
                     } catch (e) { console.error(e); }
                 };
 
-                const exportData = () => { if (table) table.download("xlsx", `药品数据_${Date.now()}.xlsx`, { sheetName: "药品数据", rowRange: "active" }); };
+                const exportData = () => {
+                    if (!table) return;
+                    try {
+                        if (typeof XLSX === "undefined") {
+                            table.download("csv", `药品数据_${Date.now()}.csv`, { rowRange: "active" });
+                            ElMessage.warning("Excel 组件未加载，已改为导出 CSV");
+                            return;
+                        }
+                        table.download("xlsx", `药品数据_${Date.now()}.xlsx`, { sheetName: "药品数据", rowRange: "active" });
+                    } catch (e) {
+                        console.error(e);
+                        ElMessage.error(`导出失败: ${e.message}`);
+                    }
+                };
 
-                const handleSearch = () => {
+                const fmtTime = (v) => String(v || "").replace("T", " ").slice(0, 16) || "未知";
+
+                const handleSearch = async () => {
                     if (!drugNames.value.length) { ElMessage.warning("请添加药品"); return; }
+                    // 已在库的药：先刷新库数据并提示最近入库时间，确认后再查
+                    await fetchHistory();
+                    const approved = libraryRows.value;
+                    const inLib = [];
+                    drugNames.value.forEach((name) => {
+                        const key = normalizeGroupName(name);
+                        const rows = approved.filter((d) => normalizeGroupName(d.generic_name) === key);
+                        if (rows.length) {
+                            const latest = rows.map((r) => r.updated_at).filter(Boolean).sort().slice(-1)[0] || "";
+                            inLib.push({ name, latest });
+                        }
+                    });
+                    if (inLib.length) {
+                        const names = inLib.map((x) => x.name).join("、");
+                        const times = [...new Set(inLib.map((x) => fmtTime(x.latest)))].join("、");
+                        try {
+                            await ElMessageBox.confirm(
+                                `<div style="line-height:1.7">已在库：<b>${escapeHtml(names)}</b><br>`
+                                + `该药品最近一次入库时间为 <b>${escapeHtml(times)}</b>。<br>`
+                                + `是否需要更新最新获批适应症/仿制药？</div>`,
+                                "药品已在库",
+                                { dangerouslyUseHTMLString: true, confirmButtonText: "继续更新", cancelButtonText: "取消", type: "info" }
+                            );
+                        } catch {
+                            const keys = new Set(inLib.map((x) => normalizeGroupName(x.name)));
+                            const remaining = drugNames.value.filter((n) => !keys.has(normalizeGroupName(n)));
+                            if (!remaining.length) return;
+                            drugNames.value = remaining;
+                        }
+                    }
                     loading.value = true; progressItems.value = [];
-                    // 未入库结果不保留：新查询先清空当前表格
+                    // 只展示本次搜索结果：已收录数据不铺在表格里
                     tableData.value = [];
-                    if (table) table.setData([]);
+                    if (table) table.setData(tableData.value);
                     drugNames.value.forEach((d) => progressItems.value.push({ drug: d, percent: 0, stage: "准备中", status: "running" }));
                     expectedCount = drugNames.value.length; doneCount = 0;
                     stats.value = { ...stats.value, currentQuery: expectedCount, done: 0, failed: 0 };
@@ -506,10 +596,16 @@
                     eventSource.addEventListener("done", (e) => {
                         const res = JSON.parse(e.data);
                         doneCount++; stats.value.done = doneCount;
-                        upsertProgress(res.drug, { status: "success", percent: 100 });
+                        const rows = Array.isArray(res.data) ? res.data : [];
+                        if (rows.length === 0) {
+                            upsertProgress(res.drug, { status: "empty", percent: 100, stage: "未查到数据" });
+                            ElMessage.warning(`${res.drug}：未查到数据`);
+                        } else {
+                            upsertProgress(res.drug, { status: "success", percent: 100 });
+                        }
                         
-                        tableData.value = tableData.value.filter((d) => !res.data.some((x) => rowKey(x) === rowKey(d)));
-                        tableData.value = [...tableData.value, ...res.data];
+                        tableData.value = tableData.value.filter((d) => !rows.some((x) => rowKey(x) === rowKey(d)));
+                        tableData.value = [...tableData.value, ...rows];
                         sortTableData();
                         table.setSort([]);
                         
@@ -612,9 +708,56 @@
                             table.redraw();
                         });
                         drawerVisible.value = false;
-                        ElMessage.success("草稿已保存，可稍后继续补全");
+                        ElMessage.success("已保存为待审核，可稍后继续补全");
                     } catch (e) {
-                        ElMessage.error(`保存草稿失败: ${e.message}`);
+                        ElMessage.error(`保存待审核失败: ${e.message}`);
+                    }
+                };
+
+                const approveIds = async (ids) => {
+                    if (!ids.length) return 0;
+                    const res = await fetch(`${API_BASE}/drugs/approve-all`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ ids })
+                    });
+                    if (!res.ok) throw new Error(await res.text());
+                    const data = await res.json();
+                    const approved = new Set(data.ids || ids);
+                    tableData.value = tableData.value.map((d) => approved.has(d.id) ? { ...d, status: "APPROVED" } : d);
+                    sortTableData();
+                    if (table) table.setData(tableData.value).then(() => { applyFilters(); table.redraw(); });
+                    ElMessage.success(`已入库 ${approved.size} 条`);
+                    return approved.size;
+                };
+
+                // 单个药品查询完成后，直接把它名下的待审核数据入库
+                const approveDrug = async (name) => {
+                    const target = normalizeGroupName(name);
+                    const ids = tableData.value
+                        .filter((d) => d.status === "DRAFT" && d.id && normalizeGroupName(d.generic_name) === target)
+                        .map((d) => d.id);
+                    if (!ids.length) { ElMessage.info(`「${name}」当前没有待审核数据`); return; }
+                    try {
+                        await approveIds(ids);
+                    } catch (e) {
+                        ElMessage.error(`入库失败: ${e.message}`);
+                    }
+                };
+
+                const approveAll = async () => {
+                    const source = table ? table.getData("active") : tableData.value;
+                    const ids = source.filter((r) => r.status === "DRAFT" && r.id).map((r) => r.id);
+                    if (!ids.length) { ElMessage.info("当前表格没有可入库的待审核数据"); return; }
+                    try {
+                        await ElMessageBox.confirm(`将当前 ${ids.length} 条待审核数据全部入库？`, "一键入库", {
+                            type: "warning", confirmButtonText: "全部入库", cancelButtonText: "取消"
+                        });
+                    } catch { return; }
+                    try {
+                        await approveIds(ids);
+                    } catch (e) {
+                        ElMessage.error(`一键入库失败: ${e.message}`);
                     }
                 };
 
@@ -624,7 +767,12 @@
                 const handleSuggestSelect = (i) => { addDrug(i.value); inputValue.value = ""; };
                 const handleAddFromInput = () => {
                     const raw = inputValue.value.trim(); if (!raw) return;
-                    raw.split(/[,，、\n;；]+/).forEach(addDrug); inputValue.value = "";
+                    const before = drugNames.value.length;
+                    // 支持空格/逗号/顿号/分号/换行分隔的一大批药名
+                    raw.split(/[\s,，、;；]+/).forEach(addDrug);
+                    inputValue.value = "";
+                    const added = drugNames.value.length - before;
+                    if (added > 1) ElMessage.success(`已添加 ${added} 个药品`);
                 };
                 const querySearch = (q, cb) => {
                     const lower = (q || "").toLowerCase();
@@ -632,12 +780,28 @@
                 };
                 const applyFilters = () => {
                     if (!table) return;
-                    const filters = [];
-                    if (globalSearch.value) { const q = globalSearch.value.toLowerCase(); filters.push((d) => Object.values(d).some((v) => v && String(v).toLowerCase().includes(q))); }
-                    if (onlyPending.value) filters.push((d) => ["DRAFT", "MACHINE", "FEEDBACK"].includes(d.status || "FEEDBACK"));
-                    if (onlyApproved.value) filters.push((d) => d.status === "APPROVED");
-                    if (onlyRejected.value) filters.push((d) => d.status === "REJECTED");
-                    if (filters.length === 0) table.clearFilter(); else table.setFilter(filters);
+                    const q = (globalSearch.value || "").trim().toLowerCase();
+                    const pending = onlyPending.value, approved = onlyApproved.value, rejected = onlyRejected.value;
+                    if (!q && !pending && !approved && !rejected) { table.clearFilter(); return; }
+                    // Tabulator 6 的 setFilter 只支持单个函数或对象数组，传函数数组会被忽略
+                    table.setFilter((d) => {
+                        if (q) {
+                            const hit = Object.values(d || {}).some(
+                                (v) => v !== null && v !== undefined && String(v).toLowerCase().includes(q)
+                            );
+                            if (!hit) return false;
+                        }
+                        const st = d.status || "FEEDBACK";
+                        if (pending && !["DRAFT", "MACHINE", "FEEDBACK"].includes(st)) return false;
+                        if (approved && st !== "APPROVED") return false;
+                        if (rejected && st !== "REJECTED") return false;
+                        return true;
+                    });
+                };
+
+                const onGlobalSearch = (val) => {
+                    globalSearch.value = val;
+                    applyFilters();
                 };
 
                 onMounted(() => {
@@ -656,9 +820,9 @@
                 return {
                     inputValue, drugNames, loading, tableData, progressItems, stats,
                     globalSearch, onlyPending, onlyApproved, onlyRejected,
-                    handleSuggestSelect, handleAddFromInput, removeDrug, handleSearch, cancelQuery, exportData, statusLabel, progressStatusOf,
+                    handleSuggestSelect, handleAddFromInput, removeDrug, handleSearch, cancelQuery, exportData, statusLabel, progressStatusOf, approveAll, approveDrug,
                     drawerVisible, editForm, saveEdit, saveDraft,
-                    querySearch, applyFilters, indicationSortMode, resortTable  
+                    querySearch, applyFilters, onGlobalSearch, indicationSortMode, resortTable  
                 };
             },
         });

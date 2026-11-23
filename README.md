@@ -100,7 +100,8 @@ main.py                 FastAPI 路由、SSE、数据库读写
 agent.py                药品抽取主流程
 nhsa_crawler.py         医保局页面抓取
 deepseek_search.py      搜索封装
-skill_market.py         市场数据
+approval_dates.py       网搜获批日期（证据句 + 双来源）
+disease_terms.py        病名字典/缩写统一入口
 skill_vision_parser.py  PDF/图片视觉解析
 models.py / db.py       SQLAlchemy 模型与 Session
 build_dict.py           由医保 CSV 生成 nhi_dictionary.json
@@ -137,3 +138,41 @@ tests/                  离线冒烟测试
 
 - [`AGENTS.md`](AGENTS.md)：给 DSH/Codex 等编码 agent 的项目约定。
 - 建议后续补一个 `CHANGES.md` 记录版本变更。
+
+## 成本与用量（P0）
+
+每次 LLM / 搜索调用都会写一条记录，用于核算单药成本、定位高消耗阶段。
+
+- 表：`llm_usage`、`search_usage`（`init_db()` 自动创建，不动 `drugs`）
+- 接口：
+  - `GET /stats/cost?days=7`：按模型 / 阶段 / 药品聚合
+  - `GET /stats/usage?limit=50`：最近调用明细
+- 价目表：`config.LLM_PRICES`、`config.SEARCH_PRICES`（2026-11 官方价，改价只改这里）
+- 开关：`USAGE_LOG_ENABLED=0`、`SNAPSHOT_ENABLED=0`
+- 快照：`snapshots/`（搜索命中、LLM 输入输出、PDF/PPT 字节），已加入 `.gitignore`
+
+### 切换模型
+
+默认全部沿用 `MAIN_LLM_MODEL`。换千问时只改环境变量：
+
+```bash
+EXTRACT_MODEL=qwen3.8-flash
+SHORT_MODEL=qwen3.7-flash
+THINK_MODEL=qwen3.8-flash
+QWEN_LLM_API_KEY=...   # 默认复用 VISION_API_KEY
+```
+
+### 离线工具
+
+```bash
+# 只读：存量简称/分型回填预演，出 diff 报告
+./venv/bin/python scripts/backfill_diff.py
+
+# 冻结当前输出作为基线（不是正确答案）
+./venv/bin/python scripts/make_baseline.py
+
+# 用快照回放一次查询（不联网、不付费）
+./venv/bin/python scripts/replay_query.py 替雷利珠单抗
+```
+
+> 注意：回放会跳过 VLM（用空结果代替），只验证“正则 + 组装”链路；需要完整回放时先正常跑一次生成快照。

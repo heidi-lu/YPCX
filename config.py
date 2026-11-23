@@ -39,9 +39,59 @@ REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 REDIS_DB = int(os.getenv("REDIS_DB", 0))
 
 LLM_MAX_CONCURRENCY = int(os.getenv("LLM_MAX_CONCURRENCY", "3"))
+QUERY_CONCURRENCY = int(os.getenv("QUERY_CONCURRENCY", "3"))
+QUERY_MAX_BATCH = int(os.getenv("QUERY_MAX_BATCH", "50"))
 SEARCH_MAX_CONCURRENCY = int(os.getenv("SEARCH_MAX_CONCURRENCY", "5"))
 HTTP_RETRY = int(os.getenv("HTTP_RETRY", "2"))
 GARBAGE_RATIO_THRESHOLD = float(os.getenv("GARBAGE_RATIO_THRESHOLD", "0.2"))
+
+# 6. 调用路由 / 成本日志（P0）
+# 阶段 -> 模型。默认全部沿用主模型；换成千问时只改这里或 .env，不改代码。
+EXTRACT_MODEL = os.getenv("EXTRACT_MODEL", MAIN_LLM_MODEL)
+SHORT_MODEL = os.getenv("SHORT_MODEL", EXTRACT_MODEL)
+THINK_MODEL = os.getenv("THINK_MODEL", EXTRACT_MODEL)
+MODEL_ROUTES = {
+    "extract": EXTRACT_MODEL,
+    "web": EXTRACT_MODEL,
+    "brand": EXTRACT_MODEL,
+    "dosage": SHORT_MODEL,
+    "price": EXTRACT_MODEL,
+    "think": THINK_MODEL,
+    "vision": VISION_MODEL,
+}
+THINK_ENABLED = os.getenv("THINK_ENABLED", "0") == "1"
+THINK_EFFORT = os.getenv("THINK_EFFORT", "high")
+
+# 千问（DashScope）文本 key；默认复用视觉 key，同一账号。
+QWEN_LLM_API_KEY = os.getenv("QWEN_LLM_API_KEY") or VISION_API_KEY
+QWEN_LLM_BASE_URL = os.getenv("QWEN_LLM_BASE_URL", VISION_BASE_URL)
+
+USAGE_LOG_ENABLED = os.getenv("USAGE_LOG_ENABLED", "1") != "0"
+SNAPSHOT_ENABLED = os.getenv("SNAPSHOT_ENABLED", "1") != "0"
+SNAPSHOT_DIR = os.getenv("SNAPSHOT_DIR", os.path.join(BASE_DIR, "snapshots"))
+
+# 元 / 百万 token，2026-11 官方价（含税前的 USD 折算，缓存命中单独计价）。
+# tier 按“单次请求输入 token”落档，命中哪档整单按哪档结算。
+LLM_PRICES = {
+    ("deepseek", "deepseek-flash"): {"in": 2.13, "out": 8.50, "cache": 0.043, "offpeak_half": True},
+    ("deepseek", "deepseek-chat"): {"in": 2.13, "out": 8.50, "cache": 0.043, "offpeak_half": True},
+    ("deepseek", "deepseek-v4-pro"): {"in": 9.40, "out": 28.10, "cache": 0.30, "offpeak_half": True},
+    ("qwen", "qwen3.8-flash"): {"in": 0.80, "out": 2.70, "cache": 0.10},
+    ("qwen", "qwen3.7-flash"): {"tiers": [
+        {"max_in": 32_000, "in": 0.20, "out": 0.80, "cache": 0.04},
+        {"max_in": 256_000, "in": 0.60, "out": 2.40, "cache": 0.12},
+        {"max_in": 1_000_000, "in": 1.20, "out": 4.80, "cache": 0.24},
+    ]},
+    ("qwen", "qwen3.7-plus"): {"in": 1.96, "out": 7.82, "cache": 0.20},
+    ("qwen", "qwen4-max"): {"in": 10.00, "out": 30.00, "cache": 0.10},
+    ("qwen", "qwen3-vl-plus"): {"tiers": [
+        {"max_in": 32_000, "in": 1.00, "out": 10.00, "cache": 0.20},
+        {"max_in": 128_000, "in": 1.50, "out": 15.00, "cache": 0.30},
+        {"max_in": 256_000, "in": 3.00, "out": 30.00, "cache": 0.60},
+    ]},
+}
+# 元 / 次（成功且有结果才计费）
+SEARCH_PRICES = {"deepseek": 0.0053, "qwen": 0.022}
 
 try:
     redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB,

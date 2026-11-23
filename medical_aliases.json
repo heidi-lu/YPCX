@@ -16,6 +16,10 @@
       "chronic obstructive pulmonary disease",
       "COPD",
       "copd"
+    ],
+    "abbreviations": [
+      "慢阻肺",
+      "COPD"
     ]
   },
   "慢性肺源性心脏病": {
@@ -354,6 +358,9 @@
     "aliases": [
       "myasthenia gravis",
       "肌无力"
+    ],
+    "abbreviations": [
+      "gMG"
     ]
   },
   "多发性硬化": {
@@ -366,6 +373,9 @@
     "aliases": [
       "neuromyelitis optica",
       "视神经脊髓炎谱系疾病"
+    ],
+    "abbreviations": [
+      "NMOSD"
     ]
   },
   "运动神经元疾病": {
@@ -1132,6 +1142,18 @@
       "嗜酸性肉芽肿性血管炎",
       "嗜酸性肉芽肿伴多血管炎",
       "嗜酸粒细胞性肉芽肿性多血管炎"
+    ]
+  },
+  "非小细胞肺癌": {
+    "aliases": [],
+    "abbreviations": [
+      "NSCLC"
+    ]
+  },
+  "小细胞肺癌": {
+    "aliases": [],
+    "abbreviations": [
+      "SCLC"
     ]
   }
 }

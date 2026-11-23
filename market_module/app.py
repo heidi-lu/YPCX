@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 import json, re, os, sys, requests
 from bs4 import BeautifulSoup
-from openai import OpenAI
 from datetime import datetime
 
 # 把根目录加进 sys.path，方便引到外面的 config.py
@@ -13,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 👇 强行导入 engine 和 MarketBase
 from market_module.models import MarketInsight, SessionLocalMarket, MarketBase, engine
-from config import MAIN_LLM_API_KEY, MAIN_LLM_BASE_URL, MAIN_LLM_MODEL
+import llm_client
 
 app = FastAPI(title="市场信息独立服务")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -37,7 +36,6 @@ def get_market_db():
     finally:
         db.close()
 
-_client = OpenAI(api_key=MAIN_LLM_API_KEY, base_url=MAIN_LLM_BASE_URL)
 
 class MarketDataIn(BaseModel):
     generic_name: str
@@ -174,14 +172,16 @@ def parse_article(req: ParseReq):
     {content}"""
 
     try:
-        resp = _client.chat.completions.create(
-            model=MAIN_LLM_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
-            temperature=0.1
+        result = llm_client.chat(
+            [{"role": "user", "content": prompt}],
+            stage="market",
+            json_mode=True,
+            temperature=0.1,
+            timeout=120,
         )
-        result_text = resp.choices[0].message.content
-        data = json.loads(result_text)
+        if not result:
+            raise RuntimeError("市场信息抽取失败：模型无返回")
+        data = json.loads(result.text)
         
         extracted_list = data.get("data", [])
         

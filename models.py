@@ -24,6 +24,8 @@ class Drug(Base):
     
     china_approval_date = Column(String(100), default="")          # 药品上市时间
     indication_approval_date = Column(String(100), default="")     # 适应症获批时间
+    indication_approval_source = Column(String(500), default="")   # 获批时间来源 URL（外部数据必须留源）
+    drug_insurance_date = Column(String(100), default="")          # 药品（通用名）最早进医保时间
     indication_insurance_date = Column(String(100), default="")    # 适应症进医保时间/兼容字段
     insurance_status_text = Column(String(200), default="")        # 例如：2021年进入，2026年退出
 
@@ -44,6 +46,8 @@ class Drug(Base):
     insurance_restriction = Column(Text, default="")
 
     price_market = Column(String(300), default="")
+    price_insurance = Column(String(200), default="")   # 医保支付标准
+    origin_region = Column(String(10), default="")      # 国产 / 进口
     # 👇 彻底移除 market_data (JSON) 字段
     nhsa_pdf_url = Column(String(500), default="")
     nhsa_ppt_url = Column(String(500), default="")
@@ -54,7 +58,47 @@ class Drug(Base):
     is_deleted = Column(Boolean, default=False, index=True)
 
     created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    # 入库时间：只在“入库”那一刻写；后续补全/重查补字段不刷新
+    updated_at = Column(DateTime, default=datetime.now)
+
+class LlmUsage(Base):
+    """每次 LLM 调用一条（含失败尝试），用于成本核算与回归复盘。"""
+    __tablename__ = "llm_usage"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.now, index=True)
+    drug = Column(String(200), default="", index=True)
+    stage = Column(String(50), default="", index=True)
+    provider = Column(String(50), default="")
+    model = Column(String(100), default="", index=True)
+    thinking = Column(Boolean, default=False)
+    attempt = Column(Integer, default=1)
+    prompt_tokens = Column(Integer, default=0)
+    completion_tokens = Column(Integer, default=0)
+    reasoning_tokens = Column(Integer, default=0)
+    cached_tokens = Column(Integer, default=0)
+    latency_ms = Column(Integer, default=0)
+    cost_cny = Column(Float, nullable=True)
+    status = Column(String(20), default="ok")
+    error = Column(Text, default="")
+    snapshot_key = Column(String(64), default="")
+
+
+class SearchUsage(Base):
+    """每次网页搜索一条。DeepSeek 只对成功且有结果的请求计费。"""
+    __tablename__ = "search_usage"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.now, index=True)
+    drug = Column(String(200), default="", index=True)
+    query = Column(Text, default="")
+    provider = Column(String(50), default="")
+    result_count = Column(Integer, default=0)
+    latency_ms = Column(Integer, default=0)
+    cost_cny = Column(Float, nullable=True)
+    status = Column(String(20), default="ok")
+    snapshot_key = Column(String(64), default="")
+
 
 class Feedback(Base):
     __tablename__ = "feedback"
