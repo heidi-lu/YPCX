@@ -62,3 +62,29 @@ docker compose down -v              # 连匿名卷一起删（不会删 bind mou
 - 镜像默认以 root 运行，方便写 bind mount 的 SQLite；生产环境可再改成非 root。
 - 改代码后重新构建：`docker compose up -d --build`。
 - 不包含 Redis：没有 Redis 时应用自动用内存缓存。
+
+## macOS 免费替代（不装 Docker Desktop）
+
+Docker Engine / CLI 本身是免费的；收费的是 **Docker Desktop 在大型商业场景**的授权。
+个人使用、小团队（<250 人且年收入 <1000 万美元）、教育/非商业开源通常免费。
+如果不想用 Docker Desktop，可以用：
+
+### Colima（免费、MIT）
+
+```bash
+brew install colima docker docker-compose
+colima start --cpu 2 --memory 4
+docker context use colima
+docker compose up -d --build
+```
+
+### Podman（免费）
+
+```bash
+brew install podman
+podman machine init
+podman machine start
+podman compose up -d --build
+```
+
+本项目用的是标准 Dockerfile / compose，不依赖 Docker Desktop 专有功能。
