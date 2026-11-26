@@ -176,3 +176,15 @@ QWEN_LLM_API_KEY=...   # 默认复用 VISION_API_KEY
 ```
 
 > 注意：回放会跳过 VLM（用空结果代替），只验证“正则 + 组装”链路；需要完整回放时先正常跑一次生成快照。
+
+## Docker
+
+```bash
+cp .env.example .env   # 填 key
+mkdir -p docker-data snapshots reports
+cp drug_agent.db docker-data/drug_agent.db   # 可选：复用现有库
+docker compose up -d --build
+```
+
+API：<http://localhost:8000>；前端直接打开 `index.html`，或 `docker compose --profile web up -d` 用 8080。
+详见 [docker/README.md](docker/README.md)。

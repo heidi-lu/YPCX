@@ -1,0 +1,46 @@
+services:
+  api:
+    build: .
+    image: ypcx-api:latest
+    container_name: ypcx-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: sqlite:////app/data/drug_agent.db
+      SNAPSHOT_DIR: /app/snapshots
+      USAGE_LOG_ENABLED: "1"
+      SNAPSHOT_ENABLED: "1"
+      TZ: Asia/Shanghai
+    volumes:
+      - ./docker-data:/app/data
+      - ./snapshots:/app/snapshots
+      - ./reports:/app/reports
+    restart: unless-stopped
+
+  # 可选：市场信息服务（端口 8001）
+  market:
+    profiles: ["market"]
+    build: .
+    image: ypcx-api:latest
+    container_name: ypcx-market
+    command: ["uvicorn", "market_module.app:app", "--host", "0.0.0.0", "--port", "8001"]
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - ./docker-data/market.db:/app/market_module/market.db
+    restart: unless-stopped
+
+  # 可选：用 nginx 托管单文件 index.html（端口 8080）
+  web:
+    profiles: ["web"]
+    image: nginx:alpine
+    container_name: ypcx-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+    restart: unless-stopped

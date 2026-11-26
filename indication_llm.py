@@ -31,7 +31,9 @@ PROMPT_HEAD = """你是药品适应症归一化器。不要使用任何病名别
 2. 再找“原文中的具体疾病/亚型全称” subtype：如 非小细胞肺癌、肌层浸润性膀胱癌、全身型重症肌无力、三阴性乳腺癌。
 3. 如果原文只有大类本身，或没有更细的亚型：short = subtype = 疾病全称（如 系统性红斑狼疮、类风湿关节炎、干燥综合征）。
 4. 活动性、分期、转移、复发、一线/二线、术前/术后、中重度都不算 subtype，不能放进 subtype。
-5. 示例：非小细胞肺癌 → short=肺癌，subtype=非小细胞肺癌；肌层浸润性膀胱癌 → short=膀胱癌，subtype=肌层浸润性膀胱癌；全身型重症肌无力 → short=重症肌无力，subtype=全身型重症肌无力；结外NK/T细胞淋巴瘤 → short=淋巴瘤，subtype=结外NK/T细胞淋巴瘤；原发性免疫球蛋白A肾病 → short=IgA肾病，subtype=原发性免疫球蛋白A肾病；腺泡状软组织肉瘤 → short=软组织肉瘤，subtype=腺泡状软组织肉瘤；嗜酸性肉芽肿性多血管炎 → short=血管炎，subtype=嗜酸性肉芽肿性多血管炎；慢性鼻窦炎伴鼻息肉 → short=鼻窦炎，subtype=慢性鼻窦炎伴鼻息肉；错配修复缺陷型或微卫星高度不稳定型实体瘤 → short=实体瘤，subtype=错配修复缺陷型或微卫星高度不稳定型实体瘤；默克尔细胞癌 → short=皮肤癌，subtype=默克尔细胞癌；系统性红斑狼疮 → short=subtype=系统性红斑狼疮。
+4.1 例外一：哮喘的“嗜酸性/重度/过敏性”等表型或严重度可以保留为分型，如 哮喘 / 重度嗜酸粒细胞性哮喘。
+4.2 例外二：实体瘤带 MSI-H/dMMR、错配修复缺陷等分子标志时，必须把分子分型保留为 subtype，不能只写“实体瘤”，如 实体瘤 / 错配修复缺陷型或微卫星高度不稳定型实体瘤。
+5. 示例：非小细胞肺癌 → short=肺癌，subtype=非小细胞肺癌；肌层浸润性膀胱癌 → short=膀胱癌，subtype=肌层浸润性膀胱癌；全身型重症肌无力 → short=重症肌无力，subtype=全身型重症肌无力；结外NK/T细胞淋巴瘤 → short=淋巴瘤，subtype=结外NK/T细胞淋巴瘤；原发性免疫球蛋白A肾病 → short=IgA肾病，subtype=原发性免疫球蛋白A肾病；腺泡状软组织肉瘤 → short=软组织肉瘤，subtype=腺泡状软组织肉瘤；嗜酸性肉芽肿性多血管炎 → short=血管炎，subtype=嗜酸性肉芽肿性多血管炎；慢性鼻窦炎伴鼻息肉 → short=鼻窦炎，subtype=慢性鼻窦炎伴鼻息肉；哮喘 → short=哮喘，subtype=重度嗜酸粒细胞性哮喘；错配修复缺陷型或微卫星高度不稳定型实体瘤 → short=实体瘤，subtype=错配修复缺陷型或微卫星高度不稳定型实体瘤；默克尔细胞癌 → short=皮肤癌，subtype=默克尔细胞癌；系统性红斑狼疮 → short=subtype=系统性红斑狼疮。
 6. 如果原文里出现了比大类更具体的病名，subtype 必须用那个具体病名，不能把 subtype 填成大类。例如原文是“结外NK/T细胞淋巴瘤”，不能输出“淋巴瘤 / 淋巴瘤”，必须输出“淋巴瘤 / 结外NK/T细胞淋巴瘤”。
 7. 每个字段必须有原文依据；不要编造。找不到就留空字符串。
 8. 只输出 JSON：{{"items":[{{"id":97,"disease":"","has_subtypes":false,"subtype_full":"","short":"","subtype":"","evidence":""}}]}}
@@ -53,6 +55,14 @@ class Normalized:
 
 def _norm(text: str) -> str:
     return re.sub(r"\s+", "", str(text or ""))
+
+
+def _strip_qualifiers(text: str) -> str:
+    """去掉分期/人群限定词后再做子串校验，兼容“错配修复…成人晚期实体瘤”这类写法。"""
+    cleaned = _norm(text)
+    for word in ("成人", "儿童", "患者", "局部晚期", "晚期", "转移性", "不可切除", "复发", "中重度", "重度"):
+        cleaned = cleaned.replace(word, "")
+    return cleaned
 
 
 def _valid(text: str, full: str) -> bool:
@@ -148,11 +158,15 @@ def subset_valid(subtype: str, short: str, full: str) -> bool:
         return False
     if any(word in value for word in BAD_WORDS):
         return False
-    if any(word in value for word in STAGE_MARKERS) or STAGE_RE.search(value):
+    if "哮喘" in value:
+        # 哮喘例外：允许“重度/嗜酸性”作为分型；仍拒绝分期/线数/术前术后
+        if any(word in value for word in ("局部晚期", "转移性", "复发", "一线", "二线", "术前", "术后")):
+            return False
+    elif any(word in value for word in STAGE_MARKERS) or STAGE_RE.search(value):
         return False
     if value == _norm(short):
         return False
-    return value in _norm(full)
+    return value in _norm(full) or value in _strip_qualifiers(full)
 
 
 def normalize_products(products: list[dict], model: str | None = None, thinking: bool | None = None,

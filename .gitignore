@@ -42,3 +42,6 @@ CLAUDE.local.md
 # local usage logs / replay snapshots / reports
 snapshots/
 reports/
+
+# docker local data
+docker-data/

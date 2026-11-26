@@ -24,10 +24,15 @@ import indication_llm  # noqa: E402
 IDS = [97, 98, 99, 100, 101, 23, 24, 55, 83, 86, 96, 72, 85, 93, 95, 60, 68, 81, 82, 92]
 
 
-def load_rows(db_path: str, all_rows: bool = False) -> list[dict]:
+def load_rows(db_path: str, all_rows: bool = False, ids: list[int] | None = None) -> list[dict]:
     con = sqlite3.connect(db_path)
     con.row_factory = sqlite3.Row
-    if all_rows:
+    if ids:
+        rows = con.execute(
+            f"select id,generic_name,status,indication_short,indication_subtype,indication_full "
+            f"from drugs where id in ({','.join('?' * len(ids))}) order by id", ids
+        ).fetchall()
+    elif all_rows:
         rows = con.execute(
             "select id,generic_name,status,indication_short,indication_subtype,indication_full "
             "from drugs where indication_full != '' order by id"
@@ -57,10 +62,12 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--all", action="store_true", help="全库回填（默认只跑固定 20 条）")
+    parser.add_argument("--ids", default="", help="只跑指定 id，逗号分隔，如 23,94")
     parser.add_argument("--db", default=os.path.join(ROOT, "drug_agent.db"))
     args = parser.parse_args()
 
-    rows = load_rows(args.db, all_rows=args.all)
+    extra_ids = [int(part) for part in args.ids.split(",") if part.strip().isdigit()] or None
+    rows = load_rows(args.db, all_rows=args.all, ids=extra_ids)
     payload = [{"id": row["id"], "generic_name": row["generic_name"], "full": row["indication_full"]} for row in rows]
     normalized = {}
     cost = 0.0
