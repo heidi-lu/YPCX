@@ -51,6 +51,22 @@ python -m http.server 5173
 - 外部来源的数据必须保留来源 URL；没有来源的字段留空，不要编造。
 - 修改抽取字段时，同时检查 `agent.py`、`models.py` 和前端列定义。
 
+## 适应症 LLM 归一（2026-11-26 起）
+
+- 简称/分型走 `indication_llm.py`；`.env` 使用
+  `INDICATION_MODE=llm`、`INDICATION_DICTS=off`、`INSURANCE_ALIASES=on`、
+  `LLM_OVERWRITE_APPROVED=1`。
+- **禁止手工改** `drugs.indication_short/subtype`；改 prompt/规则后重跑
+  `scripts/apply_llm_indications.py`（先 dry-run，再备份 + `--apply`）。
+- 覆盖 APPROVED 必须显式 `LLM_OVERWRITE_APPROVED=1`，并先出 before/after。
+- 写库前用 SQLite `backup()` 备份；回滚命令见 `HANDOFF_NEXT.md`。
+- 测试由 `tests/conftest.py` 固定开关，不依赖本地 `.env`。
+
+## 交接文档
+
+- 当前状态/下一步：`HANDOFF_NEXT.md`（2026-11-26，获批时间优化）。
+- `HANDOFF.md` 是 2026-11-22 的历史交接，已归档。
+
 ## 变更流程（必须遵守）
 
 - 修改任何代码前，先说明：问题、根因、拟修改文件、影响范围和验证方案。
