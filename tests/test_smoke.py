@@ -966,3 +966,51 @@ def test_generic_headings_stay_one_row_each():
     assert [_short(p) for p in parts] == ["非小细胞肺癌", "非小细胞肺癌", "结外NK/T细胞淋巴瘤"]
     assert "①" in parts[0] and "②" in parts[0]
     assert "【联合治疗】" in parts[0] and "【单药治疗】" in parts[1]
+
+
+def test_short_handles_lupus_and_igan():
+    from indication_regex import _short
+
+    sle = ("1.系统性红斑狼疮：本品与常规治疗联合，适用于在常规治疗基础上仍具有高疾病活动"
+           "（例如：抗ds-DNA抗体阳性及低补体、SELENA-SLEDAI评分≥8）的活动性、自身抗体阳性的"
+           "系统性红斑狼疮（SLE）成年患者。")
+    assert _short(sle) == "系统性红斑狼疮"
+
+    igan = "适用于降低存在疾病进展风险的原发性免疫球蛋白A肾病（IgAN）成人患者的蛋白尿。"
+    assert _short(igan) == "原发性免疫球蛋白A肾病"
+
+    # 同批 PDF 里另外三条不能被改坏
+    assert _short("2.类风湿关节炎：本品与甲氨蝶呤联合，用于对甲氨蝶呤疗效不佳的中、重度活动性类风湿关节炎成人患者。") == "类风湿关节炎"
+    assert _short("3.全身型重症肌无力：本品与常规治疗药物联合，用于治疗抗乙酰胆碱受体（AChR）抗体阳性的成人全身型重症肌无力（gMG）患者。") == "全身型重症肌无力"
+    assert _short("4.干燥综合征（干燥病）：适用于接受常规治疗基础上，活动性（ESSDAI≥5分）的干燥综合征（干燥病）成人患者。") == "干燥综合征"
+
+
+def test_save_rows_updates_existing_draft_by_full_text():
+    import main
+    from db import SessionLocal
+    from models import Drug
+
+    generic = "PYTEST_DRAFT_MERGE"
+    base = {
+        "generic_name": generic,
+        "brand_name": "测试品牌",
+        "manufacturer": "测试厂家",
+        "dosage_form": "注射剂",
+        "specification": "",
+        "indication_full": "适用于降低存在疾病进展风险的原发性免疫球蛋白A肾病（IgAN）成人患者的蛋白尿。",
+        "approval_country": "中国",
+        "status": "DRAFT",
+    }
+    try:
+        main._save_rows(generic, [{**base, "indication_short": "疾病", "indication_subtype": "降低存在疾病"}])
+        main._save_rows(generic, [{**base, "indication_short": "原发性免疫球蛋白A肾病", "indication_subtype": ""}])
+        main._save_rows(generic, [{**base, "indication_short": "原发性免疫球蛋白A肾病", "indication_subtype": ""}])
+        with SessionLocal() as s:
+            rows = s.query(Drug).filter(Drug.generic_name == generic).all()
+            assert len(rows) == 1, [r.indication_short for r in rows]
+            assert rows[0].indication_short == "原发性免疫球蛋白A肾病"
+            assert rows[0].indication_subtype == ""
+    finally:
+        with SessionLocal() as s:
+            s.query(Drug).filter(Drug.generic_name == generic).delete()
+            s.commit()

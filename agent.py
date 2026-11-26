@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 import requests
 
-from config import redis_client
+from config import redis_client, INDICATION_MODE, INDICATION_DICTS, LLM_INDICATION_MODEL, LLM_INDICATION_THINKING
 from scheduler import DrugDataScheduler
 from nhsa_crawler import find_drug_files
 from deepseek_search import search as ds_search
@@ -18,6 +18,7 @@ from indication_regex import (
     strip_short_patient_tail,
 )
 import llm_client
+import indication_llm
 import source_snapshot
 import usage_store
 
@@ -219,6 +220,8 @@ def _judge_origin_by_reg(reg_cat: str) -> str:
     return ""
 
 def _normalize_disease_with_dict(raw_name: str) -> str:
+    if not INDICATION_DICTS:
+        return str(raw_name or "").strip()
     short = _clean_disease_name(raw_name)
     if not short: return ""
     # 别名字典会把两者都归一成“肺癌”；亚型必须保留，否则 SCLC/NSCLC 无法区分
@@ -415,6 +418,8 @@ def _regex_short_cleanup(products: list[dict]) -> None:
     """只做正则简称清洗，不调用大模型。"""
     for prod in products:
         for ind in prod.get("indications", []):
+            if ind.get("_llm_normalized"):
+                continue
             full = str(ind.get("indication_full", "")).strip()
             short = str(ind.get("indication_short", "")).strip()
             m = re.match(r"^(?:【\d+】|\[\d+\]|[（(]?\d+\s*[)）.、:：]|[①②③④⑤⑥⑦⑧⑨⑩])\s*([^本品用联（(：:]{2,20})", full)
@@ -693,10 +698,11 @@ def _disease_covered(name: str, rows: list[dict]) -> bool:
     if not name:
         return False
     variants = {name}
-    variants.update(DISEASE_VARIANTS.get(name, ()))
-    for key in _GUIDE_DISEASE_HINTS:
-        if _disease_mentioned(name, key):
-            variants.add(key)
+    if INDICATION_DICTS:
+        variants.update(DISEASE_VARIANTS.get(name, ()))
+        for key in _GUIDE_DISEASE_HINTS:
+            if _disease_mentioned(name, key):
+                variants.add(key)
     for row in rows:
         text = str(row.get("indication_full") or "") + str(row.get("indication_short") or "")
         if any(v and _disease_mentioned(text, v) for v in variants):
@@ -706,6 +712,8 @@ def _disease_covered(name: str, rows: list[dict]) -> bool:
 
 def _expand_disease_abbr(text: str) -> str:
     """缩写展开表来自 medical_aliases.json 的 abbreviations 字段，不在代码里另建字典。"""
+    if not INDICATION_DICTS:
+        return str(text or "")
     for short, full in ABBREVIATIONS.items():
         text = text.replace(short, full)
     return text
@@ -726,6 +734,8 @@ def _orig_matches_row(orig: dict, full: str) -> bool:
     short = str(orig.get("indication_short") or "").strip()
     if short and _disease_mentioned(full, short):
         return True
+    if not INDICATION_DICTS:
+        return False
     gtext = " ".join(str(g.get("name", "")) for g in (orig.get("guidelines") or []))
     for key in _GUIDE_DISEASE_HINTS:
         if _disease_mentioned(gtext, key) and _disease_mentioned(full, key):
@@ -741,6 +751,8 @@ def _pick_guidelines(guidelines, full: str, orig_short: str) -> list[dict]:
     - 推荐写了治疗线（围术期/新辅助/一线…）而原文没有：推荐清空
     - 指南名和推荐都没有病名：只在这条原始适应症的简称能命中原文时继承
     """
+    if not INDICATION_DICTS:
+        return []
     picked = []
     for guide in guidelines or []:
         name = str(guide.get("name") or "").strip()
@@ -1171,6 +1183,20 @@ def _fetch_new_drug_impl(drug_name: str, progress_callback=None, known_indicatio
             "nhsa_ppt_url": latest_ppt["url"] if latest_ppt else ""
         }
         all_extracted_products.append(prod)
+
+    # 大模型归一：整药批量一次，替代“简称靠字典”的路径
+    if INDICATION_MODE == "llm" and all_extracted_products:
+        emit(42, "大模型归一适应症")
+        try:
+            stats = indication_llm.normalize_products(
+                all_extracted_products,
+                model=LLM_INDICATION_MODEL,
+                thinking=LLM_INDICATION_THINKING,
+            )
+            logger.info(f"[适应症LLM] updated={stats['updated']} failed={stats['failed']} "
+                        f"batches={stats['batches']} cost=¥{stats['cost_cny']}")
+        except Exception as exc:
+            logger.warning(f"[适应症LLM] 归一失败，回退正则: {exc}")
 
     _regex_short_cleanup(all_extracted_products)
 

@@ -72,7 +72,7 @@ def _client(base_url: str, api_key: str) -> OpenAI:
     key = (base_url, api_key)
     with _client_lock:
         if key not in _clients:
-            _clients[key] = OpenAI(api_key=api_key, base_url=base_url)
+            _clients[key] = OpenAI(api_key=api_key, base_url=base_url, max_retries=0)
         return _clients[key]
 
 

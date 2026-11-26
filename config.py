@@ -99,3 +99,15 @@ try:
     redis_client.ping()
 except Exception:
     redis_client = None
+# 7. 适应症模式（P1 试点）
+# regex：现有正则 + 字典；llm：大模型归一，跳过适应症映射字典
+INDICATION_MODE = os.getenv("INDICATION_MODE", "regex").strip().lower()
+# off 时隐藏：_CONCISE_RULES / _GUIDE_DISEASE_HINTS / _OVERSEAS_DISEASE_HINTS /
+# _GENERIC_DISEASE_NAMES / ALIASES_DICT（医保 DISEASE_ALIASES 仍保留）
+INDICATION_DICTS = os.getenv("INDICATION_DICTS", "on") != "off"
+INSURANCE_ALIASES = os.getenv("INSURANCE_ALIASES", "on") != "off"
+LLM_INDICATION_MODEL = os.getenv("LLM_INDICATION_MODEL", "qwen3.8-flash")
+LLM_INDICATION_THINKING = os.getenv("LLM_INDICATION_THINKING", "0") == "1"
+
+# 允许大模型结果覆盖 APPROVED 行的 short/subtype（默认关闭；回填时显式打开）
+LLM_OVERWRITE_APPROVED = os.getenv("LLM_OVERWRITE_APPROVED", "0") == "1"

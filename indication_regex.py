@@ -162,9 +162,21 @@ def _split_numbered(block: str) -> list[str]:
     return [sub for p in (parts or [block]) for sub in _split_circled(p)]
 
 
+_DISEASE_SUFFIX_RE = re.compile(r"(?:癌|瘤|病|疮|炎|综合征|肌无力|哮喘|息肉|感染|紫癜|硬化|纤维化)$")
+_ABBR_BRACKET_RE = re.compile(r"([\u4e00-\u9fa5A-Za-z0-9]{2,30})[（(][A-Za-z0-9\-]{2,10}[）)]")
+_ABBR_LEAD_RE = re.compile(r"^(?:适用于|用于|降低|存在|疾病|进展|风险|的|在|对|合并)+")
+
+
+def _looks_like_disease_name(text: str) -> bool:
+    name = str(text or "").strip("：:，,、；;。 ")
+    if not name or name in {"疾病", "病情", "病变", "患病"} or name.endswith("高疾病"):
+        return False
+    return bool(_DISEASE_SUFFIX_RE.search(name))
+
+
 def _short(part: str) -> str:
     m_prefix = re.match(r"^([\u4e00-\u9fa5A-Za-z0-9\-/]{2,20})[：:]", part)
-    if m_prefix and re.search(r"(癌|瘤|病|综合征|肌无力)", m_prefix.group(1)):
+    if m_prefix and _looks_like_disease_name(m_prefix.group(1)):
         return m_prefix.group(1)
 
     m_heading = re.match(r"^(?:【([^】]+)】|\[([^\]]+)\])", part)
@@ -181,8 +193,18 @@ def _short(part: str) -> str:
     body = re.sub(r"^(?:【\d+】|\[\d+\]|[（(]?\d{1,2}\s*[)）.、:：]|[①②③④⑤⑥⑦⑧⑨⑩])", "", part).strip()
     short = re.split(r"本品|用于|适用|联合|（|\(", body, maxsplit=1)[0].strip()
     short = short.strip("：:，,、；;。 ")
-    if short and not re.search(r"(癌|瘤|病|综合征|肌无力)", short):
-        cands = re.findall(r"([\u4e00-\u9fa5]{2,12}(?:癌|瘤|病))", body)
+    if not short:
+        # “原发性免疫球蛋白A肾病（IgAN）”这类括号缩写：取括号前的病名
+        m_abbr = _ABBR_BRACKET_RE.search(body)
+        if m_abbr:
+            candidate = _ABBR_LEAD_RE.sub("", m_abbr.group(1))
+            if _looks_like_disease_name(candidate):
+                short = candidate
+    if short and not _looks_like_disease_name(short):
+        cands = [
+            c for c in re.findall(r"([\u4e00-\u9fa5]{2,12}(?:癌|瘤|病))", body)
+            if not c.endswith(("疾病", "病情", "病变"))
+        ]
         if "相关适应症" in body and len(set(cands)) >= 2:
             short = "其他癌症"
         elif cands:
@@ -230,7 +252,7 @@ def _short(part: str) -> str:
 
 
 # ===== 简称碎片修复：只靠后缀类和结构边界，不依赖病名词典 =====
-DISEASE_TAIL = r"癌|瘤|病|炎|疹|哮喘|息肉|综合征|肌无力|感染"
+DISEASE_TAIL = r"癌|瘤|病|炎|疹|哮喘|息肉|综合征|肌无力|感染|疮|紫癜|硬化|纤维化"
 _DISEASE_TAIL_RE = re.compile(DISEASE_TAIL)
 # 候选片段里出现这些词，说明抓到的是修饰语/治疗过程，不是病名
 _BAD_IN_CANDIDATE = (

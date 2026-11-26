@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from datetime import datetime, timedelta
 
-from config import QUERY_CONCURRENCY, QUERY_MAX_BATCH
+from config import QUERY_CONCURRENCY, QUERY_MAX_BATCH, INDICATION_DICTS, INSURANCE_ALIASES, LLM_OVERWRITE_APPROVED
 from db import init_db, get_db, SessionLocal
 from models import Drug, Feedback
 import usage_store
@@ -206,19 +206,20 @@ def _split_short_subtype(raw: str, full: str = "") -> tuple[str, str]:
 
     short = text
     matched = False
-    for pattern, concise, sub in _CONCISE_RULES:
-        if re.search(pattern, text):
-            short, matched = concise, True
-            if sub:
-                candidates.append(sub)
-            break
-    if not matched:
+    if INDICATION_DICTS:
         for pattern, concise, sub in _CONCISE_RULES:
-            if re.search(pattern, full_text):
+            if re.search(pattern, text):
                 short, matched = concise, True
                 if sub:
                     candidates.append(sub)
                 break
+        if not matched:
+            for pattern, concise, sub in _CONCISE_RULES:
+                if re.search(pattern, full_text):
+                    short, matched = concise, True
+                    if sub:
+                        candidates.append(sub)
+                    break
 
     if text != short and _SUBTYPE_SUFFIX.search(text):
         candidates.append(text)
@@ -338,11 +339,12 @@ def _status_terms(full: str, short: str = "") -> list[str]:
     if short:
         terms.extend(_disease_terms(short))
 
-    for canonical, aliases in DISEASE_ALIASES.items():
-        if canonical in _GENERIC_DISEASE_NAMES:
-            continue
-        if canonical in full or any(alias in full for alias in aliases):
-            terms.append(canonical)
+    if INSURANCE_ALIASES:
+        for canonical, aliases in DISEASE_ALIASES.items():
+            if canonical in _GENERIC_DISEASE_NAMES:
+                continue
+            if canonical in full or any(alias in full for alias in aliases):
+                terms.append(canonical)
 
     for match in re.finditer(r"[\u4e00-\u9fa5]{2,9}(?:癌|淋巴瘤|白血病|骨髓瘤|肉瘤)", full):
         terms.append(match.group(0))
@@ -434,6 +436,31 @@ def _indication_text_key(value) -> str:
     return re.sub(r"[\s（）()]+", "", str(value or ""))
 
 
+_SHORT_BAD_PREFIXES = ("联合", "单药", "本品", "适用于", "用于", "至少经过")
+_SHORT_BAD_TOKENS = ("患者", "联用", "Keytruda", "鳞状", "腺癌", "细胞癌", "结合部", "非鳞状")
+
+
+def _is_bad_short(short: str) -> bool:
+    """简称是否是碎片/长句；用于回填时判断要不要用新值覆盖旧值。"""
+    text = str(short or "").strip()
+    if not text or len(text) > 20:
+        return True
+    if text in {"疾病", "病情", "病变"} or text.endswith("高疾病") or text.startswith(("在常规治疗", "适用于降低")):
+        return True
+    if text.startswith(_SHORT_BAD_PREFIXES):
+        return True
+    return any(token in text for token in _SHORT_BAD_TOKENS)
+
+
+def _is_bad_subtype(subtype: str) -> bool:
+    text = str(subtype or "").strip()
+    if not text:
+        return False
+    return len(text) > 30 or text.startswith(("降低存在", "适用于", "用于")) or any(
+        token in text for token in ("患者", "联用")
+    )
+
+
 def _save_rows(name: str, rows: list) -> list:
     with SessionLocal() as s:
         seen = set()
@@ -463,16 +490,17 @@ def _save_rows(name: str, rows: list) -> list:
                 Drug.indication_full == row.get("indication_full", "")
             ).first()
             
-            if not ex and row.get("status") == "DRAFT":
-                # 同一核心身份下，已有 APPROVED 的完整适应症段落就不要新建待审核行
-                approved = s.query(Drug).filter(
-                    Drug.generic_name == k[0], Drug.brand_name == k[1], Drug.manufacturer == k[2],
-                    Drug.dosage_form == k[3], Drug.specification == k[4],
-                    Drug.status == "APPROVED",
-                ).all()
+            if not ex:
+                # 按“通用名+厂家+剂型+规格+全文”找已有行：简称改了也要更新旧行，而不是新建重复行
                 target_text = _indication_text_key(row.get("indication_full"))
                 if target_text:
-                    for candidate in approved:
+                    candidates = s.query(Drug).filter(
+                        Drug.generic_name == k[0], Drug.brand_name == k[1], Drug.manufacturer == k[2],
+                        Drug.dosage_form == k[3], Drug.specification == k[4],
+                    ).all()
+                    # 优先匹配待审核行，其次才是已入库行
+                    candidates.sort(key=lambda item: 0 if item.status == "DRAFT" else 1)
+                    for candidate in candidates:
                         if _indication_text_key(candidate.indication_full) == target_text:
                             ex = candidate
                             break
@@ -481,13 +509,27 @@ def _save_rows(name: str, rows: list) -> list:
                 # 已入库行：只修复明显不合格的适应症简称，完整原文不动
                 old_short = str(ex.indication_short or "").strip()
                 new_short = str(row.get("indication_short") or "").strip()
-                bad_old = (
-                    len(old_short) > 8
-                    or old_short.startswith(("联合", "单药", "本品", "适用于", "用于", "至少经过"))
-                    or any(token in old_short for token in ("鳞状", "腺癌", "细胞癌", "结合部", "非鳞状"))
-                )
-                if ex.status == "APPROVED" and bad_old and new_short and len(new_short) <= 30:
+                bad_old = _is_bad_short(old_short)
+                if (ex.status == "APPROVED" and row.get("_llm_indication") and LLM_OVERWRITE_APPROVED
+                        and new_short and not _is_bad_short(new_short)):
                     ex.indication_short = new_short
+                    ex.indication_subtype = str(row.get("indication_subtype") or "").strip()
+                elif ex.status == "APPROVED" and bad_old and new_short and not _is_bad_short(new_short):
+                    ex.indication_short = new_short
+                elif ex.status == "DRAFT" and row.get("_llm_indication") and new_short and not _is_bad_short(new_short):
+                    # 大模型归一的结果：DRAFT 行直接采用（包括把“全身型重症肌无力”改成“重症肌无力”）
+                    ex.indication_short = new_short
+                    ex.indication_subtype = str(row.get("indication_subtype") or "").strip()
+                elif ex.status == "DRAFT":
+                    # 待审核行：旧值是碎片/长句时用新值覆盖；旧值已经合格就不动
+                    if new_short and (not old_short or bad_old) and not _is_bad_short(new_short):
+                        ex.indication_short = new_short
+                    old_sub = str(ex.indication_subtype or "").strip()
+                    new_sub = str(row.get("indication_subtype") or "").strip()
+                    if new_sub and (not old_sub or _is_bad_subtype(old_sub)):
+                        ex.indication_subtype = new_sub
+                    elif old_sub and _is_bad_subtype(old_sub) and not new_sub:
+                        ex.indication_subtype = ""
 
                 # 其余已有行只补空字段，绝不用新值覆盖已有值
                 for ck, v in row.items():
@@ -608,7 +650,7 @@ def _drop_covered_overseas_rows(rows: list[dict]) -> list[dict]:
         if subtype and subtype in china_subtypes:
             continue
         short = str(row.get("indication_short", ""))
-        keys = [h for h in _OVERSEAS_DISEASE_HINTS if h in short]
+        keys = [h for h in _OVERSEAS_DISEASE_HINTS if h in short] if INDICATION_DICTS else []
         if keys and all(k in china_text for k in keys):
             continue
         if not keys and len(short) <= 6:
@@ -737,6 +779,12 @@ def flatten_to_rows(data: dict) -> list:
 
         display_info = []
         for ind in inds:
+            if ind.get("_llm_normalized") and ind.get("indication_short"):
+                display_info.append((
+                    str(ind.get("indication_short") or "").strip(),
+                    str(ind.get("indication_subtype") or "").strip(),
+                ))
+                continue
             raw_ind_name = re.sub(r'^(降低|存在|疾病进展|风险的)+', '', ind.get("indication_short", "")).strip()
             raw_ind_name = re.sub(r'[（(][^）)]*[）)]', '', raw_ind_name).strip()
             display_info.append(_split_short_subtype(raw_ind_name, ind.get("indication_full", "")))
@@ -761,7 +809,8 @@ def flatten_to_rows(data: dict) -> list:
             
             processed_inds.append({
                 "ind": ind, "ind_name": ind_name, "ind_subtype": ind_subtype,
-                "brand_name": row_brand, "country": country, "ind_ins_year": ind_ins_year
+                "brand_name": row_brand, "country": country, "ind_ins_year": ind_ins_year,
+                "_llm_indication": bool(ind.get("_llm_normalized")),
             })
 
         # 👇 移除了 market_data 组装
@@ -815,6 +864,7 @@ def flatten_to_rows(data: dict) -> list:
                 "brand_name": row_brand,
                 "specification": normalize_specification(ind.get("specification") or base.get("specification", "")),
                 "indication_short": ind_name, "indication_subtype": ind_subtype,
+                "_llm_indication": pi.get("_llm_indication", False),
                 "indication_full": ind.get("indication_full", ind_name),
                 "approval_country": country,
                 "indication_approval_date": ind_approval,
