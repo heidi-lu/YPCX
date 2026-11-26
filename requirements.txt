@@ -1,21 +1,21 @@
-# Human-readable ranges. Use requirements.lock for reproducible installs.
-fastapi>=0.115.0
-uvicorn[standard]>=0.30.6
-openai>=1.51.0
-sqlalchemy>=2.0.35
-python-dotenv>=1.0.1
-redis>=5.0.8
-requests>=2.32.3
-beautifulsoup4>=4.12.3
-pdfplumber>=0.11.4
-python-pptx>=1.0.2
-openpyxl>=3.1.5
-pymupdf>=1.24.0
-# 以下三个包在 Python 3.14 下极易触发本地编译报错，使用 >= 让其自动拉取最新预编译版本
-pydantic>=2.13.0
-pandas>=2.3.3
-cryptography>=46.0.1
-tenacity>=8.3.0
-json-repair>=0.58.0
-certifi
-markdownify
+# Pinned runtime versions for reproducible installs.
+# Dev tools live in requirements-dev.txt.
+fastapi==0.143.0
+uvicorn[standard]==0.54.0
+openai==1.109.1
+sqlalchemy==2.1.4
+python-dotenv==1.2.4
+redis==8.1.0
+requests==2.34.2
+beautifulsoup4==4.15.0
+pdfplumber==0.11.10
+python-pptx==1.0.2
+openpyxl==3.1.5
+pymupdf==1.28.2
+pydantic==2.14.0
+pandas==3.0.6
+cryptography==48.0.1
+tenacity==9.2.1
+json-repair==0.64.2
+certifi==2026.7.22
+markdownify==1.2.3
