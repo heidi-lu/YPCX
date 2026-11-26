@@ -1,10 +1,13 @@
-# YPCX 交接文档（2026-11-23）
+# YPCX 交接文档（2026-11-26）
 
 项目目录：`/Users/xiaoxu/Desktop/YPCX`
-上一轮历史：`HANDOFF.md`（2026-11-22，已过时，仅作历史参考）
+当前 HEAD：`4bc4135 docs: add free Docker alternatives for macOS`
+上一轮交接：`HANDOFF_NEXT.md` 的 2026-11-23 版本（已在 git 历史里）
+本文档面向**新对话**，重点交接“适应症获批时间”优化。
 
-> 当前状态：已完成“简称/分型、医保时间、获批时间、商品名、PDF 分页、去重、前端交互”这一轮修复。
-> 测试 **66 passed**，`ruff` 干净；数据库 **103 行（APPROVED 85 / DRAFT 18）**。
+> 一句话状态：适应症简称/分型已经切到千问 LLM 并完成全库回填；
+> 获批时间仍是旧规则（54/90 为空、12 条等于上市月、只有 22 条有来源），
+> 下一步就是把它做成“证据 + 引用 + 可留空”的 LLM 裁决。
 
 ---
 
@@ -12,219 +15,270 @@
 
 ```bash
 cd /Users/xiaoxu/Desktop/YPCX
-Cmd + Shift + B            # VS Code：dev: start（8000 主服务 + 8001 市场服务）
+
+# 后端
+./venv/bin/uvicorn main:app --reload --port 8000
+
+# 前端：直接打开 index.html（API 指向 127.0.0.1:8000）
+open index.html
+
+# 测试 / 静态检查
+./venv/bin/python -m pytest -q
+./venv/bin/ruff check .
 ```
 
-单独启动：
+当前测试：**84 passed**；`ruff` 干净。
+
+Docker（可选，未实际 build，机器没装 Docker）：
 
 ```bash
-./venv/bin/python dev_server.py main:app 8000
-./venv/bin/python dev_server.py market_module.app:app 8001   # 可选
+cp .env.example .env
+mkdir -p docker-data snapshots reports
+cp drug_agent.db docker-data/drug_agent.db
+docker compose up -d --build
+# 或 Colima：brew install colima docker docker-compose && colima start
 ```
 
-- 前端：直接打开 `file:///Users/xiaoxu/Desktop/YPCX/index.html`
-- 测试：`./venv/bin/python -m pytest -q` → **66 passed**
-- 静态检查：`./venv/bin/ruff check .`
-- 数据库：`drug_agent.db`（SQLite WAL）
-
-外部依赖：
-
-| 用途 | 服务 |
-|---|---|
-| PDF/PPT 视觉解析 | 阿里云百炼 `qwen3-vl-plus` |
-| 文本抽取 | DeepSeek `deepseek-chat` |
-| 搜索 | DeepSeek `api.deepseek.com/v1/tools/search`（5 元/千次成功请求） |
-| 兔灵价 | 搜索 + 文本模型抽取 |
+详见 `docker/README.md`。
 
 ---
 
 ## 2. 当前数据状态
 
 ```text
-总行 103：APPROVED 85，DRAFT 18
-获批日期为空 53 行
-带来源 URL 的获批日期 24 行
-适应症分型非空 2 行（存量还没回填）
-药品进医保时间已回填 103 行
+总行数 90：APPROVED 85，DRAFT 5
+DRAFT：id 97–101（泰它西普 5 条）
+适应症获批时间为空：54 行
+有获批来源 URL：22 行
+获批时间 == 药品上市时间：12 行
+最近日期：id 93 美泊利珠 鼻窦炎 2026-11-14
 ```
 
-备份（保留最新一份，旧的已清理）：
+按药品看空值最多的：
+
+| 药品 | 空值行数 |
+|---|---|
+| 替雷利珠单抗注射液 | 10 |
+| 注射用卡瑞利珠单抗 | 8 |
+| 信迪利单抗注射液 | 5 |
+| 斯鲁利单抗注射液 | 5 |
+| 舒格利单抗注射液 | 4 |
+| 注射用泰它西普 | 4 |
+
+备份（都在项目根目录，`*.db` 已被 gitignore）：
 
 ```text
-drug_agent.backup_20261123_163820_before_drug_insurance.db
+drug_agent.backup_20261126_210621_before_llm_indications.db   # 全库简称/分型回填前
+drug_agent.backup_20261126_211121_before_llm_indications.db   # 23/94 规则修正前
+drug_agent.backup_20261126_201202_before_subtype_cleanup.db
+drug_agent.backup_20261126_200235_before_telitacicept.db
+drug_agent.backup_20261123_163820_before_drug_insurance.db    # 103 行旧库
 ```
+
+> 注意：103 → 90 是启动时 `_cleanup_drafts()` 清掉了超过 24 小时的旧 DRAFT，
+> 不是回填删除；APPROVED 一直是 85 行。
 
 ---
 
-## 3. 这一轮改了什么
+## 3. 这一轮改了什么（简称/分型）
 
-### 3.1 字典收敛
+### 3.1 大模型归一
 
-- 新增 `disease_terms.py`：**同一份 `medical_aliases.json` 只解析一次**
-  - `ALIASES_DICT`：别名 → 规范名（671 映射）
-  - `DISEASE_ALIASES`：规范名 → 别名
-  - `DISEASE_VARIANTS`：10 条结构性变体（截断/缩写）
-  - `ABBREVIATIONS`：从 JSON 的 `abbreviations` 字段构建
-- `_DISEASE_ABBR` 代码硬编码字典已删除；缩写写进 `medical_aliases.json`：
-  - `非小细胞肺癌: NSCLC`、`小细胞肺癌: SCLC`、`慢性阻塞性肺疾病: 慢阻肺/COPD`、`重症肌无力: gMG`、`视神经脊髓炎: NMOSD`
-- 删除了 `非小细胞肺癌→肺癌`、`小细胞肺癌→肺癌` 两条有害映射；
-- 修了 `_disease_covered` 的子串判断：SCLC 不会再被 NSCLC 覆盖。
+- 新增 `indication_llm.py`：
+  - 输入同一药品的全部 `indication_full`；
+  - 输出 `short`（最上层大类）+ `subtype`（具体病名全称）；
+  - 规则：`肺癌 / 非小细胞肺癌`、`膀胱癌 / 肌层浸润性膀胱癌`、
+    `重症肌无力 / 全身型重症肌无力`、`IgA肾病 / 原发性免疫球蛋白A肾病`；
+  - 没有更细病名时：`short = subtype = 疾病全称`；
+  - 例外：哮喘保留“重度/嗜酸性”表型；实体瘤保留 MSI-H/dMMR 分子分型。
+- `agent._fetch_new_drug_impl` 在构建完 `all_extracted_products` 后调用
+  `indication_llm.normalize_products()`；`flatten_to_rows` 优先使用
+  `_llm_normalized` 的 short/subtype。
 
-当前字典共 **13 处**（运行期 10 / 构建期 3），完整清单见第 6 节。
+### 3.2 开关（在 `.env`，未入库）
 
-### 3.2 适应症简称 + 适应症分型
+```env
+INDICATION_MODE=llm
+INDICATION_DICTS=off
+INSURANCE_ALIASES=on
+LLM_INDICATION_THINKING=0
+LLM_OVERWRITE_APPROVED=1
+```
 
-- 前端列：`适应症简称`（原“适应症简”）+ 新列 `适应症分型`（`indication_subtype`）；
-- 后端 `_split_short_subtype(raw, full)`：
-  - 简称取最简大类：`非小细胞肺癌→肺癌`、`肝细胞癌→肝癌`、`食管鳞状细胞癌→食管癌`、`三阴性乳腺癌→乳腺癌`、`胃或胃食管结合部腺癌→胃癌`、`过敏性/重度…哮喘→哮喘`；
-  - 分型取：全文 `【】/[]` 内病名 → 原文更细写法 → `术前/术后/新辅助/围术期/辅助`；
-  - 清洗 `期或转移性…`、`或IIIA期…` 等排版残留。
-- 注意：简称列现在会出现多个“肺癌”，靠分型区分。
+- `INDICATION_DICTS=off`：隐藏 `_CONCISE_RULES`、`ALIASES_DICT`、
+  `_GUIDE_DISEASE_HINTS`、`_OVERSEAS_DISEASE_HINTS`、`_GENERIC_DISEASE_NAMES`；
+- `INSURANCE_ALIASES=on`：医保病名别名暂时保留，避免医保状态大面积变“未纳入”；
+- `nhi_dictionary.json` 始终保留（医保目录权威来源）；
+- `LLM_OVERWRITE_APPROVED=1`：允许 LLM 结果覆盖 APPROVED 的 short/subtype；
+- 改 `.env` 后必须**重启服务**。
 
-### 3.3 医保时间
+### 3.3 全库回填结果
 
-- 新增列 **药品进医保时间**（`drug_insurance_date`，字段先于“适应症进医保时间”）：取 `nhi_dictionary.json` 的 `first_execution_date`，没有则 `first_year`，不在目录为“未纳入医保”；
-- 适应症医保匹配仍以**全称**为主：
-  - `_clause_conflicts`：鳞状/非鳞状互斥；联合维迪西妥或 HER2 的适应症必须条款含 HER2；
-  - 进入年取修复后的首个匹配年；“退出”仍按最新目录缺失判断（替雷利珠/赛帕利霍奇金已确认是真实退出）。
-- `indication_insurance_date` 兼容字段仍用简称，前端主显示用 `insurance_status_text`（全称口径）。**按用户要求不动。**
+- 90/90 匹配，74 行变更；
+- 费用约 ¥0.039；
+- 2 条规则修正（id 23 MSI-H、id 94 哮喘）费用 ¥0.0012；
+- 写库前后行数 90 → 90，状态不变，只改 short/subtype；
+- 脚本：
+  - `scripts/shadow_indications.py`：20 条 shadow，只读；
+  - `scripts/shadow_production.py`：副本库跑生产路径，验证不新增行；
+  - `scripts/apply_llm_indications.py`：`--ids` / `--all`，默认 dry-run，`--apply` 写库。
 
-### 3.4 获批时间（方案 A：没有证据就留空）
+### 3.4 其他修复
 
-- **PDF 正文的 VLM 不再输出 `approval_date`**（说明书通常没有分适应症日期，以前模型拿上市时间凑，是“贝莫苏拜 2024-04、卡瑞利珠 2019-05”这类错误的根因）；
-- 首次上市时间支持到“日”（`2024-05-09`），使“早于上市”能被 clamp 掉；
-- 拆分合并适应症时不再复制同一日期；PPT 同名多行不再乱赋值；
-- 网搜补日期：`approval_dates.py`
+- `_short` 修了 SLE（系统性红斑狼疮）、IgAN、COPD 被“疾病”覆盖的问题；
+- `_save_rows` 先按“通用名+厂家+剂型+规格+全文”匹配已有行，简称变了不会新建重复行；
+- `llm_client` 关闭 SDK 自动重试（`max_retries=0`），避免看起来“卡死”；
+- 测试新增 `tests/conftest.py`，固定测试用 regex/字典开关，避免 `.env` 影响离线用例。
+
+### 3.5 Docker
+
+`Dockerfile`、`docker-compose.yml`、`.dockerignore`、`docker/README.md`；
+api 8000，可选 market 8001 / web 8080。未实际 build（本机无 Docker）。
+
+---
+
+## 4. 已知问题 / 不要踩
+
+1. **不要手工改库**：用户明确要求“修规则，不手改数据”；先改 prompt/校验，重跑 LLM。
+2. **DRAFT 24 小时会被清掉**：`main._cleanup_drafts()` 每次启动删除
+   `updated_at` 超过 24h 的 DRAFT；重要待审核数据当天处理。
+3. **`INDICATION_DICTS=off` 的副作用**：指南归属、海外去重、泛称排除会变弱；
+   目前靠全文匹配兜底，后续要么接 LLM 去重，要么把该开关调回 on。
+4. **`LLM_OVERWRITE_APPROVED=1` 仍在生产**：重新查询某个药时，LLM 结果可覆盖
+   APPROVED 的 short/subtype；如果不希望，回填完成后改回 0。
+5. **部分分型仍偏粗**：id 24 默克尔细胞癌、83 子宫内膜癌、92 COPD、96 高嗜酸性
+   粒细胞综合征仍是“全称/全称”，没有更细病名；要细化就在 `indication_llm.py`
+   里继续加规则，不要改库。
+6. **Docker 未验证**：本机没有 Docker；compose YAML 已用 PyYAML 解析通过。
+7. **不要在查询途中改 `.py`**：uvicorn reload 会断 SSE。
+
+---
+
+## 5. 下一步：优化适应症获批时间
+
+### 5.1 现状
+
+| 项 | 数值 |
+|---|---|
+| 空值 | 54/90 |
+| 有来源 URL | 22/90 |
+| 获批时间 == 上市时间 | 12 行 |
+| 空值最多的药 | 替雷利珠 10、卡瑞利珠 8、信迪利 5、斯鲁利 5、舒格利 4、泰它西普 4 |
+
+当前实现：
+
+- `agent._fill_missing_approval_dates()`（agent.py:450）：
+  - 每药最多补 2 条；
+  - 只补“纯网搜产品”或全文含“新增/新适应症”的行；
+  - 调用 `approval_dates.resolve_indication_approval_date()`。
+- `approval_dates.py`：
   - 日期必须与病名同句；
-  - 限定词（一线/二线/围术期/HER2/单药/鳞/非鳞）必须一致；
-  - 同月至少 2 个独立域名来源；
-  - 句子必须含“批准/获批/上市/NMPA/FDA”；
-  - 保留“日”精度；
-  - 只对“新增/新适应症”或纯网搜产品补，每药最多 2 条（不再每个适应症都搜）。
-- 新增 `indication_approval_source` 字段，前端日期后“源”链接，悬浮显示 URL。
+  - 一线/二线/围术期/HER2/单药/鳞/非鳞等限定词必须一致；
+  - 同一月份至少 **2 个独立域名**才采用；
+  - “首次上市/首次获批”句里与上市同月的日期不算；
+  - 单来源/打平 → 返回空。
+- PPT：`indication_approval_times` 只按病名匹配，同名多行直接跳过。
+- PDF：VLM prompt 明确“**不要输出获批时间**”，只解析首次上市时间；
+  说明书正文通常没有分适应症日期。
+- `main._clamp_indication_approval_date()`（main.py:572）：
+  - 中国行早于上市日 → 留空；
+  - 方案 A：没有可靠日期就留空，不用上市时间兜底。
+- `indication_approval_source`：22 行有 URL，前端“源”链接。
 
-### 3.5 商品名
+### 5.2 为什么现有规则不够
 
-- PPT 商品名提取重写 `_extract_brand_from_text`：
-  - 优先 `通用名/商品名 X / Y`；
-  - 其次 `商品名：X`；
-  - `（X®）` 兜底时跳过“参照药品/参比/对照药”上下文。
-- 修复案例：菲诺利单抗曾把参照药“爱必妥”当商品名，现为“安佑平”。
+- 单来源的 NMPA 公告/药企新闻被“双域名”规则全部丢掉；
+- 搜索片段里的日期常与病名不在同一句，或句子被截断；
+- PPT 的同名多行（不同一线/联合方案）无法区分，直接跳过；
+- 12 条“等于上市月”可能是首个适应症的真实日期，也可能是旧兜底值，没人复核；
+- 54 条空值里，有些确实“未公开”，有些是搜索没抓到。
 
-### 3.6 PDF 分页问题
+### 5.3 建议方案：LLM 证据裁决（方案 A 不变）
 
-- 申报条件删除从 `(?=【|$)` 改为**逐句删除** `_DECLARATION_COND_RE`；
-- 修复替雷利珠说明书跨页只剩 11 条的问题，现在能解析 14 条，第 11 条完整。
+新增 `approval_llm.py`，思路与 `indication_llm.py` 一致：
 
-### 3.7 去重
+**输入（每药一批）**
+- 药品通用名/商品名、中国上市时间；
+- 每条适应症的 `id / full / short / 现有日期 / 现有来源`；
+- PPT 的 `indication_approval_times`；
+- NHSA 2026 申报 PDF 的相关段落（如有“批准时间/批准日期”）；
+- 搜索命中的证据句（含 URL、发布日期、来源域名、authority）；
+- 已保存的 `source_snapshot` 快照。
 
-- 国家去重 key：`通用名 + 厂家 + 简称 + 分型`；
-- 网搜行：**先比分型**（同分型已被官方覆盖就丢），再按简称+变体；
-- 海外行：**先比分型**，再按 `_OVERSEAS_DISEASE_HINTS`；
-- 仍有全文级去重 `_drop_web_full_text_duplicates`。
-
-### 3.8 前端
-
-- 全局搜索修好：Tabulator 6 只支持**单个函数**过滤，原来传“函数数组”被静默忽略；
-- 「一键入库」：工具栏 + 进度条每条药品完成后可单独入库；
-- 状态文案：`DRAFT` → **待审核**，不再出现“草稿”；
-- **已收录数据不再铺在表格**：`libraryRows` 单独保存，只用于“药品已在库”提示；每次查询只显示本次结果；
-- 在库提示：`该药品最近一次入库时间为 xxx，是否需要更新最新获批适应症/仿制药？`，确认后才开始查询；
-- 补全限制：`LOCKED_EDIT_FIELDS` 前端置灰 + 后端过滤：
-  - 药品上市时间、适应症全称、药品进医保时间、适应症进医保时间、指南名称、指南提及、医保局PDF、PPT摘要、医保类别、医保限制、剂型、规格
-- `通用名` 保持禁用（去重身份）。
-
----
-
-## 4. 关键约定（不要踩）
-
-1. **适应症简称不写病名词典**：用后缀/边界/括号同位语规则；字典只做“命名/事实”（展示归一、医保病名、厂家、缩写）。
-2. **获批时间没有证据就留空**，不要用上市时间或医保年份兜底。
-3. **PDF 只出病名/全文/用法用量**，不要再让 VLM 猜获批日期。
-4. **医保匹配要区分限定词**：鳞/非鳞、HER2、小细胞/非小细胞、一线/既往。
-5. **已收录数据不进表格**；`/drugs` 只用于在库提示和统计。
-6. **补全不能改权威字段**（见 3.8 的锁定列表）。
-7. 改 `.py` 会触发 uvicorn reload，查询途中不要改，否则 SSE 会断。
-8. 不要手动删 `drug_agent.db-wal/-shm`；备份用 SQLite `backup()` API。
-
----
-
-## 5. 已知问题 / 下一步（按优先级）
-
-1. **存量回填**：103 行里简称/分型还是旧的（分型只有 2 行非空）。按新规则约 83 行会变；先出 diff 再写库。
-2. **在库秒出 + 增量**：命中 APPROVED 时只查“最近一年新适应症 + 最新仿制药”，不整药重跑（用户之前提到，尚未做）。
-3. **成本/token 日志**：目前没有 usage 记录，单药约 0.3~0.5 元只能估算。
-4. **feedback 闭环**：`feedback` 表存在但 0 行、无接口；人工修正应写入并做回归。
-5. **海外行日期**：帕博利珠子宫内膜癌（美国）因 FDA/中国口径对不上，已留空；如需补需要确认口径。
-6. **商保**：`catalog_type=商业健康保险创新药` 会输出“（商保创新药）”；恩沃利/阿得贝利经确认不在目录，仍“未纳入”。
-7. **2027 执行年**：显示“2027年进入”指 2026 版目录、2027-01-01 执行，前端文案可再优化。
-8. **52 条“获批日=上市月”**：可能是真首个适应症，也可能是旧兜底值，尚未批量清理。
-
----
-
-## 6. 字典清单（13 处）
-
-运行期：
-
-```text
- 1 disease_terms.ALIASES_DICT         671   病名归一
- 2 disease_terms.DISEASE_ALIASES      154   医保条款病名
- 3 disease_terms.DISEASE_VARIANTS      10   去重/变体
- 4 disease_terms.ABBREVIATIONS         11   缩写展开（含大小写）
- 5 agent._GUIDE_DISEASE_HINTS          38   指南继承
- 6 main._OVERSEAS_DISEASE_HINTS        38   海外行匹配
- 7 main._GENERIC_DISEASE_NAMES          3   排除泛称
- 8 agent.PLACEHOLDER_MANUFACTURERS      9   厂家占位词
- 9 origin_manufacturers.json → 映射    54   国产/进口/原研
-10 nhi_dictionary.json → NHI_DICT    7130   医保目录（数据字典）
+**输出**
+```json
+{"id": 3, "date": "2024-06-12", "precision": "day|month",
+ "evidence_quote": "原文句子", "source_url": "https://...",
+ "reason_code": "first_approval|new_indication|overseas|unknown",
+ "confidence": 0.0}
 ```
 
-构建期：
+**硬约束**
+- 无证据 → `null`，不写库；
+- `evidence_quote` 必须是输入原文子串（归一化空白后）；
+- 中国行日期不得早于上市日、不得晚于今天；
+- 单来源网搜 → 只标“待核实”，不自动写；
+- 同名多行无法区分一线/联合方案 → `null`；
+- 海外行单独口径，不要用中国上市日 clamp；
+- 写入时同时写 `indication_approval_source`。
 
-```text
-11 build_dict.COL_ALIASES               9   CSV 列名
-12 data/nhi_normalization/nhi_name_map.json   495
-13 data/nhi_normalization/nhi_name_splits.csv 637
-```
+**落地顺序**
+1. **只读盘点**：`scripts/approval_inventory.py`
+   - 统计空值/等于上市月/有来源/疑似旧兜底；
+   - 按药输出样例，人工确认口径。
+2. **Shadow**：`scripts/shadow_approval_dates.py`
+   - 选 20–30 条（替雷利珠、卡瑞利珠、信迪利、斯鲁利、舒格利、泰它西普优先）；
+   - 只出 `old → new + evidence + source`，不写库；
+   - 人工抽检 10 条。
+3. **DRAFT 写库**：`scripts/apply_approval_dates.py --ids ...`
+   - 备份 → 只改 `indication_approval_date/source`；
+   - 不动 status、不动其他字段。
+4. **APPROVED 写库**：加 `APPROVAL_OVERWRITE_APPROVED=1`，同样先出 before/after，再写。
+5. **UI**：`indication_approval_date` 为空显示“未公开”，有值但单来源显示“待核实”；来源链接悬浮显示 URL。
 
-下一步可继续去字典的候选：2 个 38 条的 hints（改用适应症自身病名）、`DISEASE_VARIANTS`、`_GENERIC_DISEASE_NAMES`。
+**模型/成本**
+- 批量：`qwen3.8-flash` 非思考，约 ¥0.005–0.01/药；
+- 硬样本：`thinking=True`，约 ¥0.03/药；
+- 全库 25 个通用名跑一遍 < ¥1。
+
+**验收**
+- `pytest` 84+ 通过，`ruff` 干净；
+- shadow 20–30 条，人工确认证据句/来源；
+- 写库前后行数不变，只改日期/来源两列；
+- 空值仍允许存在，不能为了“填满”而编日期。
 
 ---
 
-## 7. 文件索引
+## 6. 文件索引
 
 ```text
 main.py
-  LOCKED_EDIT_FIELDS        补全锁定字段
-  _split_short_subtype      简称/分型
-  _clause_conflicts         医保限定词
-  _insurance_status_text    适应症医保状态
-  flatten_to_rows           行组装 / 药品进医保时间 / 来源字段
-  _country_dedupe_rows      分型优先去重
-  /drugs/approve-all        一键入库
-
+  _split_short_subtype           简 称/分型（LLM 行会被跳过）
+  _save_rows                     按全文匹配已有行；LLM 覆盖 APPROVED
+  _clamp_indication_approval_date 日期早于上市 → 留空
+  flatten_to_rows                行组装；优先 LLM short/subtype
+  /stats/cost /stats/usage       成本/用量
 agent.py
-  _validate_date            日期归一
-  _fill_missing_approval_dates  只补新增/网搜
-  _regex_short_cleanup      简称碎片修复
-  _disease_covered          覆盖判断（已修 SCLC 子串）
-  _extract_brand_from_text  （在 skill_vision_parser.py）
-
-indication_regex.py
-  disease_short_from_full   后缀+边界取病名
-  looks_like_short_fragment 碎片判定
-  _strip_declaration_conditions  申报条件逐句删除
-
-approval_dates.py           网搜日期：证据句 + 双域名
-disease_terms.py            病名/缩写/变体统一入口
-skill_vision_parser.py      PDF/PPT 抽取（含商品名修复）
-index.html                  前端表格/补全/搜索/一键入库
-tests/test_smoke.py         66 个离线用例
+  _fetch_new_drug_impl           主流程；PPT 时间、PDF 抽取
+  _fill_missing_approval_dates   当前补日期（每药 2 条）
+  _normalize_disease_with_dict   INDICATION_DICTS=off 时直接返回原值
+indication_llm.py                LLM 简称/分型（本轮新增）
+approval_dates.py                网搜日期规则（下一步要改/替换）
+skill_vision_parser.py           PDF/PPT 解析；PDF 禁止输出日期
+llm_client.py                    统一 LLM 调用/thinking/usage
+usage_store.py                   llm_usage/search_usage
+source_snapshot.py               搜索/LLM/文档快照
+scripts/
+  shadow_indications.py          简称/分型 20 条 shadow
+  shadow_production.py           副本库生产路径 shadow
+  apply_llm_indications.py       简称/分型回填（--ids/--all/--apply）
+  p1_preview.py                  旧简称回填预演
+Dockerfile / docker-compose.yml / docker/README.md
 ```
 
 ---
 
-## 8. 验证 / 回滚
+## 7. 验证 / 回滚
 
 ```bash
 cd /Users/xiaoxu/Desktop/YPCX
@@ -232,19 +286,46 @@ cd /Users/xiaoxu/Desktop/YPCX
 ./venv/bin/ruff check .
 ```
 
-回滚数据库（停服务后）：
+回滚简称/分型（先停服务）：
 
 ```bash
-./venv/bin/python -c "import sqlite3; s=sqlite3.connect('drug_agent.backup_20261123_163820_before_drug_insurance.db'); d=sqlite3.connect('drug_agent.db'); s.backup(d)"
+./venv/bin/python -c "import sqlite3; s=sqlite3.connect('drug_agent.backup_20261126_210621_before_llm_indications.db'); d=sqlite3.connect('drug_agent.db'); s.backup(d)"
 ```
 
-代码回滚：当前工作区仍未提交（`git status` 有多个修改），建议先 commit 一个快照再继续改动。
+回滚 23/94：
+
+```bash
+./venv/bin/python -c "import sqlite3; s=sqlite3.connect('drug_agent.backup_20261126_211121_before_llm_indications.db'); d=sqlite3.connect('drug_agent.db'); s.backup(d)"
+```
+
+代码回滚：`git revert <commit>`；当前提交：
+
+```text
+4bc4135 docs: add free Docker alternatives for macOS
+a4ddb75 feat: add asthma/MSI-H subtype rules and Docker deployment
+0befa1e feat: normalize indications with LLM and add backfill tooling
+0b5aba1 feat: add LLM usage logging, replay snapshots, and model routing
+```
 
 ---
 
-## 9. 变更流程（AGENTS.md）
+## 8. 不要做的事
 
-- 改代码前先说明：问题、根因、拟改文件、影响范围、验证方案；
-- 字典/数据库重建先给统计和样例；
-- 改完跑 `pytest` + `ruff`，报告 diff、测试结果、回滚方式；
-- 不在查询途中改 `.py`（会 reload 断 SSE）。
+- 不要手工改 `drugs.indication_short/subtype`；要改就改 `indication_llm.py` 的规则/示例，重跑 LLM。
+- 不要用上市时间/医保年份兜底获批时间。
+- 不要在没有原文证据时写日期；空是合法结果。
+- 不要把 VPN/代理/密钥写进 `.env.example` 或提交 `.env`。
+- 不要在查询途中改 `.py`（reload 断 SSE）。
+- 不要直接 `git push` 到 main；先看 diff 和测试。
+- 不要删除 `drug_agent.backup_*.db`，回滚要用。
+
+---
+
+## 9. 新对话开场建议
+
+把下面这段直接发给新对话：
+
+> 读 `HANDOFF_NEXT.md`。当前简称/分型已切千问 LLM 并全库回填；
+> 下一步做“适应症获批时间”优化。先只读盘点 54 条空值和 12 条等于上市月的行，
+> 设计 LLM 证据裁决（必须带原文引用、单来源只标待核实），先 shadow 不写库。
+> 不要手工改数据库，改规则/脚本。
