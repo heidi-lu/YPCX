@@ -59,13 +59,12 @@ python -m http.server 5173
 - **禁止手工改** `drugs.indication_short/subtype`；改 prompt/规则后重跑
   `scripts/apply_llm_indications.py`（先 dry-run，再备份 + `--apply`）。
 - 覆盖 APPROVED 必须显式 `LLM_OVERWRITE_APPROVED=1`，并先出 before/after。
-- 写库前用 SQLite `backup()` 备份；回滚命令见 `HANDOFF_NEXT.md`。
+- 写库前用 SQLite `backup()` 备份；回滚命令见 `HANDOFF.md`。
 - 测试由 `tests/conftest.py` 固定开关，不依赖本地 `.env`。
 
 ## 交接文档
 
-- 当前状态/下一步：`HANDOFF_NEXT.md`（2026-11-26，获批时间优化）。
-- `HANDOFF.md` 是 2026-11-22 的历史交接，已归档。
+- 当前状态/下一步：`HANDOFF.md`（2026-11-26，获批时间优化）。
 
 ## 变更流程（必须遵守）
 
